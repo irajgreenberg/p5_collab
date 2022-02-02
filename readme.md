@@ -1,4 +1,4 @@
-Collaborative development using P5, TypeScript & Parcel in Node environment.
+Collaborative development using P5, TypeScript & Parcel in Node environment
 
 Requires: Node
 Adheres to P5's Instanced mode: https://p5js.org/reference/#/p5/p5
@@ -16,11 +16,10 @@ Have fun and make engaging, joyful stuff.
 
 
 
-
-Credits:
+## Credits:
 Template from: https://github.com/CaribouJohn/p5-typescript-template
 Notes below included from: https://github.com/CaribouJohn/p5-typescript-template readme.md
-## Disclaimer
-Various online sources helped me get to this point, but especially https://github.com/Gaweph/p5-typescript-starter (Thanks!) 
 
-This is mainly for my benefit but if you gain anything from it feel free to use it in any way consistant with the MIT Licence I am inheriting from [here](https://github.com/Gaweph/p5-typescript-starter). 
+"Various online sources helped me get to this point, but especially https://github.com/Gaweph/p5-typescript-starter (Thanks!) 
+
+This is mainly for my benefit but if you gain anything from it feel free to use it in any way consistant with the MIT Licence I am inheriting from [here](https://github.com/Gaweph/p5-typescript-starter)." 
