@@ -4,10 +4,9 @@
     "description": "",
     "main": "dist/index.html",
     "scripts": {
-        "start": "npm-run-all clean start-parcel",
         "dev": "npm-run-all clean start-parcel",
         "build": "npm-run-all clean build-parcel",
-        "start-parcel": "parcel index.html --open",
+        "start-parcel": "parcel -p 8080 index.html --open",
         "build-parcel": "parcel build index.html",
         "clean": "rimraf dist"
     },
