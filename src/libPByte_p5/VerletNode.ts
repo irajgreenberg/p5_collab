@@ -1,6 +1,5 @@
 import P5 from "p5";
 
-// Verlet Node class
 export class VerletNode {
 
 	p: P5;
@@ -44,12 +43,12 @@ export class VerletNode {
 		this.p.translate(this.pos.x, this.pos.y, this.pos.z);
 		this.p.sphere(this.radius * 2)
 		this.p.pop();
+		//this.p.noFill();
 	}
 
 	setStyle(radius: number, col: P5.Color): void {
 		this.radius = radius;
 		this.col = col;
-
 	}
 
 	boundsCollide(bounds: P5.Vector) {
@@ -80,5 +79,6 @@ export class VerletNode {
 			this.pos.z += 1;
 		}
 	}
+
 }
 

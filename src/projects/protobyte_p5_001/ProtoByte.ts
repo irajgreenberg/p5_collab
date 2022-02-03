@@ -1,4 +1,5 @@
 import P5 from "p5";
+import { VerletStrand } from "../../libPByte_p5/VerletStrand";
 
 export class Protobyte {
     p: P5;
@@ -15,6 +16,8 @@ export class Protobyte {
     spineTheta = 0;
     spineThetas: number[] = [];
 
+    strands: VerletStrand[] = [];
+
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector) {
         this.p = p;
         this.length = length;
@@ -26,7 +29,6 @@ export class Protobyte {
         const bodySeg = length / slices;
         const radii: number[] = [];
         for (let i = 0, k = 0; i < slices; i++) {
-
             const radiusDelta = this.radiusMinMax.y - this.radiusMinMax.x;
             const csPts: P5.Vector[] = [];
             const csPts_init: P5.Vector[] = [];
@@ -42,6 +44,11 @@ export class Protobyte {
                 csPts[j] = p.createVector(x, y, z);
                 csPts_init[j] = p.createVector(x, y, z);
                 theta += p.TWO_PI / radialDetail;
+
+                // dangling strands
+                if (i == 0) {
+                    this.strands.push(new VerletStrand(p, csPts[j], p.random(30, 80), p.int(p.random(5, 10)), p.color(90, 30, 90, 100)));
+                }
             }
             k += p.PI / (slices - 1);
             this.pts2D.push(csPts);
@@ -51,6 +58,8 @@ export class Protobyte {
 
     draw(): void {
         // spine | only draw in testing mode
+        this.p.fill(0, 0);
+        this.p.stroke(65, 45, 200);
         this.p.beginShape();
         for (let i = 0; i < this.spine.length; i++) {
             // this.p.vertex(this.spine[i].x, this.spine[i].y, this.spine[i].z);
@@ -59,6 +68,8 @@ export class Protobyte {
 
         // body
         // cross-sections
+        this.p.fill(30, 30, 80);
+        this.p.stroke(255);
         for (let i = 0; i < this.pts2D.length; i++) {
             // radial segments
             for (let j = 0; j < this.pts2D[i].length; j++) {
@@ -79,12 +90,17 @@ export class Protobyte {
                 }
             }
         }
+
+        //dangling strands
+        for (let i = 0; i < this.strands.length; i++) {
+            this.strands[i].draw();
+        }
     }
 
     move(): void {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
-            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * 50
+            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * 80
             this.spineThetas[i] += this.p.PI / 90;
 
             // deform body based on spine motion
@@ -94,5 +110,9 @@ export class Protobyte {
             }
         }
 
+        for (let i = 0; i < this.strands.length; i++) {
+            this.strands[i].move();
+        }
     }
+
 }

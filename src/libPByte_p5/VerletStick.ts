@@ -11,7 +11,7 @@ export class VerletStick {
 
     len: number;
 
-    constructor(p: P5, start: VerletNode, end: VerletNode, stickTension: number, anchorTerminal: number, col: P5.Color) {
+    constructor(p: P5, start: VerletNode, end: VerletNode, stickTension: number = .5, anchorTerminal: number = 0, col: P5.Color = p.color(200, 225, 200)) {
         this.p = p;
         this.start = start;
         this.end = end;
@@ -103,6 +103,5 @@ export class VerletStick {
     reinitializeLen(): void {
         this.len = this.start.pos.dist(this.end.pos);
     }
-
 
 }
