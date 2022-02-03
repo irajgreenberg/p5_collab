@@ -1,23 +1,34 @@
-// Verlet Node class
-class VerletNode {
+import P5 from "p5";
 
-	// expects a vector and a number
-	constructor(pos, radius, color) {
+// Verlet Node class
+export class VerletNode {
+
+	p: P5;
+	pos: P5.Vector;
+	radius: number;
+	col: P5.Color;
+	radiusOld: number;
+	posOld: P5.Vector;
+
+	offset: P5.Vector | undefined;
+
+	constructor(p: P5, pos: P5.Vector, radius: number, col: P5.Color) {
+		this.p = p;
 		this.pos = pos;
 		this.radius = radius;
-		this.color = color;
-		this.radiusOld = this.radius; // no side-effect for primitive variable
-		this.posOld = new p5.Vector(pos.x, pos.y, pos.z); // creating a new address for reference variable
+		this.col = col;
+		this.radiusOld = this.radius;
+		this.posOld = p.createVector(pos.x, pos.y, pos.z); // need new address for refvariable
 	}
 
-	nudge(offset) {
+	nudge(offset: P5.Vector): void {
 		this.offset = offset;
 		this.pos.add(this.offset);
 	}
 
 	//this is where the motion is calculated
 	verlet() {
-		var posTemp = new p5.Vector(this.pos.x, this.pos.y, this.pos.z);
+		var posTemp = this.p.createVector(this.pos.x, this.pos.y, this.pos.z);
 
 		this.pos.x += (this.pos.x - this.posOld.x);
 		this.pos.y += (this.pos.y - this.posOld.y);
@@ -26,21 +37,22 @@ class VerletNode {
 		this.posOld.set(posTemp);
 	}
 
-	draw() {
-		fill(this.color);
-		noStroke();
-		push();
-		translate(this.pos.x, this.pos.y, this.pos.z);
-		sphere(this.radius * 2)
-		pop();
-	}
-	
-	setStyle(radius, color){
-		this.color = color;
-		this.radius = radius;
+	draw(): void {
+		this.p.fill(this.col);
+		this.p.noStroke();
+		this.p.push();
+		this.p.translate(this.pos.x, this.pos.y, this.pos.z);
+		this.p.sphere(this.radius * 2)
+		this.p.pop();
 	}
 
-	boundsCollide(bounds) {
+	setStyle(radius: number, col: P5.Color): void {
+		this.radius = radius;
+		this.col = col;
+
+	}
+
+	boundsCollide(bounds: P5.Vector) {
 		if (this.pos.x > bounds.x / 2 - this.radius) {
 			this.pos.x = bounds.x / 2 - this.radius;
 			this.pos.x -= 1;
@@ -68,5 +80,5 @@ class VerletNode {
 			this.pos.z += 1;
 		}
 	}
-} // closes class
+}
 
