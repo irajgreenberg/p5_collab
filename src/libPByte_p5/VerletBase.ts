@@ -1,0 +1,43 @@
+import P5 from "p5";
+import { VerletNode } from "./VerletNode";
+import { VerletStick } from "./VerletStick";
+import { VerletStyle } from "./VerletStyle";
+
+export abstract class VerletBase {
+
+    p: P5;
+    dim: P5.Vector;
+    elasticity: number;
+    fillCol: P5.Color;
+    style: VerletStyle;
+
+    nodes: VerletNode[] = [];
+    sticks: VerletStick[] = [];
+
+    constructor(p: P5, dim: P5.Vector, elasticity: number, fillCol: P5.Color, style: VerletStyle) {
+
+        this.p = p;
+        this.dim = dim;
+        this.elasticity = elasticity;
+        this.fillCol = fillCol;
+        this.style = style;
+        this.nodes = [];
+        this.sticks = [];
+
+        this.init();
+    }
+
+    verlet() {
+        for (let i = 0; i < this.nodes.length; i++) {
+            this.nodes[i].verlet();
+        }
+
+        for (let i = 0; i < this.sticks.length; i++) {
+            this.sticks[i].constrainLen();
+        }
+    }
+
+    //  subclass implements
+    abstract init(): void;
+
+}

@@ -25,7 +25,7 @@ class VerletToroid {
         this.ctr = 0;
 
         // create nodes
-       
+
 
         // the unique drawing algorithm
         this.init();
@@ -44,7 +44,7 @@ class VerletToroid {
         }
     } // end cstr
 
-    init(){
+    init() {
         let theta = 0;
         // calculate nodes
         for (let i = 0, k = 0; i < this.connects; i++) {
@@ -87,7 +87,7 @@ class VerletToroid {
 
             theta += Math.PI * 2 / this.connects;
         }
-        
+
         // create sticks
         for (let i = 0, k = 0; i < this.connects; i++) {
             for (let j = 0; j < this.slices; j++) {
@@ -111,7 +111,7 @@ class VerletToroid {
             }
         }
     }
-    
+
     setColor(skinCol) {
         this.skinCol = skinCol;
     }
