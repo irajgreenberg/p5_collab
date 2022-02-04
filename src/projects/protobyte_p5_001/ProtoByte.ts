@@ -47,9 +47,9 @@ export class Protobyte {
 
                 // dangling strands
                 if (i == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(30, 180), p.int(p.random(5, 10)), p.color(90, 30, 90, 200)));
-                } else if (j % 3 == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(30, 80), p.int(p.random(3, 6)), p.color(200, 255, 200, 150)));
+                    this.strands.push(new VerletStrand(p, csPts[j], p.random(30, 180), p.int(p.random(5, 10)), p.color(255, 200, 200, 200)));
+                } else if (j % 2 == 0) {
+                    this.strands.push(new VerletStrand(p, csPts[j], p.random(10, 40), p.int(p.random(3, 6)), p.color(200, 255, 200, 150)));
                 }
             }
             k += p.PI / (slices - 1);
@@ -70,7 +70,7 @@ export class Protobyte {
 
         // body
         // cross-sections
-        this.p.fill(30, 30, 80);
+        this.p.fill(130, 130, 180);
         this.p.stroke(255);
         for (let i = 0; i < this.pts2D.length; i++) {
             // radial segments
