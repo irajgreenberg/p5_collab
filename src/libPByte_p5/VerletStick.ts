@@ -22,7 +22,7 @@ export class VerletStick {
     }
 
     constrainLen(): void {
-        let accuracyCount = 50;
+        let accuracyCount = 10;
         for (let i = 0; i < accuracyCount; i++) {
             let delta = this.p.createVector(
                 this.end.pos.x - this.start.pos.x,

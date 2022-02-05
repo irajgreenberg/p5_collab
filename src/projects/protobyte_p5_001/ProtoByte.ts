@@ -1,5 +1,8 @@
 import P5 from "p5";
+import { NodeType } from "../../libPByte_p5/PByte_utils";
+import { VerletAnnulus } from "../../libPByte_p5/VerletAnnulus";
 import { VerletStrand } from "../../libPByte_p5/VerletStrand";
+import { VerletStyle } from "../../libPByte_p5/VerletStyle";
 
 export class Protobyte {
     p: P5;
@@ -17,6 +20,11 @@ export class Protobyte {
     spineThetas: number[] = [];
 
     strands: VerletStrand[] = [];
+
+    // annuli
+    annulus: VerletAnnulus;
+    annulus2: VerletAnnulus;
+    annulus3: VerletAnnulus;
 
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector) {
         this.p = p;
@@ -52,10 +60,15 @@ export class Protobyte {
                     this.strands.push(new VerletStrand(p, csPts[j], p.random(10, 40), p.int(p.random(3, 6)), p.color(200, 255, 200, 35)));
                 }
             }
-            k += p.PI / (slices - 1);
+            k += p.PI * .5 / (slices - 1);
             this.pts2D.push(csPts);
             this.pts2D_init.push(csPts_init);
         }
+
+        const vs = new VerletStyle(.3, p.color(255, 0, 0), 255, NodeType.SPHERE, p.color(0), .5, .2);
+        this.annulus = new VerletAnnulus(p, 130, 8, this.pts2D[3], .2, p.color(100, 200, 100), vs);
+        this.annulus2 = new VerletAnnulus(p, 160, 8, this.pts2D[8], .04, p.color(100, 200, 100), vs);
+        this.annulus3 = new VerletAnnulus(p, 120, 8, this.pts2D[13], .004, p.color(100, 200, 100), vs);
     }
 
     draw(): void {
@@ -97,13 +110,19 @@ export class Protobyte {
         for (let i = 0; i < this.strands.length; i++) {
             this.strands[i].draw();
         }
+
+
+        this.annulus.draw();
+        this.annulus2.draw();
+        this.annulus3.draw();
+        // this.annulus.verlet();
     }
 
     move(): void {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
             this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * 80
-            this.spineThetas[i] += this.p.PI / 90;
+            this.spineThetas[i] += this.p.PI / 80;// - (this.p.frameCount * .2));
 
             // deform body based on spine motion
             for (let j = 0; j < this.pts2D[i].length; j++) {
