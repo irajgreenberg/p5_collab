@@ -56,8 +56,8 @@ export class Protobyte {
                 // dangling strands
                 if (i == 0) {
                     this.strands.push(new VerletStrand(p, csPts[j], p.random(30, 110), p.int(p.random(10, 20)), p.color(255, 200, 200, 60)));
-                } else if (j % 4 == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(10, 40), p.int(p.random(3, 6)), p.color(200, 255, 200, 35)));
+                } else if (j % 1 == 0) {
+                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 10), p.int(p.random(3, 6)), p.color(200, 255, 200, 35)));
                 }
             }
             k += p.PI * .5 / (slices - 1);
@@ -65,10 +65,10 @@ export class Protobyte {
             this.pts2D_init.push(csPts_init);
         }
 
-        const vs = new VerletStyle(.3, p.color(255, 0, 0), 255, NodeType.SPHERE, p.color(0), .5, .2);
-        this.annulus = new VerletAnnulus(p, 130, 8, this.pts2D[3], .2, p.color(100, 200, 100), vs);
-        this.annulus2 = new VerletAnnulus(p, 160, 8, this.pts2D[8], .04, p.color(100, 200, 100), vs);
-        this.annulus3 = new VerletAnnulus(p, 120, 8, this.pts2D[13], .004, p.color(100, 200, 100), vs);
+        const vs = new VerletStyle(.3, p.color(190, 190, 255, 255), 255, NodeType.SPHERE, p.color(0), .5, .2);
+        this.annulus = new VerletAnnulus(p, 100, 3, this.pts2D[7], .2, p.color(100, 200, 100), vs);
+        // this.annulus2 = new VerletAnnulus(p, 100, 13, this.pts2D[8], .04, p.color(100, 200, 100), vs);
+        // this.annulus3 = new VerletAnnulus(p, 100, 3, this.pts2D[13], .004, p.color(100, 200, 100), vs);
     }
 
     draw(): void {
@@ -113,8 +113,8 @@ export class Protobyte {
 
 
         this.annulus.draw();
-        this.annulus2.draw();
-        this.annulus3.draw();
+        // this.annulus2.draw();
+        // this.annulus3.draw();
         // this.annulus.verlet();
     }
 

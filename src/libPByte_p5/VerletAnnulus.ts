@@ -28,21 +28,37 @@ export class VerletAnnulus extends VerletBase {
     }
 
     init(): void {
+
+        // get centroid to properly scale annuli at origin
+        for (let i = 0; i < this.innerRing.length; i++) {
+            this.centroid.add(this.innerRing[i]);
+        }
+        this.centroid.div(this.innerRing.length - 1);
+
         // calculate radial segment length between consective rings
         this.radialSeg = (this.radius - this.innerRing[0].mag()) / this.ringEdgeCount;
         for (let i = 0; i < this.ringEdgeCount; i++) {
             const ring: VerletNode[] = [];
             let v = this.p.createVector(0, 0, 0);
+            let v2 = this.p.createVector(0, 0, 0);
             for (let j = 0; j < this.innerRing.length; j++) {
                 // attaches annulus to body
-                if (i == 0) {
-                    v = this.innerRing[j];
-                } else {
-                    v = this.p.createVector(this.innerRing[j].x, this.innerRing[j].y, this.innerRing[j].z);
-                    v.normalize();
-                    v.mult(this.radialSeg * i)
-                    v.add(this.innerRing[j]);
+                // if (i == 0) {
+                //     v = this.innerRing[j];
+                // } else {
+                v = this.p.createVector(this.innerRing[j].x, this.innerRing[j].y, this.innerRing[j].z);
+                let x = v.x
+                // v2 = this.p.createVector(this.innerRing[j].x, this.innerRing[j].y, this.innerRing[j].z);
+                // v.x -= x;
+                v.normalize();
+                v.mult(this.radialSeg * i)
+                if (i > 0) {
+                    // v.x *= 1.7
+                    // v.z *= 1.7
                 }
+                v.add(this.innerRing[j]);
+                // v.x += x;
+                // }
                 const vn = new VerletNode(this.p, v, this.style.nodeRadius, this.style.nodeCol);
                 ring[j] = vn;
                 this.nodes.push(vn)
@@ -95,6 +111,9 @@ export class VerletAnnulus extends VerletBase {
 
         for (let i = 0; i < this.innerRing.length; i++) {
             this.centroid.add(this.innerRing[i]);
+
+            // attach annulus to body ring
+            this.nodes2D[0][i].pos.set(this.innerRing[i]);
         }
         this.centroid.div(this.innerRing.length);
 
@@ -104,6 +123,7 @@ export class VerletAnnulus extends VerletBase {
                 this.nodes[i].verlet();
             }
 
+            // stablize annulus to outer ring
             if (i > this.nodes.length - this.innerRing.length - 1) {
                 this.nodes[i].pos.x = this.outerRing[k].x + this.centroid.x;
                 this.nodes[i].pos.y = this.outerRing[k].y + this.centroid.y;
@@ -118,7 +138,7 @@ export class VerletAnnulus extends VerletBase {
         }
 
         // render annulus skin
-        this.p.fill(this.p.color(200, 100, 100, 20));
+        this.p.fill(this.p.color(200, 100, 100, 60));
         for (let i = 0; i < this.nodes2D.length; i++) {
             for (let j = 0; j < this.nodes2D[i].length; j++) {
                 this.p.beginShape();

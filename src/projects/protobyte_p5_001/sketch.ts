@@ -32,7 +32,7 @@ const sketch = (p: P5) => {
         bgColor = "#" + bgR + bgG + bgB;
         document.body.style.backgroundColor = bgColor;
 
-        pb = new Protobyte(p, 300, 16, 18, p.createVector(8, 60));
+        pb = new Protobyte(p, 300, 14, 18, p.createVector(8, 60));
 
         // dust
         dp = new DustParticle(p);
@@ -90,7 +90,7 @@ const sketch = (p: P5) => {
         p.stroke(255, 150);
         p.strokeWeight(.2);
         p.translate(0, 0, 500 + p.cos(p.frameCount * p.PI / 720) * 200);
-        p.rotateY(p.frameCount * p.PI / 720);
+        // p.rotateY(p.frameCount * p.PI / 720);
         p.strokeWeight(.4);
         p.shininess(8);
         pb.draw();
