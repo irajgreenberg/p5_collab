@@ -42,23 +42,18 @@ export class VerletAnnulus extends VerletBase {
             let v = this.p.createVector(0, 0, 0);
             let v2 = this.p.createVector(0, 0, 0);
             for (let j = 0; j < this.innerRing.length; j++) {
-                // attaches annulus to body
-                // if (i == 0) {
-                //     v = this.innerRing[j];
-                // } else {
-                v = this.p.createVector(this.innerRing[j].x, this.innerRing[j].y, this.innerRing[j].z);
-                let x = v.x
-                // v2 = this.p.createVector(this.innerRing[j].x, this.innerRing[j].y, this.innerRing[j].z);
-                // v.x -= x;
+
+                v = this.p.createVector(0, this.innerRing[j].y, this.innerRing[j].z);
+                // v.x += v.x;
+                // console.log(v.x);
                 v.normalize();
-                v.mult(this.radialSeg * i)
-                if (i > 0) {
-                    // v.x *= 1.7
-                    // v.z *= 1.7
-                }
-                v.add(this.innerRing[j]);
-                // v.x += x;
-                // }
+                // v.mult(this.radialSeg * i)
+                v.y *= (this.radialSeg * i);
+                v.z *= (this.radialSeg * i);
+
+                v.y += this.innerRing[j].y;
+                v.z += this.innerRing[j].z;
+
                 const vn = new VerletNode(this.p, v, this.style.nodeRadius, this.style.nodeCol);
                 ring[j] = vn;
                 this.nodes.push(vn)

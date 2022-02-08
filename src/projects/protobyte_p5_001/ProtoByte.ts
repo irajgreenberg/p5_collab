@@ -66,9 +66,9 @@ export class Protobyte {
         }
 
         const vs = new VerletStyle(.3, p.color(190, 190, 255, 255), 255, NodeType.SPHERE, p.color(0), .5, .2);
-        this.annulus = new VerletAnnulus(p, 100, 3, this.pts2D[7], .2, p.color(100, 200, 100), vs);
-        // this.annulus2 = new VerletAnnulus(p, 100, 13, this.pts2D[8], .04, p.color(100, 200, 100), vs);
-        // this.annulus3 = new VerletAnnulus(p, 100, 3, this.pts2D[13], .004, p.color(100, 200, 100), vs);
+        this.annulus = new VerletAnnulus(p, 200, 6, this.pts2D[2], .2, p.color(100, 200, 100), vs);
+        this.annulus2 = new VerletAnnulus(p, 100, 13, this.pts2D[8], .04, p.color(100, 200, 100), vs);
+        this.annulus3 = new VerletAnnulus(p, 100, 3, this.pts2D[13], .004, p.color(100, 200, 100), vs);
     }
 
     draw(): void {
@@ -113,8 +113,8 @@ export class Protobyte {
 
 
         this.annulus.draw();
-        // this.annulus2.draw();
-        // this.annulus3.draw();
+        this.annulus2.draw();
+        this.annulus3.draw();
         // this.annulus.verlet();
     }
 
