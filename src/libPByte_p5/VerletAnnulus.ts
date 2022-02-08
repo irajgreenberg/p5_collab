@@ -113,7 +113,7 @@ export class VerletAnnulus extends VerletBase {
         this.centroid.div(this.innerRing.length);
 
         for (let i = 0, k = 0; i < this.nodes.length; i++) {
-            this.nodes[i].draw();
+            // this.nodes[i].draw();
             if (i > this.innerRing.length) {
                 this.nodes[i].verlet();
             }
@@ -133,7 +133,7 @@ export class VerletAnnulus extends VerletBase {
         }
 
         // render annulus skin
-        this.p.fill(this.p.color(200, 100, 100, 60));
+        this.p.fill(this.p.color(200, 100, 100, 30));
         for (let i = 0; i < this.nodes2D.length; i++) {
             for (let j = 0; j < this.nodes2D[i].length; j++) {
                 this.p.beginShape();

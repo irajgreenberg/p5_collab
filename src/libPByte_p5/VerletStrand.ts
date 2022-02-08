@@ -30,7 +30,7 @@ export class VerletStrand {
             }
             this.nodes[i] = new VerletNode(p, n, .2, col);
             if (i > 0) {
-                this.sticks.push(new VerletStick(p, this.nodes[i - 1], this.nodes[i], p.random(.001, .3), 0, col));
+                this.sticks.push(new VerletStick(p, this.nodes[i - 1], this.nodes[i], p.random(.01, .3), 0, col));
             }
         }
     }
