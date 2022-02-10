@@ -100,8 +100,8 @@ export class Protobyte {
             for (let j = 0; j < this.pts2D[i].length; j++) {
                 if (i < this.pts2D.length - 1) {
 
-                    this.p.beginShape();
-                    this.p.fill(this.colR[k], this.colG[k], this.colB[k]);
+                    this.p.beginShape(this.p.LINES);
+                    // this.p.fill(this.colR[k], this.colG[k], this.colB[k]);
                     if (j < this.pts2D[i].length - 1) {
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
                         this.p.vertex(this.pts2D[i + 1][j].x, this.pts2D[i + 1][j].y, this.pts2D[i + 1][j].z);
