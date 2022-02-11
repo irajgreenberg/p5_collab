@@ -26,12 +26,12 @@ export class Protobyte {
     strands: VerletStrand[] = [];
 
     // annuli
-    annulus: VerletAnnulus;
-    annulus2: VerletAnnulus;
-    annulus3: VerletAnnulus;
+    annulus: VerletAnnulus | undefined;
+    annulus2: VerletAnnulus | undefined;
+    annulus3: VerletAnnulus | undefined;
 
     // swarm
-    smarmCount: number = 500;
+    smarmCount = 500;
     smarmSpd: P5.Vector[] = [];
     smarmRad: number[] = [];
     smarmFreqRange: P5.Vector | undefined;
@@ -40,13 +40,18 @@ export class Protobyte {
 
 
     // bubbles
-    bubbleCount: number = 300;
-    bubbleFreq: P5.Vector[] = [];
+    bubbleCount = 300;
+    bubblePos: P5.Vector[] = [];
+    bubbleSpd: P5.Vector[] = [];
+    bubbleSpdInit: P5.Vector[] = [];
+    bubbleTempCount = 0; // for varible emission
+    bubbleFreq: number[] = [];
     bubbleAmp: number[] = [];
     bubbleRad: number[] = [];
     bubbleFreqRange: P5.Vector | undefined;
     bubbleAmpRange: P5.Vector | undefined;
     bubbleRadRange: P5.Vector | undefined;
+    bubbleEmissionRate = .1;
 
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector) {
         this.p = p;
@@ -56,50 +61,66 @@ export class Protobyte {
         this.radiusMinMax = radiusMinMax;
 
 
+        this.construct();
+    }
 
-
+    construct(): void {
         // each cross-section built around x-axis
-        const bodySeg = length / slices;
+        const bodySeg = length / this.slices;
         const radii: number[] = [];
-        for (let i = 0, k = 0, l = 0; i < slices; i++) {
+        for (let i = 0, k = 0, l = 0; i < this.slices; i++) {
             const radiusDelta = this.radiusMinMax.y - this.radiusMinMax.x;
             const csPts: P5.Vector[] = [];
             const csPts_init: P5.Vector[] = [];
             const x = -length / 2 + bodySeg * i;
-            this.spine.push(p.createVector(x, 0, 0));
-            this.spine_init.push(p.createVector(x, 0, 0));
-            this.spineThetas[i] = p.sin(p.PI / slices) * i;
+            this.spine.push(this.p.createVector(x, 0, 0));
+            this.spine_init.push(this.p.createVector(x, 0, 0));
+            this.spineThetas[i] = this.p.sin(this.p.PI / this.slices) * i;
             let theta = 0;
-            for (let j = 0; j < radialDetail; j++) {
-                l = i * radialDetail + j;
-                const y = p.sin(theta) * (radiusMinMax.x + p.sin(k) * radiusDelta);
-                const z = p.cos(theta) * (radiusMinMax.x + p.sin(k) * radiusDelta);
-                csPts[j] = p.createVector(x, y, z);
-                csPts_init[j] = p.createVector(x, y, z);
-                theta += p.TWO_PI / radialDetail;
+            for (let j = 0; j < this.radialDetail; j++) {
+                l = i * this.radialDetail + j;
+                const y = this.p.sin(theta) * (this.radiusMinMax.x + this.p.sin(k) * radiusDelta);
+                const z = this.p.cos(theta) * (this.radiusMinMax.x + this.p.sin(k) * radiusDelta);
+                csPts[j] = this.p.createVector(x, y, z);
+                csPts_init[j] = this.p.createVector(x, y, z);
+                theta += this.p.TWO_PI / this.radialDetail;
 
                 // dangling strands
                 if (i == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 160), p.int(p.random(5, 7)), p.color(0, 100, 100, 150)));
+                    this.strands.push(new VerletStrand(this.p, csPts[j], this.p.random(5, 160), this.p.int(this.p.random(5, 7)), this.p.color(0, 100, 100, 150)));
                 } else if (j % 2 == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 100), p.int(p.random(3, 6)), p.color(200, 255, 200, 35)));
+                    this.strands.push(new VerletStrand(this.p, csPts[j], this.p.random(5, 100), this.p.int(this.p.random(3, 6)), this.p.color(200, 255, 200, 35)));
                 }
-                this.colR[l] = 60 + p.random(70);
-                this.colG[l] = 60 + p.random(70);
-                this.colB[l] = 180 + p.random(70);
+                this.colR[l] = 60 + this.p.random(70);
+                this.colG[l] = 60 + this.p.random(70);
+                this.colB[l] = 180 + this.p.random(70);
 
             }
 
-            k += p.PI / (slices - 1);
+            k += this.p.PI / (this.slices - 1);
             this.pts2D.push(csPts);
             this.pts2D_init.push(csPts_init);
 
         }
 
-        const vs = new VerletStyle(.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE, p.color(0), .5, .2);
-        this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
-        this.annulus2 = new VerletAnnulus(p, 120, 8, this.pts2D[8], .009, p.color(100, 200, 100), vs);
-        this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
+        const vs = new VerletStyle(.3, this.p.color(255, this.p.random(205, 255), 0, 255), 255, NodeType.SPHERE, this.p.color(0), .5, .2);
+        this.annulus = new VerletAnnulus(this.p, 90, 8, this.pts2D[4], .002, this.p.color(100, 200, 100), vs);
+        this.annulus2 = new VerletAnnulus(this.p, 120, 8, this.pts2D[8], .009, this.p.color(100, 200, 100), vs);
+        this.annulus3 = new VerletAnnulus(this.p, 90, 8, this.pts2D[11], .004, this.p.color(100, 200, 100), vs);
+
+        // Bubbles
+        this.bubbleFreqRange = this.p.createVector(this.p.PI / 270, this.p.PI / 45);
+        this.bubbleAmpRange = this.p.createVector(5, 25);
+        this.bubbleRadRange = this.p.createVector(13, 16);
+        for (let i = 0; i < this.bubbleCount; i++) {
+            this.bubblePos[i] = this.p.createVector(this.length / 2.05, 0, 0);
+            const s = this.p.createVector(this.p.random(-1, 1), this.p.random(3.4, 3.2), this.p.random(-1, 1));
+            this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
+            this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
+            this.bubbleFreq[i] = this.p.random(this.bubbleFreqRange.x, this.bubbleFreqRange.y);
+            this.bubbleAmp[i] = this.p.random(this.bubbleAmpRange.x, this.bubbleAmpRange.y);
+            this.bubbleRad[i] = this.p.random(this.bubbleRadRange.x, this.bubbleRadRange.y);
+        }
     }
 
     draw(): void {
@@ -144,7 +165,6 @@ export class Protobyte {
             }
 
         }
-
         //dangling strands
         this.p.strokeWeight(14);
         for (let i = 0; i < this.strands.length; i++) {
@@ -152,10 +172,23 @@ export class Protobyte {
         }
 
         this.p.strokeWeight(1.3);
-        this.annulus.draw();
-        this.annulus2.draw();
-        this.annulus3.draw();
+        this.annulus!.draw();
+        this.annulus2!.draw();
+        this.annulus3!.draw();
         // this.annulus.verlet();
+
+        this.p.fill(255, 0, 0);
+        // Bubbles
+        for (let i = 0; i < this.bubbleTempCount; i++) {
+            this.p.push();
+            this.p.translate(this.bubblePos[i].x, this.bubblePos[i].y, this.bubblePos[i].z);
+            this.p.box(this.bubbleRad[i] * 2, this.bubbleRad[i] * 2, this.bubbleRad[i] * 2)
+            this.p.pop();
+        }
+        if (this.bubbleTempCount < this.bubbleCount - this.bubbleEmissionRate) {
+            this.bubbleTempCount += this.bubbleEmissionRate;
+        }
+
     }
 
     move(): void {
@@ -173,6 +206,11 @@ export class Protobyte {
 
         for (let i = 0; i < this.strands.length; i++) {
             this.strands[i].move();
+        }
+
+        // Bubbles
+        for (let i = 0; i < this.bubbleTempCount; i++) {
+            this.bubblePos[i].add(this.bubbleSpd[i]);
         }
     }
 
