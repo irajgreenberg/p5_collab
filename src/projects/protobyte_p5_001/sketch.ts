@@ -24,7 +24,8 @@ let bgColor: string
 const sketch = (p: P5) => {
     p.setup = () => {
         // p.camera(0, 0, 1300 + p.sin(p.frameCount * 0.1) * 400, 0, 0, 0, 0, 1, 0);
-        bgColor = "#" + bgR + bgG + bgB;
+        bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
+        console.log(p.hex(bgR, 2));
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
 
@@ -32,6 +33,7 @@ const sketch = (p: P5) => {
 
         p.setAttributes('antialias', true);
         p.frustum(-0.12, 0.12, -0.04, 0.04, 0.1, 10000);
+        p.camera();
 
 
         // avoid scroll bars
@@ -65,10 +67,13 @@ const sketch = (p: P5) => {
     };
 
     p.draw = () => {
+        p.background(bgR, bgG, bgB);
+        // p.fill(bgR, bgG, bgB, 80);
+        // // p.fill(0);
+        // p.rect(-p.windowWidth, -p.windowHeight, p.windowWidth * 2, p.windowHeight * 2);
 
-        p.fill(bgR, bgG, bgB, 80);
-        // p.fill(0);
-        p.rect(-p.width / 2, -p.height / 2, p.windowWidth, p.windowHeight);
+
+        p.orbitControl();
         p.translate(0, 0, -200);
 
 
