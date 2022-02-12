@@ -40,18 +40,23 @@ export class Protobyte {
 
 
     // bubbles
-    bubbleCount = 300;
+    bubbleCount = 150;
+    bubbleIsOn: boolean[] = [];
     bubblePos: P5.Vector[] = [];
     bubbleSpd: P5.Vector[] = [];
     bubbleSpdInit: P5.Vector[] = [];
     bubbleTempCount = 0; // for varible emission
+    bubbleTheta: number[] = [];
     bubbleFreq: number[] = [];
+    bubbleDamp = .15;
+    bubbleRot: P5.Vector[] = [];
     bubbleAmp: number[] = [];
     bubbleRad: number[] = [];
     bubbleFreqRange: P5.Vector | undefined;
     bubbleAmpRange: P5.Vector | undefined;
     bubbleRadRange: P5.Vector | undefined;
-    bubbleEmissionRate = .1;
+    bubbleEmissionRate = .2;
+    bubbleGravity = .3;
 
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector) {
         this.p = p;
@@ -89,13 +94,13 @@ export class Protobyte {
                 } else if (j % 2 == 0) {
                     this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 100), p.int(p.random(3, 6)), p.color(200, 255, 200, 35)));
                 }
-                this.colR[l] = 60 + p.random(70);
-                this.colG[l] = 60 + p.random(70);
-                this.colB[l] = 180 + p.random(70);
+                this.colR[l] = 30 + p.random(70);
+                this.colG[l] = 30 + p.random(70);
+                this.colB[l] = 130 + p.random(70);
 
             }
 
-            k += p.PI / (slices - 1);
+            k += 1 * p.PI / (slices - 1);
             this.pts2D.push(csPts);
             this.pts2D_init.push(csPts_init);
 
@@ -107,17 +112,20 @@ export class Protobyte {
         this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
 
         // Bubbles
-        this.bubbleFreqRange = this.p.createVector(this.p.PI / 270, this.p.PI / 45);
-        this.bubbleAmpRange = this.p.createVector(5, 25);
-        this.bubbleRadRange = this.p.createVector(13, 16);
+        this.bubbleFreqRange = this.p.createVector(this.p.PI / 45, this.p.PI / 5);
+        this.bubbleAmpRange = this.p.createVector(-p.random(-.1, -2), p.random(.1, 2));
+        this.bubbleRadRange = this.p.createVector(1, 3);
         for (let i = 0; i < this.bubbleCount; i++) {
-            this.bubblePos[i] = this.p.createVector(this.length / 2.05, 0, 0);
-            const s = this.p.createVector(this.p.random(-1, 1), this.p.random(3.4, 3.2), this.p.random(-1, 1));
+            this.bubblePos[i] = this.p.createVector(0, p.windowHeight, 0);
+            const s = this.p.createVector(0 + this.p.random(-1, 1), 0, this.p.random(-1, 1));
             this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
             this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
             this.bubbleFreq[i] = this.p.random(this.bubbleFreqRange.x, this.bubbleFreqRange.y);
+            this.bubbleTheta[i] = 0.0;
+            this.bubbleRot[i] = this.p.createVector(this.p.random(-this.p.PI / 15.0, this.p.PI / 15.0), this.p.random(-this.p.PI / 15.0, this.p.PI / 15.0), this.p.random(-this.p.PI / 15.0, this.p.PI / 15.0));
             this.bubbleAmp[i] = this.p.random(this.bubbleAmpRange.x, this.bubbleAmpRange.y);
             this.bubbleRad[i] = this.p.random(this.bubbleRadRange.x, this.bubbleRadRange.y);
+            this.bubbleIsOn[i] = false;
         }
     }
 
@@ -176,16 +184,22 @@ export class Protobyte {
         // this.annulus3!.draw();
         // this.annulus.verlet();
 
-        this.p.noFill();
+
         // Bubbles
+        this.p.noFill();
+        this.p.stroke(100, 100, 255, 100);
+        this.p.strokeWeight(.2);
         for (let i = 0; i < this.bubbleTempCount; i++) {
             this.p.push();
             this.p.translate(this.bubblePos[i].x, this.bubblePos[i].y, this.bubblePos[i].z);
-            this.p.box(this.bubbleRad[i] * 2, this.bubbleRad[i] * 2, this.bubbleRad[i] * 2)
+            this.p.rotateX(this.p.frameCount * this.bubbleRot[i].x);
+            this.p.rotateY(this.p.frameCount * this.bubbleRot[i].y);
+            this.p.rotateZ(this.p.frameCount * this.bubbleRot[i].z);
+            if (this.bubbleIsOn[i]) {
+                this.p.box(this.bubbleRad[i] * 2, this.bubbleRad[i] * 2, this.bubbleRad[i] * 2)
+            }
             this.p.pop();
-        }
-        if (this.bubbleTempCount < this.bubbleCount - this.bubbleEmissionRate) {
-            this.bubbleTempCount += this.bubbleEmissionRate;
+
         }
 
     }
@@ -209,7 +223,25 @@ export class Protobyte {
 
         // Bubbles
         for (let i = 0; i < this.bubbleTempCount; i++) {
+            this.bubbleSpd[i].y += this.bubbleGravity;
+            this.bubbleSpd[i].x = this.bubbleSpdInit[i].x + this.p.sin(this.bubbleTheta[i]) * this.bubbleAmp[i];
             this.bubblePos[i].add(this.bubbleSpd[i]);
+            this.bubbleTheta[i] += this.bubbleFreq[i];
+
+            // console.log(this.bubbleSpd[8].y);
+            if (this.bubblePos[i].y > this.p.windowHeight / 2) {
+                this.bubblePos[i].x = this.spine[this.spine.length - 1].x
+                this.bubblePos[i].y = this.spine[this.spine.length - 1].y
+                this.bubblePos[i].z = this.spine[this.spine.length - 1].z
+                const s = this.p.createVector(this.p.random(12) + this.p.random(-1, 1), 0, this.p.random(-1, 1));
+                this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
+                this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
+                this.bubbleSpd[i].x *= this.bubbleDamp;
+                this.bubbleIsOn[i] = true;
+            }
+        }
+        if (this.bubbleTempCount < this.bubbleCount - this.bubbleEmissionRate) {
+            this.bubbleTempCount += this.bubbleEmissionRate;
         }
     }
 

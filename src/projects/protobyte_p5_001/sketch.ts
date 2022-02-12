@@ -78,13 +78,15 @@ const sketch = (p: P5) => {
 
 
         //p.stroke(140, p.random(40, 80), 0, 0);
-
+        p.noFill();
+        p.stroke(200, 100, 255, 5);
+        p.strokeWeight(.05);
         for (let i = 0; i < particles; i++) {
             // p.stroke(200, 100, 75, 0);
             p.push();
             p.translate(pos[i].x, pos[i].y, pos[i].z);
             p.scale(scl[i]);
-            p.strokeWeight(.9);
+            p.strokeWeight(.1);
             dp.draw();
             p.pop();
 
@@ -112,8 +114,8 @@ const sketch = (p: P5) => {
         p.specularMaterial(127 + p.sin(p.frameCount * p.PI / 20) * 127);
         p.stroke(255, 150);
         p.strokeWeight(.2);
-        // p.translate(175 + p.cos(p.frameCount * p.PI / 720) * 650, 60 + p.cos(-p.frameCount * p.PI / 720) * -60, 400 + p.cos(-p.frameCount * p.PI / 720) * -200);
-        // p.rotateY(p.frameCount * p.PI / 360);
+        p.translate(185 + p.cos(p.frameCount * p.PI / 620) * 650, 60 + p.cos(-p.frameCount * p.PI / 720) * -60, 200 + p.cos(-p.frameCount * p.PI / 720) * -200);
+        p.rotateY(p.frameCount * p.PI / 360);
         p.strokeWeight(.4);
         p.shininess(150 + p.sin(p.frameCount * p.PI / 25) * 150);
 
