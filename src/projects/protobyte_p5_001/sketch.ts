@@ -25,7 +25,7 @@ const sketch = (p: P5) => {
     p.setup = () => {
         // p.camera(0, 0, 1300 + p.sin(p.frameCount * 0.1) * 400, 0, 0, 0, 0, 1, 0);
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
-        console.log(p.hex(bgR, 2));
+        //console.log(p.hex(bgR, 2));
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
 
@@ -33,7 +33,7 @@ const sketch = (p: P5) => {
 
         p.setAttributes('antialias', true);
         p.frustum(-0.12, 0.12, -0.04, 0.04, 0.1, 10000);
-        p.camera();
+        //p.camera();
 
 
         // avoid scroll bars
@@ -73,8 +73,8 @@ const sketch = (p: P5) => {
         // p.rect(-p.windowWidth, -p.windowHeight, p.windowWidth * 2, p.windowHeight * 2);
 
 
-        p.orbitControl();
-        p.translate(0, 0, -200);
+        //  p.orbitControl();
+        //p.translate(0, 0, -200);
 
 
         //p.stroke(140, p.random(40, 80), 0, 0);
@@ -112,8 +112,8 @@ const sketch = (p: P5) => {
         p.specularMaterial(127 + p.sin(p.frameCount * p.PI / 20) * 127);
         p.stroke(255, 150);
         p.strokeWeight(.2);
-        p.translate(175 + p.cos(p.frameCount * p.PI / 720) * 650, 60 + p.cos(-p.frameCount * p.PI / 720) * -60, 400 + p.cos(-p.frameCount * p.PI / 720) * -200);
-        p.rotateY(p.frameCount * p.PI / 360);
+        // p.translate(175 + p.cos(p.frameCount * p.PI / 720) * 650, 60 + p.cos(-p.frameCount * p.PI / 720) * -60, 400 + p.cos(-p.frameCount * p.PI / 720) * -200);
+        // p.rotateY(p.frameCount * p.PI / 360);
         p.strokeWeight(.4);
         p.shininess(150 + p.sin(p.frameCount * p.PI / 25) * 150);
 
