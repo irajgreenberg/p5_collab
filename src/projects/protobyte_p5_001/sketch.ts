@@ -6,7 +6,7 @@ let pb: Protobyte;
 
 //dust vars
 let dps: DustParticle[] = [];
-const dustCount = 400;
+const dustCount = 500;
 
 
 // keep dust and bg aligned
@@ -30,32 +30,23 @@ const sketch = (p: P5) => {
         p.frustum(-0.12, 0.12, -0.04, 0.04, 0.1, 10000);
         //p.camera();
 
-
         // avoid scroll bars
         cnv.style('display', 'block');
-
-        // coordinate html and canvas bg's
-
-        //document.bgColor = "red";
 
         pb = new Protobyte(p, 300, 14, 24, p.createVector(10, 70));
 
         // dust
-        //constructor(p: P5, pos: P5.Vector, spd: P5.Vector, rot: P5.Vector, amp: P5.Vector, freq: P5.Vector, scl: P5.Vector;)
+        //constructor(pos: P5.Vector, spd: P5.Vector, rot: P5.Vector, amp: P5.Vector, freq: P5.Vector, scl: P5.Vector)
         for (let i = 0; i < dustCount; i++) {
-            dps[i] = new DustParticle(p, p.createVector(0, 0, 0), p.createVector(0, 0, 0), p.createVector(0, 0, 0),
-                p.createVector(0, 0, 0), p.createVector(0, 0, 0), p.createVector(3, 3, 3));
+            dps[i] = new DustParticle(p,
+                p.createVector(0, 0, 0), /*pos*/
+                p.createVector(0, 0, 0), /*spd*/
+                p.createVector(p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02), /*rot*/
+                p.createVector(p.random(30, 150), p.random(60, 120), p.random(30, 140)), /*amp*/
+                p.createVector(p.random(p.PI / 360, p.PI / 180), p.random(p.PI / 320, p.PI / 90), p.random(p.PI / 320, p.PI / 90)), /*freq*/
+                p.createVector(p.random(.5, 2), p.random(.5, 2), p.random(.5, 2))  /*scl*/
+            );
         }
-
-        // for (let i = 0; i < particles; i++) {
-        //     pos[i] = p.createVector(p.random(-p.width / bgShim, p.width / bgShim), p.random(-p.height / bgShim, p.height / bgShim), 500);
-        //     spd[i] = p.createVector(p.random(-.4, .4), p.random(-.4, .4), 0);
-        //     spdInit[i] = p.createVector(spd[i].x, spd[i].y, spd[i].z);
-        //     scl[i] = p.createVector(p.random(.2, 1.9), p.random(.2, 1.9), p.random(.2, 1.9));
-        //     amp[i] = p.createVector(p.random(120, 255), p.random(120, 255), p.random(120, 255));
-        //     freq[i] = p.createVector(p.random(p.PI / 180, p.PI / 60), p.random(p.PI / 180, p.PI / 60), p.random(p.PI / 180, p.PI / 60));
-        // }
-        //p.camera(0, 0, 700, 0, 0, 0, 0, 1, 0);
     };
 
     const resizedSketch = (p: P5) => {
@@ -68,7 +59,7 @@ const sketch = (p: P5) => {
     p.draw = () => {
         p.background(bgR, bgG, bgB);
         // p.fill(bgR, bgG, bgB, 80);
-        let pbPos = p.createVector(185 + p.cos(p.frameCount * p.PI / 620) * 650, 60 + p.cos(-p.frameCount * p.PI / 720) * -60, 200 + p.cos(-p.frameCount * p.PI / 720) * -200)
+        let pbPos = p.createVector(0 + p.cos(p.frameCount * p.PI / 620) * 450, 60 + p.cos(-p.frameCount * p.PI / 720) * -60, 200 + p.cos(-p.frameCount * p.PI / 720) * -200)
         // // p.fill(0);
         // p.rect(-p.windowWidth, -p.windowHeight, p.windowWidth * 2, p.windowHeight * 2);
 
@@ -77,37 +68,6 @@ const sketch = (p: P5) => {
         //p.translate(0, 0, -200);
 
 
-        //p.stroke(140, p.random(40, 80), 0, 0);
-        // Dus
-        p.noFill();
-        p.stroke(200, 100, 255, 5);
-        p.strokeWeight(.05);
-        for (let i = 0; i < dustCount; i++) {
-            dps[i].draw();
-            // // p.stroke(200, 100, 75, 0);
-            // p.push();
-            // p.translate(pbPos.x, spd[i].y, spd[i].z);
-            // p.rotateY(p.frameCount * p.PI / 360);
-            // p.scale(scl[i]);
-            // p.strokeWeight(.1);
-            // dp.draw();
-            // p.pop();
-
-            // spd[i].z = spdInit[i].z + p.cos(p.frameCount * freq[i].z) * amp[i].z;
-            // spd[i].y = spdInit[i].y + p.sin(-p.frameCount * freq[i].y) * amp[i].y;
-            // pos[i].add(spd[i]);
-            // if (pos[i].x > p.width / bgShim) {
-            //     pos[i].x = -p.width / bgShim;
-            // } else if (pos[i].x < -p.width / bgShim) {
-            //     pos[i].x = p.width / bgShim;
-            // }
-
-            // if (pos[i].y > p.height / bgShim) {
-            //     pos[i].y = -p.height / bgShim;
-            // } else if (pos[i].y < -p.height / bgShim) {
-            //     pos[i].y = p.height / bgShim;
-            // }
-        }
         p.ambientLight(p.random(180, 220), p.random(180, 220), p.random(180, 220));
         p.emissiveMaterial(127 + p.cos(p.frameCount * p.PI / 20) * 127, 127 + p.sin(p.frameCount * p.PI / 20) * 127, 0);
         p.specularColor(127 + p.sin(p.frameCount * p.PI / 20) * 127, 127 + p.sin(p.frameCount * p.PI / 20) * 127, 127 + p.sin(p.frameCount * p.PI / 20) * 127);
@@ -122,8 +82,35 @@ const sketch = (p: P5) => {
         p.strokeWeight(.4);
         p.shininess(150 + p.sin(p.frameCount * p.PI / 25) * 150);
 
+        // Protobyte
         pb.draw();
         pb.move();
+
+        // Dust
+
+        for (let i = 0; i < dustCount; i++) {
+            dps[i].move();
+            dps[i].draw();
+
+            // statc
+            // p.noFill();
+            p.stroke(255, 255, p.random(120, 170), p.random(.5));
+            p.strokeWeight(p.random(.1, .31));
+            for (let j = 0; j < dustCount; j++) {
+                if (i !== j) {
+                    if (dps[i].pos.dist(dps[j].pos) > 250 && dps[i].pos.dist(dps[j].pos) < 290.1) {
+                        // p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[j].pos.x, dps[j].pos.y, dps[j].pos.z)
+
+                        dps[i].col = p.color(255);
+                        dps[j].col = p.color(255);
+                    } else {
+                        dps[i].col = p.color(255, 60);
+                        dps[j].col = p.color(255, 60);
+                    }
+
+                }
+            }
+        }
 
     };
 

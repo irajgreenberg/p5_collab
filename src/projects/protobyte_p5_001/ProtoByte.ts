@@ -57,7 +57,7 @@ export class Protobyte {
     bubbleAmpRange: P5.Vector | undefined;
     bubbleRadRange: P5.Vector | undefined;
     bubbleEmissionRate = .05;
-    bubbleGravity = .3;
+    bubbleGravity = .2;
 
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector) {
         this.p = p;
@@ -98,9 +98,9 @@ export class Protobyte {
 
                 // dangling strands
                 if (i == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 160), p.int(p.random(5, 7)), p.color(0, 100, 100, 150)));
+                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 160), p.int(p.random(5, 7)), p.color(p.random(20, 50), 100, p.random(70, 165), 150), p.random(3, 22)));
                 } else if (j % 2 == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 100), p.int(p.random(3, 6)), p.color(200, 255, 200, 35)));
+                    this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
                 }
                 this.colR[l] = 30 + p.random(70);
                 this.colG[l] = 30 + p.random(70);
@@ -117,7 +117,7 @@ export class Protobyte {
 
         const vs = new VerletStyle(.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE, p.color(0), .5, .2);
         this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
-        this.annulus2 = new VerletAnnulus(p, 120, 8, this.pts2D[8], .009, p.color(100, 200, 100), vs);
+        this.annulus2 = new VerletAnnulus(p, 220, 8, this.pts2D[8], .009, p.color(100, 200, 100), vs);
         this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
 
         // Bubbles
@@ -187,17 +187,18 @@ export class Protobyte {
             this.strands[i].draw();
         }
 
+
         this.p.strokeWeight(1.3);
         // this.annulus!.draw();
-        // this.annulus2!.draw();
+        this.annulus2!.draw();
         // this.annulus3!.draw();
         // this.annulus.verlet();
 
 
         // Bubbles
         this.p.noFill();
-        this.p.stroke(100, 100, 255, 100);
-        this.p.strokeWeight(.2);
+        this.p.stroke(100, 100, 255, this.p.random(90, 220));
+        this.p.strokeWeight(.5);
         for (let i = 0; i < this.bubbleTempCount; i++) {
             this.p.push();
             this.p.translate(this.bubblePos[i].x, this.bubblePos[i].y, this.bubblePos[i].z);

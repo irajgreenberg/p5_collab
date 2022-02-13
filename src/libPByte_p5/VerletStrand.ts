@@ -9,16 +9,18 @@ export class VerletStrand {
     len: number;
     nodeCount: number;
     col: P5.Color;
+    strokeWt: number;
 
     nodes: VerletNode[] = [];
     sticks: VerletStick[] = [];
 
-    constructor(p: P5, head: P5.Vector, len: number, nodeCount: number, col: P5.Color) {
+    constructor(p: P5, head: P5.Vector, len: number, nodeCount: number, col: P5.Color, strokeWt: number) {
         this.p = p;
         this.head = head;
         this.len = len;
         this.nodeCount = nodeCount;
         this.col = col;
+        this.strokeWt = strokeWt;
 
         const lenSeg = len / nodeCount;
         for (let i = 0; i < nodeCount; i++) {
@@ -45,6 +47,7 @@ export class VerletStrand {
     }
 
     draw(): void {
+        this.p.strokeWeight(this.strokeWt);
         for (let i = 0; i < this.nodeCount; i++) {
             this.nodes[i].draw();
             if (i > 0) {
