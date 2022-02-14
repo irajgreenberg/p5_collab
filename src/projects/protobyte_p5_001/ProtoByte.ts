@@ -108,7 +108,7 @@ export class Protobyte {
 
             }
 
-            k += 1 * p.PI / (slices - 1);
+            k += 3 * p.PI / (slices - 1);
             this.pts2D.push(csPts);
             this.pts2D_init.push(csPts_init);
 

@@ -11,7 +11,7 @@ const dustCount = 400;
 
 // keep dust and bg aligned
 const bgShim = 4.5;
-const bgR = 10;
+const bgR = 50;
 const bgG = 20;
 const bgB = 30;
 let bgColor: string
