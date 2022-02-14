@@ -14,6 +14,8 @@ export class VerletStrand {
     nodes: VerletNode[] = [];
     sticks: VerletStick[] = [];
 
+    stickTension: P5.Vector;
+
     constructor(p: P5, head: P5.Vector, len: number, nodeCount: number, col: P5.Color, strokeWt: number) {
         this.p = p;
         this.head = head;
@@ -21,6 +23,7 @@ export class VerletStrand {
         this.nodeCount = nodeCount;
         this.col = col;
         this.strokeWt = strokeWt;
+        this.stickTension = p.createVector(.01, .3);
 
         const lenSeg = len / nodeCount;
         for (let i = 0; i < nodeCount; i++) {
@@ -32,10 +35,16 @@ export class VerletStrand {
             }
             this.nodes[i] = new VerletNode(p, n, .2, col);
             if (i > 0) {
-                this.sticks.push(new VerletStick(p, this.nodes[i - 1], this.nodes[i], p.random(.01, .3), 0, col));
+                this.sticks.push(new VerletStick(p, this.nodes[i - 1], this.nodes[i], p.random(this.stickTension.x, this.stickTension.y), 0, col));
             }
         }
     }
+
+    setstickTension(stickTension: P5.Vector): void {
+        this.stickTension = stickTension;
+    }
+
+
 
     move(): void {
         for (let i = 0; i < this.nodeCount; i++) {

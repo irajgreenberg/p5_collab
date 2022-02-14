@@ -14,6 +14,9 @@ export class VerletAnnulus extends VerletBase {
 
     ringLen: number;
     outerRing: P5.Vector[] = [];
+    outerRingInit: P5.Vector[] = [];
+    outerRingThetas: number[] = [];
+    outerRingfreq: number[] = [];
     radialSeg: number = 0;
 
     strands: VerletStrand[] = [];
@@ -64,7 +67,9 @@ export class VerletAnnulus extends VerletBase {
                 // outer ring
                 if (i == this.ringEdgeCount - 1) {
                     this.outerRing.push(this.p.createVector(vn.pos.x, vn.pos.y, vn.pos.z));
-                    this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(40, 290), this.p.random(5, 11), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(40, 120)), this.p.random(.25, 1.9)));
+                    this.outerRingInit.push(this.p.createVector(vn.pos.x, vn.pos.y, vn.pos.z));
+                    this.outerRingThetas.push(this.p.sin(this.p.PI / this.ringEdgeCount) * j)
+                    this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(40, 90), this.p.random(8, 11), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(20, 60)), this.p.random(.25, 2.9)));
                 }
             }
             this.nodes2D.push(ring);
@@ -75,15 +80,15 @@ export class VerletAnnulus extends VerletBase {
             for (let j = 0; j < this.nodes2D[i].length; j++) {
                 // rings
                 if (j < this.nodes2D[i].length - 1) {
-                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][j + 1], this.elasticity, 0, this.p.color(200, 100, 100, 40)));
+                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][j + 1], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 60))));
                 } else {
-                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][0], this.elasticity, 0, this.p.color(200, 100, 100, 40)));
+                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][0], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 60))));
                 }
 
                 // spines
                 if (i < this.nodes2D.length - 1) {
                     this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i + 1][j], this.elasticity, 0,
-                        this.p.color(200, 100, 100, 40)));
+                        this.p.color(255, 255, 255, this.p.random(20, 60))));
                 }
 
                 // cross-supports
@@ -105,6 +110,9 @@ export class VerletAnnulus extends VerletBase {
         //         }
         //     }
         // }
+        for (let i = 0; i < this.strands.length; i++) {
+            this.strands[i].setstickTension(this.p.createVector(.001, .005));
+        }
     }
 
     draw() {
@@ -125,9 +133,11 @@ export class VerletAnnulus extends VerletBase {
 
             // stablize annulus to outer ring
             if (i > this.nodes.length - this.innerRing.length - 1) {
+                this.outerRing[k].x = this.outerRingInit[k].x + this.p.sin(this.outerRingThetas[k]) * 100;
                 this.nodes[i].pos.x = this.outerRing[k].x + this.centroid.x;
                 this.nodes[i].pos.y = this.outerRing[k].y + this.centroid.y;
                 this.nodes[i].pos.z = this.outerRing[k].z + this.centroid.z;
+                this.outerRingThetas[i] += this.p.PI / 1;
                 k++
             }
         }
@@ -138,7 +148,7 @@ export class VerletAnnulus extends VerletBase {
         }
 
         // render annulus skin
-        this.p.fill(this.p.color(200, 200, 150, 10));
+        this.p.fill(this.p.color(200, 100, 0, 7));
         //this.p.noStroke();
         for (let i = 0; i < this.nodes2D.length; i++) {
             for (let j = 0; j < this.nodes2D[i].length; j++) {
