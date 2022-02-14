@@ -32,7 +32,7 @@ export class Protobyte {
     annulus3: VerletAnnulus | undefined;
 
     // swarm
-    smarmCount = 500;
+    smarmCount = 800;
     smarmSpd: P5.Vector[] = [];
     smarmRad: number[] = [];
     smarmFreqRange: P5.Vector | undefined;
@@ -99,7 +99,7 @@ export class Protobyte {
                 // dangling strands
                 if (i == 0) {
                     this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 160), p.int(p.random(5, 7)), p.color(p.random(20, 50), 100, p.random(70, 165), 150), p.random(3, 22)));
-                } else if (j % 2 == 0) {
+                } else if (j % 4 == 0) {
                     this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
                 }
                 this.colR[l] = 30 + p.random(70);
@@ -117,7 +117,7 @@ export class Protobyte {
 
         const vs = new VerletStyle(.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE, p.color(0), .5, .2);
         this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
-        this.annulus2 = new VerletAnnulus(p, 220, 8, this.pts2D[8], .009, p.color(100, 200, 100), vs);
+        this.annulus2 = new VerletAnnulus(p, 220, 6, this.pts2D[7], .009, p.color(100, 200, 100), vs);
         this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
 
         // Bubbles

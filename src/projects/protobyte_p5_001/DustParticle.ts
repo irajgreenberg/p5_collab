@@ -55,7 +55,7 @@ export class DustParticle {
         this.pos.x = this.p.sin(this.theta.x) * this.amp.x;
         this.pos.y = this.p.sin(this.theta.y) * this.amp.y;
         this.pos.z = this.p.cos(this.theta.z) * this.amp.z;
-        console.log(this.pos.x);
+        //console.log(this.pos.x);
         this.theta.x += this.freq.x;
         this.theta.y += this.freq.y;
         this.theta.z += this.freq.z;

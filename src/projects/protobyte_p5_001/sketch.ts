@@ -6,7 +6,7 @@ let pb: Protobyte;
 
 //dust vars
 let dps: DustParticle[] = [];
-const dustCount = 500;
+const dustCount = 400;
 
 
 // keep dust and bg aligned
@@ -44,7 +44,7 @@ const sketch = (p: P5) => {
                 p.createVector(p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02), /*rot*/
                 p.createVector(p.random(30, 150), p.random(60, 120), p.random(30, 140)), /*amp*/
                 p.createVector(p.random(p.PI / 360, p.PI / 180), p.random(p.PI / 320, p.PI / 90), p.random(p.PI / 320, p.PI / 90)), /*freq*/
-                p.createVector(p.random(.5, 2), p.random(.5, 2), p.random(.5, 2))  /*scl*/
+                p.createVector(p.random(.5, 1.5), p.random(.5, 1.5), p.random(.5, 1.5))  /*scl*/
             );
         }
     };
@@ -65,7 +65,7 @@ const sketch = (p: P5) => {
 
 
         //p.orbitControl();
-        //p.translate(0, 0, -200);
+        p.translate(0, 0, -400);
 
 
         p.ambientLight(p.random(180, 220), p.random(180, 220), p.random(180, 220));
@@ -97,15 +97,16 @@ const sketch = (p: P5) => {
             p.stroke(255, 255, p.random(120, 170), p.random(.5));
             p.strokeWeight(p.random(.1, .31));
             for (let j = 0; j < dustCount; j++) {
-                if (i !== j) {
-                    if (dps[i].pos.dist(dps[j].pos) > 250 && dps[i].pos.dist(dps[j].pos) < 290.1) {
-                        // p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[j].pos.x, dps[j].pos.y, dps[j].pos.z)
+                const d = dps[i].pos.dist(dps[j].pos);
+                if (i != j) {
+                    if (d > 250 && d < 250.01) {
+                        p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[j].pos.x, dps[j].pos.y, dps[j].pos.z)
 
-                        dps[i].col = p.color(255);
-                        dps[j].col = p.color(255);
+                        //  dps[i].col = p.color(255);
+                        //  dps[j].col = p.color(255);
                     } else {
-                        dps[i].col = p.color(255, 60);
-                        dps[j].col = p.color(255, 60);
+                        //  dps[i].col = p.color(255, 60);
+                        //   dps[j].col = p.color(255, 60);
                     }
 
                 }
