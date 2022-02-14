@@ -40,7 +40,7 @@ export class VerletStrand {
         }
     }
 
-    setstickTension(stickTension: P5.Vector): void {
+    setStickTension(stickTension: P5.Vector): void {
         this.stickTension = stickTension;
     }
 

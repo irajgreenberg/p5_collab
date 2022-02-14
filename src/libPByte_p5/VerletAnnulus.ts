@@ -111,7 +111,7 @@ export class VerletAnnulus extends VerletBase {
         //     }
         // }
         for (let i = 0; i < this.strands.length; i++) {
-            this.strands[i].setstickTension(this.p.createVector(.001, .005));
+            this.strands[i].setStickTension(this.p.createVector(.001, .005));
         }
     }
 
