@@ -41,7 +41,7 @@ export class Protobyte {
 
 
     // bubbles
-    bubbleCount = 150;
+    bubbleCount = 70;
     bubbleIsOn: boolean[] = [];
     bubblePos: P5.Vector[] = [];
     bubbleSpd: P5.Vector[] = [];
@@ -49,15 +49,15 @@ export class Protobyte {
     bubbleTempCount = 0; // for varible emission
     bubbleTheta: number[] = [];
     bubbleFreq: number[] = [];
-    bubbleDamp = .15;
+    bubbleDamp = .75;
     bubbleRot: P5.Vector[] = [];
     bubbleAmp: number[] = [];
     bubbleRad: number[] = [];
     bubbleFreqRange: P5.Vector | undefined;
     bubbleAmpRange: P5.Vector | undefined;
     bubbleRadRange: P5.Vector | undefined;
-    bubbleEmissionRate = .05;
-    bubbleGravity = .2;
+    bubbleEmissionRate = .3;
+    bubbleGravity = -.2;
 
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector) {
         this.p = p;
@@ -98,17 +98,23 @@ export class Protobyte {
 
                 // dangling strands
                 if (i == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 160), p.int(p.random(5, 7)), p.color(p.random(20, 50), 100, p.random(70, 165), 150), p.random(3, 22)));
+                    // this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)), p.color(p.random(20, 50), 100, p.random(70, 165), 150), p.random(3, 22)));
+
+                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)), p.color(p.random(150, 200), p.random(150, 200), p.random(6, 90), 150), p.random(3, 22)));
                 } else if (j % 4 == 0) {
                     this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
                 }
-                this.colR[l] = 30 + p.random(70);
-                this.colG[l] = 30 + p.random(70);
-                this.colB[l] = 130 + p.random(70);
+                // this.colR[l] = 30 + p.random(70);
+                // this.colG[l] = 30 + p.random(70);
+                // this.colB[l] = 130 + p.random(70);
+
+                this.colR[l] = 100 + p.random(70);
+                this.colG[l] = 80 + p.random(60);
+                this.colB[l] = 70 + p.random(50);
 
             }
 
-            k += 3 * p.PI / (slices - 1);
+            k += 6 * p.PI / (slices - 1);
             this.pts2D.push(csPts);
             this.pts2D_init.push(csPts_init);
 
@@ -125,8 +131,8 @@ export class Protobyte {
         this.bubbleAmpRange = this.p.createVector(-p.random(-.1, -2), p.random(.1, 2));
         this.bubbleRadRange = this.p.createVector(.5, 2);
         for (let i = 0; i < this.bubbleCount; i++) {
-            this.bubblePos[i] = this.p.createVector(0, p.windowHeight, 0);
-            const s = this.p.createVector(0 + this.p.random(-1, 1), 0, this.p.random(-1, 1));
+            this.bubblePos[i] = this.p.createVector(0, -p.windowHeight / 2 - 50, 0);
+            const s = this.p.createVector(this.p.random(5, 10), this.p.random(-2, -1), this.p.random(-1, 1));
             this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
             this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
             this.bubbleFreq[i] = this.p.random(this.bubbleFreqRange.x, this.bubbleFreqRange.y);
@@ -140,6 +146,8 @@ export class Protobyte {
 
 
     draw(): void {
+
+        //console.log(this.bubblePos[0]);
         // spine | only draw in testing mode
         // this.p.fill(0, 0);
         // this.p.stroke(65, 45, 200);
@@ -161,7 +169,8 @@ export class Protobyte {
                 if (i < this.pts2D.length - 1) {
 
                     this.p.beginShape(this.p.LINES);
-                    this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
+                    // this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
+                    this.p.fill(this.colR[k], this.colG[k], this.colB[k]);
                     if (j < this.pts2D[i].length - 1) {
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
                         this.p.vertex(this.pts2D[i + 1][j].x, this.pts2D[i + 1][j].y, this.pts2D[i + 1][j].z);
@@ -189,7 +198,7 @@ export class Protobyte {
 
 
         this.p.strokeWeight(1.3);
-        // this.annulus!.draw();
+        //this.annulus!.draw();
         this.annulus2!.draw();
         // this.annulus3!.draw();
         // this.annulus.verlet();
@@ -217,8 +226,9 @@ export class Protobyte {
     move(): void {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
-            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * 60
-            this.spineThetas[i] += this.p.PI / 90;// - (this.p.frameCount * .2));
+            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * 130;
+            this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * 180
+            this.spineThetas[i] += this.p.PI / 80;// - (this.p.frameCount * .2));
 
             // deform body based on spine motion
             for (let j = 0; j < this.pts2D[i].length; j++) {
@@ -247,11 +257,11 @@ export class Protobyte {
             this.bubbleTheta[i] += this.bubbleFreq[i];
 
             // console.log(this.bubbleSpd[8].y);
-            if (this.bubblePos[i].y > this.p.windowHeight / 2) {
+            if (this.bubblePos[i].y < -this.p.height / 2) {
                 this.bubblePos[i].x = this.spine[this.spine.length - 1].x
                 this.bubblePos[i].y = this.spine[this.spine.length - 1].y
                 this.bubblePos[i].z = this.spine[this.spine.length - 1].z
-                const s = this.p.createVector(this.p.random(6), this.p.random(-2, 2), this.p.random(-2.5, 2.5));
+                const s = this.p.createVector(this.p.random(6), this.p.random(-2, -1), this.p.random(-2.5, 2.5));
                 this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
                 this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
                 this.bubbleSpd[i].x *= this.bubbleDamp;

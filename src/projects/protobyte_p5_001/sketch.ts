@@ -23,17 +23,18 @@ const sketch = (p: P5) => {
         //console.log(p.hex(bgR, 2));
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
+        //document.body.style.backgroundColor = "red";
 
-        let cnv = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        let cnv = p.createCanvas(1000, 1000, p.WEBGL);
 
         p.setAttributes('antialias', true);
-        p.frustum(-0.12, 0.12, -0.04, 0.04, 0.1, 10000);
+        // p.frustum(-0.12, 0.12, -0.04, 0.04, 0.1, 10000);
         //p.camera();
 
         // avoid scroll bars
         cnv.style('display', 'block');
 
-        pb = new Protobyte(p, 300, 14, 24, p.createVector(10, 70));
+        pb = new Protobyte(p, 400, 14, 24, p.createVector(40, 70));
 
         // dust
         //constructor(pos: P5.Vector, spd: P5.Vector, rot: P5.Vector, amp: P5.Vector, freq: P5.Vector, scl: P5.Vector)
@@ -52,14 +53,14 @@ const sketch = (p: P5) => {
     const resizedSketch = (p: P5) => {
         p.windowResized = () => {
             document.body.style.backgroundColor = bgColor;
-            p.resizeCanvas(p.windowWidth, p.windowHeight);
+            p.resizeCanvas(1000, 1000);
         }
     };
 
     p.draw = () => {
         p.background(bgR, bgG, bgB);
         // p.fill(bgR, bgG, bgB, 80);
-        let pbPos = p.createVector(0 + p.cos(p.frameCount * p.PI / 620) * 450, 60 + p.cos(-p.frameCount * p.PI / 720) * -60, 200 + p.cos(-p.frameCount * p.PI / 720) * -200)
+        let pbPos = p.createVector(0 + p.cos(p.frameCount * p.PI / 620) * 450, -70 + p.cos(-p.frameCount * p.PI / 720) * -420, 600 + p.cos(-p.frameCount * p.PI / 720) * -200)
         // // p.fill(0);
         // p.rect(-p.windowWidth, -p.windowHeight, p.windowWidth * 2, p.windowHeight * 2);
 

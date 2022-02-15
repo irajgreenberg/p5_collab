@@ -80,15 +80,15 @@ export class VerletAnnulus extends VerletBase {
             for (let j = 0; j < this.nodes2D[i].length; j++) {
                 // rings
                 if (j < this.nodes2D[i].length - 1) {
-                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][j + 1], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 60))));
+                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][j + 1], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 90))));
                 } else {
-                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][0], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 60))));
+                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][0], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 90))));
                 }
 
                 // spines
                 if (i < this.nodes2D.length - 1) {
                     this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i + 1][j], this.elasticity, 0,
-                        this.p.color(255, 255, 255, this.p.random(20, 60))));
+                        this.p.color(255, 255, 255, this.p.random(20, 90))));
                 }
 
                 // cross-supports
