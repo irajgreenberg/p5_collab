@@ -148,7 +148,9 @@ export class VerletAnnulus extends VerletBase {
         }
 
         // render annulus skin
-        this.p.fill(this.p.color(200, 100, 0, 7));
+        this.p.fill(this.p.color(this.fillCol));
+        this.p.stroke(this.p.color(this.style.stickCol));
+        this.p.strokeWeight(this.style.stickWeight);
         //this.p.noStroke();
         for (let i = 0; i < this.nodes2D.length; i++) {
             for (let j = 0; j < this.nodes2D[i].length; j++) {

@@ -82,6 +82,7 @@ export class Protobyte {
         const val = p.int(p.random(6));
         let tailCol: P5.Color = p.color(p.random(150, 200), p.random(150, 200), p.random(5, 10), p.random(50, 150));
 
+
         for (let i = 0, k = 0, l = 0; i < slices; i++) {
             const radiusDelta = this.radiusMinMax.y - this.radiusMinMax.x;
             const csPts: P5.Vector[] = [];
@@ -114,22 +115,22 @@ export class Protobyte {
 
                     switch (val) {
                         case 0:
-                            tailCol = p.color(p.random(150, 240), p.random(150, 240), p.random(10, 40), p.random(35, 125));
+                            tailCol = p.color(p.random(150, 200), p.random(150, 200), p.random(10, 80), p.random(35, 125));
                             break;
                         case 1:
-                            tailCol = p.color(p.random(150, 240), p.random(10, 40), p.random(150, 240), p.random(35, 125));
+                            tailCol = p.color(p.random(150, 200), p.random(10, 80), p.random(150, 200), p.random(35, 125));
                             break;
                         case 2:
-                            tailCol = p.color(p.random(10, 40), p.random(150, 240), p.random(150, 240), p.random(35, 125));
+                            tailCol = p.color(p.random(10, 80), p.random(150, 200), p.random(150, 200), p.random(35, 125));
                             break;
                         case 3:
-                            tailCol = p.color(p.random(150, 240), p.random(75, 100), p.random(10, 40), p.random(35, 125));
+                            tailCol = p.color(p.random(150, 200), p.random(75, 100), p.random(10, 80), p.random(35, 125));
                             break;
                         case 4:
-                            tailCol = p.color(p.random(150, 240), p.random(10, 40), p.random(75, 100), p.random(35, 125));
+                            tailCol = p.color(p.random(150, 200), p.random(10, 80), p.random(75, 100), p.random(35, 125));
                             break;
                         case 5:
-                            tailCol = p.color(p.random(10, 40), p.random(150, 240), p.random(75, 100), p.random(35, 125));
+                            tailCol = p.color(p.random(10, 80), p.random(150, 200), p.random(75, 100), p.random(35, 125));
                             break;
                     }
                     this.tailStrands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)),
@@ -156,10 +157,11 @@ export class Protobyte {
 
         }
 
-        const vs = new VerletStyle(.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE, p.color(0), .5, .2);
-        this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
-        this.annulus2 = new VerletAnnulus(p, 220, 6, this.pts2D[7], .009, p.color(100, 200, 100), vs);
-        this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
+        const vs = new VerletStyle(.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE,
+            p.color(p.random(155, 255), p.random(155, 255), p.random(155, 255), p.random(10, 60)), p.random(.2, 1));
+        // this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
+        this.annulus2 = new VerletAnnulus(p, 220, 6, this.pts2D[7], .009, p.color(p.random(125, 200), p.random(125, 200), p.random(125, 200), p.random(20, 40)), vs);
+        // this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
 
         // Bubbles
         this.bubbleFreqRange = this.p.createVector(this.p.PI / 45, this.p.PI / 5);
@@ -204,8 +206,11 @@ export class Protobyte {
                 if (i < this.pts2D.length - 1) {
 
                     this.p.beginShape(this.p.LINES);
-                    // this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
-                    this.p.fill(this.colR[k], this.colG[k], this.colB[k], 255);
+                    if (k % 4 == 0) {
+                        this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
+                    } else {
+                        this.p.fill(this.colR[k], this.colG[k], this.colB[k], 255);
+                    }
                     if (j < this.pts2D[i].length - 1) {
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
                         this.p.vertex(this.pts2D[i + 1][j].x, this.pts2D[i + 1][j].y, this.pts2D[i + 1][j].z);
@@ -306,6 +311,7 @@ export class Protobyte {
             this.bodyStrands[i].move();
         }
 
+
         // Bubbles
         for (let i = 0; i < this.bubbleTempCount; i++) {
             this.bubbleSpd[i].y += this.bubbleGravity;
@@ -313,11 +319,11 @@ export class Protobyte {
             this.bubblePos[i].add(this.bubbleSpd[i]);
             this.bubbleTheta[i] += this.bubbleFreq[i];
 
-            // console.log(this.bubbleSpd[8].y);
             if (this.bubblePos[i].y < -this.p.height / 2) {
-                this.bubblePos[i].x = this.spine[this.spine.length - 1].x
-                this.bubblePos[i].y = this.spine[this.spine.length - 1].y
-                this.bubblePos[i].z = this.spine[this.spine.length - 1].z
+                this.bubblePos[i].x = this.pts2D[this.spine.length - 1][0].x
+                this.bubblePos[i].y = this.pts2D[this.spine.length - 1][0].y
+                this.bubblePos[i].z = this.pts2D[this.spine.length - 1][0].z
+
                 const s = this.p.createVector(this.p.random(1, 3), this.p.random(-2, -1), this.p.random(-2.5, 2.5));
                 this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
                 this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
