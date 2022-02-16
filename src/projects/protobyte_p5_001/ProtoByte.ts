@@ -25,6 +25,9 @@ export class Protobyte {
     spineThetas: number[] = [];
 
     strands: VerletStrand[] = [];
+    bodyStrands: VerletStrand[] = [];
+    tailStrands: VerletStrand[] = [];
+    bodySegments = 1;
 
     // annuli
     annulus: VerletAnnulus | undefined;
@@ -59,19 +62,26 @@ export class Protobyte {
     bubbleEmissionRate = .3;
     bubbleGravity = -.2;
 
-    constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector) {
+    spineMotionAmp: P5.Vector;
+    spineMotionFreq: number;
+
+    constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector, bodySegments: number = 1) {
         this.p = p;
         this.length = length;
         this.slices = slices;
         this.radialDetail = radialDetail;
         this.radiusMinMax = radiusMinMax;
-
-
+        this.bodySegments = bodySegments;
 
 
         // each cross-section built around x-axis
         const bodySeg = length / slices;
         const radii: number[] = [];
+
+        // seeds tail color random functions
+        const val = p.int(p.random(6));
+        let tailCol: P5.Color = p.color(p.random(150, 200), p.random(150, 200), p.random(5, 10), p.random(50, 150));
+
         for (let i = 0, k = 0, l = 0; i < slices; i++) {
             const radiusDelta = this.radiusMinMax.y - this.radiusMinMax.x;
             const csPts: P5.Vector[] = [];
@@ -100,21 +110,46 @@ export class Protobyte {
                 if (i == 0) {
                     // this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)), p.color(p.random(20, 50), 100, p.random(70, 165), 150), p.random(3, 22)));
 
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)), p.color(p.random(150, 200), p.random(150, 200), p.random(6, 90), 150), p.random(3, 22)));
+                    // this.strands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)), p.color(p.random(150, 200), p.random(150, 200), p.random(6, 90), 150), p.random(3, 22)));
+
+                    switch (val) {
+                        case 0:
+                            tailCol = p.color(p.random(150, 240), p.random(150, 240), p.random(10, 40), p.random(35, 125));
+                            break;
+                        case 1:
+                            tailCol = p.color(p.random(150, 240), p.random(10, 40), p.random(150, 240), p.random(35, 125));
+                            break;
+                        case 2:
+                            tailCol = p.color(p.random(10, 40), p.random(150, 240), p.random(150, 240), p.random(35, 125));
+                            break;
+                        case 3:
+                            tailCol = p.color(p.random(150, 240), p.random(75, 100), p.random(10, 40), p.random(35, 125));
+                            break;
+                        case 4:
+                            tailCol = p.color(p.random(150, 240), p.random(10, 40), p.random(75, 100), p.random(35, 125));
+                            break;
+                        case 5:
+                            tailCol = p.color(p.random(10, 40), p.random(150, 240), p.random(75, 100), p.random(35, 125));
+                            break;
+                    }
+                    this.tailStrands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)),
+                        p.color(tailCol),
+                        p.random(3, 22)));
                 } else if (j % 4 == 0) {
-                    this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
+                    // this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
+                    this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
                 }
                 // this.colR[l] = 30 + p.random(70);
                 // this.colG[l] = 30 + p.random(70);
-                // this.colB[l] = 130 + p.random(70);
+                // this.colB[l] = 30 + p.random(70);
 
-                this.colR[l] = 100 + p.random(70);
-                this.colG[l] = 80 + p.random(60);
-                this.colB[l] = 70 + p.random(50);
+                this.colR[l] = 90 + p.random(60);
+                this.colG[l] = 70 + p.random(50);
+                this.colB[l] = 60 + p.random(40);
 
             }
 
-            k += 6 * p.PI / (slices - 1);
+            k += this.bodySegments * p.PI / (slices - 1);
             this.pts2D.push(csPts);
             this.pts2D_init.push(csPts_init);
 
@@ -132,7 +167,7 @@ export class Protobyte {
         this.bubbleRadRange = this.p.createVector(.5, 2);
         for (let i = 0; i < this.bubbleCount; i++) {
             this.bubblePos[i] = this.p.createVector(0, -p.windowHeight / 2 - 50, 0);
-            const s = this.p.createVector(this.p.random(5, 10), this.p.random(-2, -1), this.p.random(-1, 1));
+            const s = this.p.createVector(this.p.random(1, 3), this.p.random(-2, -1), this.p.random(-1, 1));
             this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
             this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
             this.bubbleFreq[i] = this.p.random(this.bubbleFreqRange.x, this.bubbleFreqRange.y);
@@ -142,25 +177,25 @@ export class Protobyte {
             this.bubbleRad[i] = this.p.random(this.bubbleRadRange.x, this.bubbleRadRange.y);
             this.bubbleIsOn[i] = false;
         }
+
+        this.spineMotionAmp = p.createVector(p.random(80, 240), p.random(30, 60), p.random(30, 60));
+        this.spineMotionFreq = p.random(50, 150);
     }
 
 
     draw(): void {
 
-        //console.log(this.bubblePos[0]);
-        // spine | only draw in testing mode
-        // this.p.fill(0, 0);
-        // this.p.stroke(65, 45, 200);
+
+        // Spine
+        // this.p.noFill();
+        // this.p.stroke(255, 255);
         // this.p.beginShape();
         // for (let i = 0; i < this.spine.length; i++) {
-        //     // this.p.vertex(this.spine[i].x, this.spine[i].y, this.spine[i].z);
+        //     this.p.vertex(this.spine[i].x, this.spine[i].y, this.spine[i].z);
         // }
         // this.p.endShape();
 
-        // // body
-        // cross-sections
-        // this.p.fill(130, 150, 160);
-        //this.p.stroke(255, 140);
+        //Bbody
         this.p.noStroke();
 
         for (let i = 0, k = 0; i < this.pts2D.length; i++) {
@@ -170,7 +205,7 @@ export class Protobyte {
 
                     this.p.beginShape(this.p.LINES);
                     // this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
-                    this.p.fill(this.colR[k], this.colG[k], this.colB[k]);
+                    this.p.fill(this.colR[k], this.colG[k], this.colB[k], 255);
                     if (j < this.pts2D[i].length - 1) {
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
                         this.p.vertex(this.pts2D[i + 1][j].x, this.pts2D[i + 1][j].y, this.pts2D[i + 1][j].z);
@@ -192,8 +227,15 @@ export class Protobyte {
         }
         //dangling strands
         this.p.strokeWeight(14);
-        for (let i = 0; i < this.strands.length; i++) {
-            this.strands[i].draw();
+        // for (let i = 0; i < this.strands.length; i++) {
+        //     this.strands[i].draw();
+        // }
+
+        for (let i = 0; i < this.tailStrands.length; i++) {
+            this.tailStrands[i].draw();
+        }
+        for (let i = 0; i < this.bodyStrands.length; i++) {
+            this.bodyStrands[i].draw();
         }
 
 
@@ -207,7 +249,7 @@ export class Protobyte {
         // Bubbles
         this.p.noFill();
         this.p.stroke(100, 100, 255, this.p.random(90, 220));
-        this.p.strokeWeight(.5);
+        this.p.strokeWeight(.25);
         for (let i = 0; i < this.bubbleTempCount; i++) {
             this.p.push();
             this.p.translate(this.bubblePos[i].x, this.bubblePos[i].y, this.bubblePos[i].z);
@@ -220,19 +262,18 @@ export class Protobyte {
             this.p.pop();
 
         }
-
     }
 
     move(): void {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
-            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * 130;
-            this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * 180
-            this.spineThetas[i] += this.p.PI / 80;// - (this.p.frameCount * .2));
+            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.x;
+            this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.z
+            this.spineThetas[i] += this.p.PI / this.spineMotionFreq;
 
             // deform body based on spine motion
             for (let j = 0; j < this.pts2D[i].length; j++) {
-                this.pts2D[i][j].x = this.pts2D_init[i][j].x + this.spine[i].y * .5;
+                this.pts2D[i][j].x = this.pts2D_init[i][j].x + this.spine[i].z;
                 this.pts2D[i][j].y = this.pts2D_init[i][j].y + this.spine[i].y;
 
                 // mouth
@@ -245,8 +286,24 @@ export class Protobyte {
             }
         }
 
-        for (let i = 0; i < this.strands.length; i++) {
-            this.strands[i].move();
+
+        // Add a little inertial jitter to tail, based on organim's path
+        // keeps tail behind body
+        const x = this.spine[this.spine.length - 1].x - this.spine[0].x;
+        const y = this.spine[this.spine.length - 1].y - this.spine[0].y;
+        const z = this.spine[this.spine.length - 1].z - this.spine[0].z;
+        let motionVec = this.p.createVector(x, y, z);
+        motionVec.normalize();
+        motionVec.mult(this.p.random(-3.2));
+
+
+        for (let i = 0; i < this.tailStrands.length; i++) {
+
+            this.tailStrands[i].tail.add(motionVec);
+            this.tailStrands[i].move();
+        }
+        for (let i = 0; i < this.bodyStrands.length; i++) {
+            this.bodyStrands[i].move();
         }
 
         // Bubbles
@@ -261,7 +318,7 @@ export class Protobyte {
                 this.bubblePos[i].x = this.spine[this.spine.length - 1].x
                 this.bubblePos[i].y = this.spine[this.spine.length - 1].y
                 this.bubblePos[i].z = this.spine[this.spine.length - 1].z
-                const s = this.p.createVector(this.p.random(6), this.p.random(-2, -1), this.p.random(-2.5, 2.5));
+                const s = this.p.createVector(this.p.random(1, 3), this.p.random(-2, -1), this.p.random(-2.5, 2.5));
                 this.bubbleSpd[i] = this.p.createVector(s.x, s.y, s.z);
                 this.bubbleSpdInit[i] = this.p.createVector(s.x, s.y, s.z); //deep copy of bubbleSpd
                 this.bubbleSpd[i].x *= this.bubbleDamp;

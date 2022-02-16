@@ -26,7 +26,7 @@ export class DustParticle {
 
         this.theta = p.createVector(0, 0, 0);
         this.col = p.color(p.random(100, 220), p.random(80, 150), p.random(150, 205), p.random(60, 140));
-        this.strokeWt = p.random(.1, 2.5);
+        this.strokeWt = p.random(.1, 1.5);
     }
 
     setLineStye(col: P5.Color, strokeWt: number): void {

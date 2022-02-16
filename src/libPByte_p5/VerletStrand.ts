@@ -6,6 +6,7 @@ import { VerletStick } from "./VerletStick";
 export class VerletStrand {
     p: P5;
     head: P5.Vector;
+    tail: P5.Vector;
     len: number;
     nodeCount: number;
     col: P5.Color;
@@ -32,6 +33,9 @@ export class VerletStrand {
                 n = head;
             } else {
                 n = p.createVector(head.x, head.y + lenSeg * i, head.z);
+                if (i == this.nodeCount - 1) {
+                    this.tail = n;
+                }
             }
             this.nodes[i] = new VerletNode(p, n, .2, col);
             if (i > 0) {
@@ -48,8 +52,9 @@ export class VerletStrand {
 
     move(): void {
         for (let i = 0; i < this.nodeCount; i++) {
-            this.nodes[i].verlet();
+            // this.nodes[i].verlet();
             if (i > 0) {
+                this.nodes[i].verlet();
                 this.sticks[i - 1].constrainLen();
             }
         }

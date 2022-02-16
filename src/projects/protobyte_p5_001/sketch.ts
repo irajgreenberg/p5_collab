@@ -25,7 +25,7 @@ const sketch = (p: P5) => {
         document.body.style.backgroundColor = bgColor;
         //document.body.style.backgroundColor = "red";
 
-        let cnv = p.createCanvas(1000, 1000, p.WEBGL);
+        let cnv = p.createCanvas(1200, 900, p.WEBGL);
 
         p.setAttributes('antialias', true);
         // p.frustum(-0.12, 0.12, -0.04, 0.04, 0.1, 10000);
@@ -34,7 +34,7 @@ const sketch = (p: P5) => {
         // avoid scroll bars
         cnv.style('display', 'block');
 
-        pb = new Protobyte(p, 400, 14, 24, p.createVector(40, 70));
+        pb = new Protobyte(p, 400, 14, 24, p.createVector(p.random(5, 25), p.random(25, 200)), p.int(p.random(1, 5)));
 
         // dust
         //constructor(pos: P5.Vector, spd: P5.Vector, rot: P5.Vector, amp: P5.Vector, freq: P5.Vector, scl: P5.Vector)
@@ -58,15 +58,16 @@ const sketch = (p: P5) => {
     };
 
     p.draw = () => {
-        p.background(bgR, bgG, bgB);
+        // p.background(bgR, bgG, bgB);
         // p.fill(bgR, bgG, bgB, 80);
-        let pbPos = p.createVector(0 + p.cos(p.frameCount * p.PI / 620) * 450, -70 + p.cos(-p.frameCount * p.PI / 720) * -420, 600 + p.cos(-p.frameCount * p.PI / 720) * -200)
-        // // p.fill(0);
-        // p.rect(-p.windowWidth, -p.windowHeight, p.windowWidth * 2, p.windowHeight * 2);
+        p.fill(bgR, bgG, bgB, 150);
+        p.rect(-p.width / 2 - 1, -p.height / 2 - 1, p.width + 2, p.height + 2);
+
+        let pbPos = p.createVector(60 + p.cos(p.frameCount * p.PI / 620) * 250, 40 + p.cos(-p.frameCount * p.PI / 720) * 120, 600 + p.cos(-p.frameCount * p.PI / 720) * -200);
 
 
         //p.orbitControl();
-        p.translate(0, 0, -400);
+        p.translate(0, 0, -300);
 
 
         p.ambientLight(p.random(180, 220), p.random(180, 220), p.random(180, 220));
@@ -79,6 +80,7 @@ const sketch = (p: P5) => {
         p.stroke(255, 150);
         p.strokeWeight(.2);
         p.translate(pbPos.x, pbPos.y, pbPos.z);
+        p.scale(.55);
         p.rotateY(p.frameCount * p.PI / 360);
         p.strokeWeight(.4);
         p.shininess(150 + p.sin(p.frameCount * p.PI / 25) * 150);

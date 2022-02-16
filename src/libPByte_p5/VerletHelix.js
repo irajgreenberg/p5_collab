@@ -1,15 +1,15 @@
 class VerletHelix extends VerletToroid {
 
     constructor(r1, r2, slices, connects, springiness, rigidity = 5, ht = 100, rots = 5) {
-       
-       // calls superclass constructor
+
+        // calls superclass constructor
         super(r1, r2, slices, connects, springiness, rigidity);
-        
+
         // unique to Helix
         this.ht = ht;
         this.rots = rots;
 
-       this.init();
+        this.init();
         // create sticks
         for (let i = 0, k = 0; i < this.connects; i++) {
             for (let j = 0; j < this.slices; j++) {
@@ -23,7 +23,7 @@ class VerletHelix extends VerletToroid {
                     this.sticks[k++] = new VerletStick(this.nodes[i][j + 1], this.nodes[0][j + 1], this.springiness, 0, this.stickCol);
                     this.sticks[k++] = new VerletStick(this.nodes[0][j + 1], this.nodes[0][j], this.springiness, 0, this.stickCol);
                     this.sticks[k++] = new VerletStick(this.nodes[0][j], this.nodes[i][j], this.springiness, 0, this.stickCol);
-                } 
+                }
             }
         }
 
@@ -38,52 +38,52 @@ class VerletHelix extends VerletToroid {
     }
 
     // helix drawing algorithm
-    init(){
+    init() {
         let theta = 0;
-         // controls downward incrementation of helix
-         this.helixStepper = this.ht / this.slices;
+        // controls downward incrementation of helix
+        this.helixStepper = this.ht / this.slices;
 
-         this.crossSupportsVisible = false;
- 
-         // calculate nodes
-         for (let i = 0, k = 0; i < this.connects; i++) {
-             // create tube profile (based on # of connects)
- 
-             /* Z-rotation to calculate connects
-             x' = x*cos q - y*sin q
-             y' = x*sin q + y*cos q
-             z' = z
-             */
-             let x = this.r1 + Math.cos(theta) * this.r2;
-             let y = -this.ht / 2 + Math.sin(theta) * this.r2;
-             let z = 0;
- 
-             // create new connects arrays
-             let connectNodes = [];
- 
-             let phi = 0;
- 
-             let y2 = y;
-             for (let j = 0; j < this.slices; j++) {
-                 // create copies of tube profiles (based on # of slices)
-                 /* Y-rotation to sweep connects, creating slices
-                 z' = z*cos p - x*sin p
-                 x' = z*sin p + x*cos p
-                 y' = y
-                 */
-                 let z2 = z * Math.cos(phi) - x * Math.sin(phi);
-                 let x2 = z * Math.sin(phi) + x * Math.cos(phi);
- 
-                 this.nodes1D[k++] = connectNodes[j] = new VerletNode(createVector(x2, y2 += this.helixStepper, z2), .8, this.nodeCol);
- 
-                 phi += Math.PI * 2 * this.rots / this.slices;
-             }
-             // add each connectNodes array to nodes 2D array
-             this.nodes[i] = connectNodes;
- 
-             theta += Math.PI * 2 / this.connects;
-         }
- 
+        this.crossSupportsVisible = false;
+
+        // calculate nodes
+        for (let i = 0, k = 0; i < this.connects; i++) {
+            // create tube profile (based on # of connects)
+
+            /* Z-rotation to calculate connects
+            x' = x*cos q - y*sin q
+            y' = x*sin q + y*cos q
+            z' = z
+            */
+            let x = this.r1 + Math.cos(theta) * this.r2;
+            let y = -this.ht / 2 + Math.sin(theta) * this.r2;
+            let z = 0;
+
+            // create new connects arrays
+            let connectNodes = [];
+
+            let phi = 0;
+
+            let y2 = y;
+            for (let j = 0; j < this.slices; j++) {
+                // create copies of tube profiles (based on # of slices)
+                /* Y-rotation to sweep connects, creating slices
+                z' = z*cos p - x*sin p
+                x' = z*sin p + x*cos p
+                y' = y
+                */
+                let z2 = z * Math.cos(phi) - x * Math.sin(phi);
+                let x2 = z * Math.sin(phi) + x * Math.cos(phi);
+
+                this.nodes1D[k++] = connectNodes[j] = new VerletNode(createVector(x2, y2 += this.helixStepper, z2), .8, this.nodeCol);
+
+                phi += Math.PI * 2 * this.rots / this.slices;
+            }
+            // add each connectNodes array to nodes 2D array
+            this.nodes[i] = connectNodes;
+
+            theta += Math.PI * 2 / this.connects;
+        }
+
     }
     setColor(skinCol) {
         this.skinCol = skinCol;
@@ -150,14 +150,14 @@ class VerletHelix extends VerletToroid {
                         vertex(this.nodes[0][j + 1].pos.x, this.nodes[0][j + 1].pos.y, this.nodes[0][j + 1].pos.z);
                         vertex(this.nodes[0][j].pos.x, this.nodes[0][j].pos.y, this.nodes[0][j].pos.z);
                         endShape(CLOSE);
-                    } 
+                    }
                 }
             }
         }
 
         if (this.crossSupportsVisible) {
             for (let i = 0; i < this.crossSupportSticks.length; i++) {
-                 this.crossSupportSticks[i].draw();
+                this.crossSupportSticks[i].draw();
             }
         }
     }
@@ -168,7 +168,7 @@ class VerletHelix extends VerletToroid {
         }
     }
 
-    setAreCrossSupportsVisible(crossSupportsVisible){
+    setAreCrossSupportsVisible(crossSupportsVisible) {
         this.crossSupportsVisible = crossSupportsVisible;
     }
 
