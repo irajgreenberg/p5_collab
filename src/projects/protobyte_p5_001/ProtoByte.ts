@@ -299,7 +299,7 @@ export class Protobyte {
 
         for (let i = 0; i < this.tailStrands.length; i++) {
 
-            this.tailStrands[i].tail.add(motionVec);
+            this.tailStrands[i].tail!.add(motionVec);
             this.tailStrands[i].move();
         }
         for (let i = 0; i < this.bodyStrands.length; i++) {

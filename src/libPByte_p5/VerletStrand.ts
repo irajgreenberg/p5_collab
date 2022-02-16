@@ -6,7 +6,7 @@ import { VerletStick } from "./VerletStick";
 export class VerletStrand {
     p: P5;
     head: P5.Vector;
-    tail: P5.Vector;
+    tail: P5.Vector | undefined;
     len: number;
     nodeCount: number;
     col: P5.Color;
