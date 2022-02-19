@@ -16,10 +16,12 @@ export class VerletAnnulus extends VerletBase {
     outerRing: P5.Vector[] = [];
     outerRingInit: P5.Vector[] = [];
     outerRingThetas: number[] = [];
-    outerRingfreq: number[] = [];
+    outerRingFreqs: number[] = [];
+    outerRingAmps: number[] = [];
     radialSeg: number = 0;
 
     strands: VerletStrand[] = [];
+
 
 
 
@@ -34,6 +36,10 @@ export class VerletAnnulus extends VerletBase {
     }
 
     init(): void {
+
+        // for outerRing
+        const outerRingFreqSeed = this.p.random(this.p.PI / 20, this.p.PI / 120);
+        const outerRingAmpSeed = this.p.random(50, 90);
 
         // get centroid to properly scale annuli at origin
         for (let i = 0; i < this.innerRing.length; i++) {
@@ -66,9 +72,13 @@ export class VerletAnnulus extends VerletBase {
 
                 // outer ring
                 if (i == this.ringEdgeCount - 1) {
+
                     this.outerRing.push(this.p.createVector(vn.pos.x, vn.pos.y, vn.pos.z));
                     this.outerRingInit.push(this.p.createVector(vn.pos.x, vn.pos.y, vn.pos.z));
-                    this.outerRingThetas.push(this.p.sin(this.p.PI / this.ringEdgeCount) * j)
+                    this.outerRingThetas.push(this.p.sin(this.p.PI / this.ringEdgeCount) * j);
+                    this.outerRingFreqs.push(outerRingFreqSeed);
+                    this.outerRingAmps.push(outerRingAmpSeed);
+
                     this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(40, 90), this.p.random(8, 11), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(20, 60)), this.p.random(.25, 2.9)));
                 }
             }
@@ -133,11 +143,14 @@ export class VerletAnnulus extends VerletBase {
 
             // stablize annulus to outer ring
             if (i > this.nodes.length - this.innerRing.length - 1) {
-                this.outerRing[k].x = this.outerRingInit[k].x + this.p.sin(this.outerRingThetas[k]) * 100;
+                this.outerRing[k].x = this.outerRingInit[k].x + this.p.sin(this.outerRingThetas[k]) * this.outerRingAmps[k];
+                // this.outerRing[k].y = this.outerRingInit[k].y + this.p.sin(this.outerRingThetas[k]) * 100;
+                // this.outerRing[k].z = this.outerRingInit[k].z + this.p.sin(this.outerRingThetas[k]) * 100;
                 this.nodes[i].pos.x = this.outerRing[k].x + this.centroid.x;
                 this.nodes[i].pos.y = this.outerRing[k].y + this.centroid.y;
                 this.nodes[i].pos.z = this.outerRing[k].z + this.centroid.z;
-                this.outerRingThetas[i] += this.p.PI / 1;
+                // this.outerRingThetas[k] += this.p.PI / 45;
+                this.outerRingThetas[k] += this.outerRingFreqs[k];
                 k++
             }
         }

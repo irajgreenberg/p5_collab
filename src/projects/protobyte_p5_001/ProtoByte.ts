@@ -28,6 +28,7 @@ export class Protobyte {
     bodyStrands: VerletStrand[] = [];
     tailStrands: VerletStrand[] = [];
     bodySegments = 1;
+    bodyColIndex = 0;
 
     // annuli
     annulus: VerletAnnulus | undefined;
@@ -72,6 +73,7 @@ export class Protobyte {
         this.radialDetail = radialDetail;
         this.radiusMinMax = radiusMinMax;
         this.bodySegments = bodySegments;
+        this.bodyColIndex = this.p.int(this.p.random(8));
 
 
         // each cross-section built around x-axis
@@ -138,7 +140,7 @@ export class Protobyte {
                         p.random(3, 22)));
                 } else if (j % 4 == 0) {
                     // this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
-                    this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
+                    this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(28, 150), p.int(p.random(5, 8)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(8, 44)));
                 }
                 // this.colR[l] = 30 + p.random(70);
                 // this.colG[l] = 30 + p.random(70);
@@ -158,9 +160,9 @@ export class Protobyte {
         }
 
         const vs = new VerletStyle(.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE,
-            p.color(p.random(155, 255), p.random(155, 255), p.random(155, 255), p.random(10, 60)), p.random(.2, 1));
+            p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(50, 120)), p.random(.1, .3));
         // this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
-        this.annulus2 = new VerletAnnulus(p, 220, 6, this.pts2D[7], .009, p.color(p.random(125, 200), p.random(125, 200), p.random(125, 200), p.random(20, 40)), vs);
+        this.annulus2 = new VerletAnnulus(p, p.random(220, 300), p.int(p.random(5, 10)), this.pts2D[7], p.random(.01, .005), p.color(p.random(125, 200), p.random(125, 200), p.random(125, 200), p.random(20, 40)), vs);
         // this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
 
         // Bubbles
@@ -197,7 +199,7 @@ export class Protobyte {
         // }
         // this.p.endShape();
 
-        //Bbody
+        //Body
         this.p.noStroke();
 
         for (let i = 0, k = 0; i < this.pts2D.length; i++) {
@@ -206,11 +208,35 @@ export class Protobyte {
                 if (i < this.pts2D.length - 1) {
 
                     this.p.beginShape(this.p.LINES);
-                    if (k % 4 == 0) {
-                        this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
-                    } else {
-                        this.p.fill(this.colR[k], this.colG[k], this.colB[k], 255);
+                    switch (this.bodyColIndex) {
+                        case 0:
+                            this.p.fill(this.colR[k], this.colG[k], this.colB[k]);
+                            break;
+                        case 1:
+                            this.p.fill(this.colR[k], this.colG[k], this.colR[k]);
+                            break;
+                        case 2:
+                            this.p.fill(this.colR[k], this.colB[k], this.colB[k]);
+                            break;
+                        case 3:
+                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * 1.2, this.colR[k] * 1.2);
+                            break;
+                        case 4:
+                            this.p.fill(this.colR[k] * 1.2, this.colG[k] * 1.2, this.colB[k] * 1.2);
+                            break;
+                        case 5:
+                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * .85, this.colR[k] * 1.1);
+                            break;
+                        case 6:
+                            this.p.fill(this.colR[k] * .75, this.colG[k] * 1.1, this.colB[k] * 1.3);
+                            break;
+                        case 7:
+                            this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
+                            break;
+
                     }
+
+
                     if (j < this.pts2D[i].length - 1) {
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
                         this.p.vertex(this.pts2D[i + 1][j].x, this.pts2D[i + 1][j].y, this.pts2D[i + 1][j].z);
