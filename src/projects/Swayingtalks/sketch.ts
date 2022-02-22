@@ -1,4 +1,5 @@
 import P5 from "p5";
+import { Spine } from "./Spine";
 
 
 
@@ -9,6 +10,8 @@ let bgB = 30;
 let bgColor: string
 let bgAlpha = 0;
 
+// declare custom geom
+let spine: Spine;
 
 const sketch = (p: P5) => {
     p.setup = () => {
@@ -26,6 +29,20 @@ const sketch = (p: P5) => {
 
         p.setAttributes('antialias', true);
         cnv.style('display', 'block');
+
+        // Instantiate custom geom
+        // spinePts:
+        const pts: P5.Vector[] = [];
+        const ptCount = 12.0;
+        const len = 200.0;
+        const deltaY = len / (ptCount - 1);
+        for (let i = 0; i < ptCount; i++) {
+            pts.push(p.createVector(0, -len / 2 + deltaY * i, 0));
+        }
+        //console.log(pts);
+
+        //constructor(p: p5, pos: p5.Vector, pts: p5.Vector[], interpDetail: number, col: p5.Color, strokeWt: number)
+        spine = new Spine(p, p.createVector(0, 0, 0), pts, 5, p.color(255, 127, 0), 2);
     };
 
     const resizedSketch = (p: P5) => {
@@ -64,6 +81,9 @@ const sketch = (p: P5) => {
         p.rotateY(p.frameCount * p.PI / 360);
         p.strokeWeight(.4);
         p.shininess(290 + p.sin(p.frameCount * p.PI / 25) * 100);
+
+        // Animate custom geom
+        spine.draw();
 
     };
 

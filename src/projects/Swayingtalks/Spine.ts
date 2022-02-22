@@ -1,8 +1,8 @@
 import p5 from "p5";
 
 export class Spine {
-
     p: p5;
+    pos: p5.Vector
     interpDetail: number;
     col: p5.Color;
     strokeWt: number;
@@ -15,10 +15,9 @@ export class Spine {
     swayFreqs: number[] = [];
     swayThetas: number[] = [];
 
-
-
-    constructor(p: p5, pts: p5.Vector[], interpDetail: number, col: p5.Color, strokeWt: number) {
+    constructor(p: p5, pos: p5.Vector, pts: p5.Vector[], interpDetail: number, col: p5.Color, strokeWt: number) {
         this.p = p;
+        this.pos = pos;
         this.interpDetail = interpDetail;
         this.col = col;
         this.strokeWt = strokeWt;
@@ -37,11 +36,25 @@ export class Spine {
                 this.pts.push(p.createVector(pts[i - 1].x + delta.x * j, pts[i - 1].y + delta.y * j, pts[i - 1].z + delta.z * j));
             }
         }
-
+        //  console.log(this.pts);
     }
 
     setSway(amp: p5.Vector, freq: number, theta: number): void {
-
     }
+
+    draw(): void {
+        this.p.strokeWeight(this.strokeWt)
+        this.p.stroke(this.col);
+        this.p.noFill();
+        this.p.push();
+        this.p.translate(this.pos.x, this.pos.y, this.pos.z);
+        this.p.beginShape(this.p.LINES);
+        for (let i = 0; i < this.pts.length; i++) {
+            this.p.vertex(this.pts[i].x, this.pts[i].y, this.pts[i].z);
+        }
+        this.p.endShape();
+        this.p.pop();
+    }
+
 
 }
