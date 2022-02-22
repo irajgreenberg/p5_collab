@@ -34,15 +34,15 @@ const sketch = (p: P5) => {
         // spinePts:
         const pts: P5.Vector[] = [];
         const ptCount = 12.0;
-        const len = 200.0;
+        const len = 800.0;
         const deltaY = len / (ptCount - 1);
         for (let i = 0; i < ptCount; i++) {
-            pts.push(p.createVector(0, -len / 2 + deltaY * i, 0));
+            pts.push(p.createVector(0, -len / 2 + deltaY * i, 10));
         }
         //console.log(pts);
 
         //constructor(p: p5, pos: p5.Vector, pts: p5.Vector[], interpDetail: number, col: p5.Color, strokeWt: number)
-        spine = new Spine(p, p.createVector(0, 0, 0), pts, 5, p.color(255, 127, 0), 2);
+        spine = new Spine(p, p.createVector(0, 0, 0), pts, 3, p.color(255, 127, 0), 5 );
     };
 
     const resizedSketch = (p: P5) => {
@@ -53,14 +53,16 @@ const sketch = (p: P5) => {
     };
 
     p.draw = () => {
-        //p.background(bgR, bgG, bgB);
+        // plain vanilla bg
+        p.background(bgR, bgG, bgB);
 
         // custom fading bg
-        p.fill(bgR, bgG, bgB, bgAlpha);
+        // p.noStroke();
+        // p.fill(bgR, bgG, bgB, bgAlpha);
         p.rect(-p.width / 2 - 1, -p.height / 2 - 1, p.width + 2, p.height + 2);
 
-        //p.orbitControl();
-        p.translate(0, 0, -300);
+        p.orbitControl();
+        //p.translate(0, 0, -300);
 
         // lighting
         let al = p.random(60, 65);
@@ -83,6 +85,7 @@ const sketch = (p: P5) => {
         p.shininess(290 + p.sin(p.frameCount * p.PI / 25) * 100);
 
         // Animate custom geom
+        spine.sway();
         spine.draw();
 
     };
