@@ -12,6 +12,7 @@ let bgAlpha = 0;
 
 // declare custom geom
 let spine: Spine;
+const spineCount = 12;
 
 const sketch = (p: P5) => {
     p.setup = () => {
@@ -37,12 +38,12 @@ const sketch = (p: P5) => {
         const len = 800.0;
         const deltaY = len / (ptCount - 1);
         for (let i = 0; i < ptCount; i++) {
-            pts.push(p.createVector(0, -len / 2 + deltaY * i, 10));
+            pts.push(p.createVector(0, -len / 2 + deltaY * i, p.sin(i * 9 * p.PI / 180) * 300));
         }
         //console.log(pts);
 
         //constructor(p: p5, pos: p5.Vector, pts: p5.Vector[], interpDetail: number, col: p5.Color, strokeWt: number)
-        spine = new Spine(p, p.createVector(0, 0, 0), pts, 3, p.color(255, 127, 0), 5 );
+        spine = new Spine(p, p.createVector(0, 0, 0), pts, 3, p.color(255, 127, 0), 5);
     };
 
     const resizedSketch = (p: P5) => {
@@ -80,13 +81,19 @@ const sketch = (p: P5) => {
         p.strokeWeight(.2);
         p.translate(0, 0, 0);
         p.scale(.55);
-        p.rotateY(p.frameCount * p.PI / 360);
+        //    / p.rotateY(p.frameCount * p.PI / 360);
+        // p.rotateY(90 * p.PI / 180);
         p.strokeWeight(.4);
         p.shininess(290 + p.sin(p.frameCount * p.PI / 25) * 100);
 
         // Animate custom geom
+        // for (let i = 0; i < spineCount; i++) {
+        //     p.push();
+        //     p.rotateY(p.TWO_PI / 12 * i);
         spine.sway();
         spine.draw();
+        //     p.pop();
+        // }
 
     };
 
