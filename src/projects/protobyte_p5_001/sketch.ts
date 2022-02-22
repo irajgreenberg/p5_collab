@@ -24,7 +24,8 @@ const sketch = (p: P5) => {
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
 
-        let cnv = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        //let cnv = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        let cnv = p.createCanvas(1024, 768, p.WEBGL);
 
         p.setAttributes('antialias', true);
         p.frustum(-0.12, 0.12, -0.04, 0.04, 0.1, 10000);
