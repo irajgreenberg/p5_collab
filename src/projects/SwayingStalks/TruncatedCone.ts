@@ -52,7 +52,7 @@ export class TruncatedCone {
     draw(arePointsVisable: boolean = false, isWireframeVisible: boolean = true): void {
 
         this.p.push();
-        this.p.translate(this.pos.x, this.pos.y, this.pos.z)
+        // this.p.translate(this.pos.x, this.pos.y, this.pos.z)
         if (arePointsVisable) {
             this.p.strokeWeight(2);
             this.p.beginShape(this.p.POINTS);
@@ -69,7 +69,7 @@ export class TruncatedCone {
         } else {
             this.p.noStroke();
         }
-        this.p.fill(75, 75, 155);
+        this.p.fill(75, 75, 155, 25);
 
         for (let i = 0; i < this.slices; i++) {
             for (let j = 0; j < this.radialDetail; j++) {

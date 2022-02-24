@@ -34,7 +34,19 @@ export class ProtoBundler {
         this.tc01.pos.x = this.spine01.pts[this.spine01.pts.length - 1].x
         this.tc01.pos.y = this.spine01.pts[this.spine01.pts.length - 1].y
         this.tc01.pos.z = this.spine01.pts[this.spine01.pts.length - 1].z
+
+        let pt0 = this.spine01.pts[this.spine01.pts.length - 1].copy();
+        let pt1 = this.spine01.pts[this.spine01.pts.length - 2].copy();
+        pt1.sub(pt0);
+        pt1.normalize();
+        this.p.push();
+        this.p.translate(this.tc01.pos.x, this.tc01.pos.y, this.tc01.pos.z);
+        const thetaZ = this.p.atan2(pt1.y - pt0.y, pt1.x - pt0.x) + this.p.PI / 2;
+        this.p.rotateZ(thetaZ);
+        const thetaX = this.p.atan2(pt0.y - pt1.y, pt0.z - pt1.z);
+        this.p.rotateX(thetaX);
         this.tc01.draw(false, false);
+        this.p.pop();
 
     }
 
