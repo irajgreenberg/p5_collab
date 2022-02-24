@@ -46,7 +46,7 @@ export class Spine {
                 this.thetas.push(this.p.random(-this.p.PI * .01, this.p.PI * .01));
                 // this.freqs.push(this.p.PI/(50-k*.095));
                 this.freqs.push(this.p.PI / 50);
-                this.amps.push(p.createVector(k * k * k * .03, 0, k * k * k * .03));
+                this.amps.push(p.createVector(k * k * k * .01, 0, k * k * k * .01));
                 k++
             }
         }
