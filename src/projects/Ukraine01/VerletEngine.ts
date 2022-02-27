@@ -1,52 +1,53 @@
+import p5 from "p5";
+import { IGSphere } from "./IGSphere";
+
 export class VerletEngine {
     surf: VerletSurface;
-    IGSphere[] spheres;
-  
-    int sphereCount, triCount; 
-    Triangle3D[] tris;
-  
-    float gravity = .3;
-    PVector wind;
-    float friction = .45;
+    spheres: IGSphere[] = [];
 
-    VerletEngine() {
-    }
+    sphereCount: number;
+    triCount: number;
+    tris: Triangle3[] = [];
 
-    VerletEngine(VerletSurface surf, IGSphere[] spheres) {
+    gravity = .3;
+    wind: p5.Vector;
+    friction = .45;
+
+    constructor(surf: VerletSurface, spheres: IGSphere[]) {
         this.surf = surf;
         this.spheres = spheres;
-        tris = surf.getTris();
+        this.tris = surf.getTris();
     }
 
     /* 
      * check spehere-sphere collision
      */
-    void ballCollide() {
-    for (int i = 0; i < spheres.length; i++) {
-        for (int j = i + 1; j < spheres.length; j++) {
+    ballCollide(): void {
+        for (let i = 0; i < this.spheres.length; i++) {
+            for (let j = i + 1; j < spheres.length; j++) {
           float d = PVector.dist(spheres[i].loc, spheres[j].loc);
           float r2 = spheres[i].radius + spheres[j].radius;
-            // spheres overlapping
-            if (d <= r2) {
+                // spheres overlapping
+                if (d <= r2) {
             // get ball motion vectors at collision
             PVector s1Vec = new PVector();
             PVector s2Vec = new PVector();
-                s1Vec.set(spheres[i].spd);
-                s2Vec.set(spheres[j].spd);
-                s1Vec.normalize();
-                s2Vec.normalize();
+                    s1Vec.set(spheres[i].spd);
+                    s2Vec.set(spheres[j].spd);
+                    s1Vec.normalize();
+                    s2Vec.normalize();
             PVector n = PVector.sub(spheres[i].loc, spheres[j].loc);
-                n.normalize();
+                    n.normalize();
             PVector nudger = new PVector();
-                nudger.set(n);
-                nudger.mult(r2);
+                    nudger.set(n);
+                    nudger.mult(r2);
 
             // initially correct ball overlap
             PVector temp = new PVector();
-                temp.set(spheres[i].loc);
-                spheres[j].loc.x = temp.x - nudger.x;
-                spheres[j].loc.y = temp.y - nudger.y;
-                spheres[j].loc.z = temp.z - nudger.z;
+                    temp.set(spheres[i].loc);
+                    spheres[j].loc.x = temp.x - nudger.x;
+                    spheres[j].loc.y = temp.y - nudger.y;
+                    spheres[j].loc.z = temp.z - nudger.z;
 
             // calc relfectio based on velocity/momentum
             float a1 = PVector.dot(spheres[i].spd, n);
@@ -55,23 +56,23 @@ export class VerletEngine {
             float p = (2.0 * (a1 - a2)) / (spheres[i].radius + spheres[j].radius);
   
             PVector vec1 = new PVector();
-                vec1.set(n);
-                vec1.mult(spheres[j].radius);
-                vec1.mult(p);
+                    vec1.set(n);
+                    vec1.mult(spheres[j].radius);
+                    vec1.mult(p);
             PVector newVec1 = PVector.sub(spheres[i].spd, vec1);
   
             PVector vec2 = new PVector();
-                vec2.set(n);
-                vec2.mult(spheres[i].radius);
-                vec2.mult(p);
+                    vec2.set(n);
+                    vec2.mult(spheres[i].radius);
+                    vec2.mult(p);
             PVector newVec2 = PVector.add(spheres[j].spd, vec2);
 
-                spheres[i].spd.set(newVec1);
-                spheres[j].spd.set(newVec2);
+                    spheres[i].spd.set(newVec1);
+                    spheres[j].spd.set(newVec2);
+                }
             }
         }
     }
-}
 
 /* 
  * check sphere-surface collision

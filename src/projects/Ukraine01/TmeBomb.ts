@@ -31,31 +31,31 @@ export class TimeBomb {
         this.launchVec = new p5.Vector(0, 0, 0);
     }
 
-void setPhysics(PVector spd, float gravity, float damping) {
-    this.spd = spd;
-    this.gravity = gravity;
-    this.damping = damping;
-}
-
-void launch() {
-    fill(220, 30, 30);
-    //spd.x += wind.x;
-    accel.y += gravity;
-    spd.add(accel);
-    loc.add(spd);
-    if (isWindy) {
-        loc.add(wind);
+    setPhysics(spd: p5.Vector, gravity: number, damping: number): void {
+        this.spd = spd;
+        this.gravity = gravity;
+        this.damping = damping;
     }
-    pushMatrix();
-    translate(loc.x, loc.y, loc.z);
-    sphere(dim.w);
-    popMatrix();
-}
 
-void setCollision(Dimension3D surf) {
-    if (loc.y > surf.h - 14) {
-        loc.y = surf.h - 14;
-        spd.y *= -1;
+    launch(): void {
+        this.p.fill(220, 30, 30);
+        //spd.x += wind.x;
+        this.accel.y += this.gravity;
+        this.spd.add(this.accel);
+        this.loc.add(this.spd);
+        if (this.isWindy) {
+            this.loc.add(this.wind);
+        }
+        this.p.push();
+        this.p.translate(this.loc.x, this.loc.y, this.loc.z);
+        this.p.sphere(this.dim.w);
+        this.p.pop();
+    }
+
+    setCollision(surf: Dimension3): void {
+        if (this.loc.y > surf.h - 14) {
+            this.loc.y = surf.h - 14;
+            this.spd.y *= -1;
+        }
     }
 }
-  }
