@@ -69,7 +69,7 @@ export class TruncatedCone {
         } else {
             this.p.noStroke();
         }
-        this.p.fill(75, 75, 155, 25);
+        this.p.fill(75, 75, 155);
 
         for (let i = 0; i < this.slices; i++) {
             for (let j = 0; j < this.radialDetail; j++) {

@@ -47,7 +47,7 @@ const sketch = (p: P5) => {
     p.draw = () => {
         // plain vanilla bg
         p.background(bgR, bgG, bgB);
-
+        p.rotateY(p.PI / 2);
         // custom fading bg
         // p.noStroke();
         // p.fill(bgR, bgG, bgB, bgAlpha);

@@ -46,7 +46,7 @@ export class Spine {
                 this.thetas.push(this.p.random(-this.p.PI * .01, this.p.PI * .01));
                 // this.freqs.push(this.p.PI/(50-k*.095));
                 this.freqs.push(this.p.PI / 50);
-                this.amps.push(p.createVector(k * k * k * .01, 0, k * k * k * .01));
+                this.amps.push(p.createVector(k * k * k * .3, 0, k * k * k * .3));
                 k++
             }
         }
@@ -55,7 +55,7 @@ export class Spine {
 
     sway(): void {
         for (let i = 0; i < this.pts.length; i++) {
-            this.pts[i].x = this.ptsInit[i].x + this.p.cos(this.thetas[i]) * this.amps[i].x;
+            //  this.pts[i].x = this.ptsInit[i].x + this.p.cos(this.thetas[i]) * this.amps[i].x;
             //    this.pts[i].y = this.ptsInit[i].y+ this.p.sin(this.thetas[i])*this.amps[i].y;
             this.pts[i].z = this.ptsInit[i].z + this.p.cos(this.thetas[i]) * this.amps[i].z;
 
@@ -68,12 +68,13 @@ export class Spine {
 
     draw(): void {
         this.p.strokeWeight(this.strokeWt)
-        this.p.stroke(255, 255, 0);
+        this.p.stroke(this.col);
         this.p.noFill();
 
         this.p.push();
         this.p.translate(this.pos.x, this.pos.y, this.pos.z);
         this.p.beginShape(this.p.POINTS);
+        //this.p.beginShape();
         for (let i = 0; i < this.pts.length; i++) {
             this.p.vertex(this.pts[i].x, this.pts[i].y, this.pts[i].z);
         }

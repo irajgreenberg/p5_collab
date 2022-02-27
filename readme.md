@@ -23,3 +23,5 @@ Notes below included from: https://github.com/CaribouJohn/p5-typescript-template
 "Various online sources helped me get to this point, but especially https://github.com/Gaweph/p5-typescript-starter (Thanks!) 
 
 This is mainly for my benefit but if you gain anything from it feel free to use it in any way consistant with the MIT Licence I am inheriting from [here](https://github.com/Gaweph/p5-typescript-starter)." 
+
+Lighting: https://www.geeksforgeeks.org/how-to-design-phong-shading-graphics-using-p5-js/
