@@ -118,6 +118,5 @@ export abstract class VerletSurface {
         return this.vNorms;
     }
 
-}
-imgReset(id: number): void {};
+    imgReset(id: number): void { };
 }
