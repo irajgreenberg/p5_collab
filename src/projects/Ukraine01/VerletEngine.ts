@@ -1,11 +1,12 @@
 import p5 from "p5";
 import { IGSphere } from "./IGSphere";
+import { VerletSurface } from "./VerletSurface";
 
 export class VerletEngine {
     surf: VerletSurface;
     spheres: IGSphere[] = [];
 
-    sphereCount: number;
+    sphereCount: number = 100;
     triCount: number;
     tris: Triangle3[] = [];
 

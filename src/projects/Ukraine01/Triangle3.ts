@@ -30,7 +30,10 @@ export class Triangle3 {
     }
 
     getNormal(): p5.Vector {
-        this.n = p5.Vector.cross(p5.Vector.sub(this.v1, this.v2), p5.Vector.sub(this.v0, this.v2));
+        const v1 = p5.Vector.sub(this.v1, this.v2);
+        const v2 = p5.Vector.sub(this.v0, this.v2);
+
+        this.n = v1.cross(v2);
         this.n.normalize();
         return (this.n);
     }

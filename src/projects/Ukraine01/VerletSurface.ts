@@ -7,6 +7,10 @@
 
 import p5 from "p5";
 import { Dimension3 } from "./Dimension3";
+import { VerletNode } from "src/libPByte_p5/VerletNode"
+import { VerletStick } from "src/libPByte_p5/VerletStick";
+import { Triangle3 } from "./Triangle3";
+
 
 export abstract class VerletSurface {
 
@@ -20,8 +24,8 @@ export abstract class VerletSurface {
     // for verlet sticks
     tension = .4;
 
-    vBalls: VerletBall[] = []
-    vBalls2D: VerletBall[][] = []; // convenience datatype
+    vBalls: VerletNode[] = []
+    vBalls2D: VerletNode[][] = []; // convenience datatype
     vBallInitPos: p5.Vector[] = [];
     vSticks: VerletStick[] = [];
     uvs: p5.Vector[][] = [] // UV Texturing
@@ -103,14 +107,14 @@ export abstract class VerletSurface {
         }
     }
 
-    getTris(): Triangle3[] {
+    getTris(): Triangle3[] | null {
         if (this.tris != null) {
             return this.tris;
         }
         return null;
     }
 
-    getVBalls(): VerletBall[] {
+    getVBalls(): VerletNode[] {
         return this.vBalls;
     }
 
