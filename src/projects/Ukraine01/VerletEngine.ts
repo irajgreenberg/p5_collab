@@ -1,20 +1,23 @@
 import p5 from "p5";
 import { IGSphere } from "./IGSphere";
+import { Triangle3 } from "./Triangle3";
 import { VerletSurface } from "./VerletSurface";
 
 export class VerletEngine {
+    p: p5;
     surf: VerletSurface;
     spheres: IGSphere[] = [];
 
     sphereCount: number = 100;
-    triCount: number;
+    triCount: number = 0;
     tris: Triangle3[] = [];
 
     gravity = .3;
-    wind: p5.Vector;
+    wind: p5.Vector = new p5.Vector();
     friction = .45;
 
-    constructor(surf: VerletSurface, spheres: IGSphere[]) {
+    constructor(p: p5, surf: VerletSurface, spheres: IGSphere[]) {
+        this.p = p;
         this.surf = surf;
         this.spheres = spheres;
         this.tris = surf.getTris();
@@ -25,140 +28,140 @@ export class VerletEngine {
      */
     ballCollide(): void {
         for (let i = 0; i < this.spheres.length; i++) {
-            for (let j = i + 1; j < spheres.length; j++) {
-          float d = PVector.dist(spheres[i].loc, spheres[j].loc);
-          float r2 = spheres[i].radius + spheres[j].radius;
+            for (let j = i + 1; j < this.spheres.length; j++) {
+                const d = p5.Vector.dist(this.spheres[i].loc, this.spheres[j].loc);
+                const r2 = this.spheres[i].radius + this.spheres[j].radius;
                 // spheres overlapping
                 if (d <= r2) {
-            // get ball motion vectors at collision
-            PVector s1Vec = new PVector();
-            PVector s2Vec = new PVector();
-                    s1Vec.set(spheres[i].spd);
-                    s2Vec.set(spheres[j].spd);
+                    // get ball motion vectors at collision
+                    let s1Vec = new p5.Vector();
+                    const s2Vec = new p5.Vector();
+                    s1Vec.set(this.spheres[i].spd);
+                    s2Vec.set(this.spheres[j].spd);
                     s1Vec.normalize();
                     s2Vec.normalize();
-            PVector n = PVector.sub(spheres[i].loc, spheres[j].loc);
+                    let n = p5.Vector.sub(this.spheres[i].loc, this.spheres[j].loc);
                     n.normalize();
-            PVector nudger = new PVector();
+                    let nudger = new p5.Vector();
                     nudger.set(n);
                     nudger.mult(r2);
 
-            // initially correct ball overlap
-            PVector temp = new PVector();
-                    temp.set(spheres[i].loc);
-                    spheres[j].loc.x = temp.x - nudger.x;
-                    spheres[j].loc.y = temp.y - nudger.y;
-                    spheres[j].loc.z = temp.z - nudger.z;
+                    // initially correct ball overlap
+                    let temp = new p5.Vector();
+                    temp.set(this.spheres[i].loc);
+                    this.spheres[j].loc.x = temp.x - nudger.x;
+                    this.spheres[j].loc.y = temp.y - nudger.y;
+                    this.spheres[j].loc.z = temp.z - nudger.z;
 
-            // calc relfectio based on velocity/momentum
-            float a1 = PVector.dot(spheres[i].spd, n);
-            float a2 = PVector.dot(spheres[j].spd, n);
-            // radius is used as mass
-            float p = (2.0 * (a1 - a2)) / (spheres[i].radius + spheres[j].radius);
-  
-            PVector vec1 = new PVector();
+                    // calc relfection based on velocity/momentum
+                    const a1 = p5.Vector.dot(this.spheres[i].spd, n);
+                    const a2 = p5.Vector.dot(this.spheres[j].spd, n);
+                    // radius is used as mass
+                    const p = (2.0 * (a1 - a2)) / (this.spheres[i].radius + this.spheres[j].radius);
+
+                    let vec1 = new p5.Vector();
                     vec1.set(n);
-                    vec1.mult(spheres[j].radius);
+                    vec1.mult(this.spheres[j].radius);
                     vec1.mult(p);
-            PVector newVec1 = PVector.sub(spheres[i].spd, vec1);
-  
-            PVector vec2 = new PVector();
-                    vec2.set(n);
-                    vec2.mult(spheres[i].radius);
-                    vec2.mult(p);
-            PVector newVec2 = PVector.add(spheres[j].spd, vec2);
+                    const newVec1 = p5.Vector.sub(this.spheres[i].spd, vec1);
 
-                    spheres[i].spd.set(newVec1);
-                    spheres[j].spd.set(newVec2);
+                    let vec2 = new p5.Vector();
+                    vec2.set(n);
+                    vec2.mult(this.spheres[i].radius);
+                    vec2.mult(p);
+                    const newVec2 = p5.Vector.add(this.spheres[j].spd, vec2);
+
+                    this.spheres[i].spd.set(newVec1);
+                    this.spheres[j].spd.set(newVec2);
                 }
             }
         }
     }
 
-/* 
- * check sphere-surface collision
- */
-void surfaceCollide() {
-    for (int i = 0; i < spheres.length; i++) {
-        for (int j = 0; j < tris.length; j++) {
-          PVector p = new PVector();
-          PVector q = new PVector();
-          PVector N = tris[j].getNormal();
-            p.set(spheres[i].loc);
-            q.set(tris[j].v0);
-            p.sub(q);
-          float d = -p.dot(N);
-            if (d < spheres[i].radius && barycentricCheck(spheres[i].loc, tris[j]) && d > -spheres[i].radius * 4) {
-                // move ground
-                deformSurface(spheres[i], tris[j]);
-              PVector ground = findsurface(spheres[i], tris[j], d);
+    /* 
+     * check sphere-surface collision
+     */
+    surfaceCollide(): void {
+        for (let i = 0; i < this.spheres.length; i++) {
+            for (let j = 0; j < this.tris.length; j++) {
+                let p = new p5.Vector();
+                let q = new p5.Vector();
+                let N = this.tris[j].getNormal();
+                p.set(this.spheres[i].loc);
+                q.set(this.tris[j].v0);
+                p.sub(q);
+                const d = -p.dot(N);
+                if (d < this.spheres[i].radius && this.barycentricCheck(this.spheres[i].loc, this.tris[j]) && d > -this.spheres[i].radius * 4) {
+                    // move ground
+                    this.deformSurface(this.spheres[i], this.tris[j]);
+                    const ground = this.findsurface(this.spheres[i], this.tris[j], d);
 
-                spheres[i].loc.y = ground.y;
-              PVector reflectVec = getReflectVec(spheres[i].spd, tris[j].getNormal());
-                spheres[i].spd.set(reflectVec);
-                // if(spheres[i].spd.y > 0){
-                deformSurface(spheres[i], tris[j]);
-                // }
-                spheres[i].spd.y *= spheres[i].material;
-                //spheres[i].spd.mult(spheres[i].material);
-                //spheres[i].spd.x *= .85;
-                //spheres[i].spd.z *= .55;
+                    this.spheres[i].loc.y = ground.y;
+                    const reflectVec = this.getReflectVec(this.spheres[i].spd, this.tris[j].getNormal());
+                    this.spheres[i].spd.set(reflectVec);
+                    // if(this.spheres[i].spd.y > 0){
+                    this.deformSurface(this.spheres[i], this.tris[j]);
+                    // }
+                    this.spheres[i].spd.y *= this.spheres[i].material;
+                    //spheres[i].spd.mult(spheres[i].material);
+                    //spheres[i].spd.x *= .85;
+                    //spheres[i].spd.z *= .55;
 
 
 
+                }
             }
         }
     }
-}
 
     /* 
      * returns surface position
      */
-    PVector findsurface(IGSphere s, Triangle3D t, float d) {
-      PVector p = new PVector();
-      PVector q = new PVector();
-      PVector N = t.getNormal();
-  
-      PVector temp = new PVector();
-    temp.set(s.loc);
-    q.set(t.v1);
-    while (d < s.radius) {
-        temp.sub(N);
-        p.set(temp);
-        p.sub(q);
-        d = -p.dot(N);
+    findsurface(s: IGSphere, t: Triangle3, d: number): p5.Vector {
+        let p = new p5.Vector();
+        let q = new p5.Vector();
+        let N = t.getNormal();
+
+        const temp = new p5.Vector();
+        temp.set(s.loc);
+        q.set(t.v1);
+        while (d < s.radius) {
+            temp.sub(N);
+            p.set(temp);
+            p.sub(q);
+            d = -p.dot(N);
+        }
+        return temp;
     }
-    return temp;
-}
 
 
     /* Barycentric Technique:
      * www.blackpawn.com/texts/pointinpoly/default.html
      */
-    boolean barycentricCheck(PVector p, Triangle3D tri) {
-      // Compute vectors        
-      PVector v0 = PVector.sub(tri.v2, tri.v0);
-      PVector v1 = PVector.sub(tri.v1, tri.v0);
-      PVector v2 = PVector.sub(p, tri.v0);
+    barycentricCheck(p: p5.Vector, tri: Triangle3): boolean {
+        // Compute vectors        
+        const v0 = p5.Vector.sub(tri.v2, tri.v0);
+        const v1 = p5.Vector.sub(tri.v1, tri.v0);
+        const v2 = p5.Vector.sub(p, tri.v0);
 
-      // Compute dot products
-      float dot00 = PVector.dot(v0, v0);
-      float dot01 = PVector.dot(v0, v1);
-      float dot02 = PVector.dot(v0, v2);
-      float dot11 = PVector.dot(v1, v1);
-      float dot12 = PVector.dot(v1, v2);
+        // Compute dot products
+        let dot00 = p5.Vector.dot(v0, v0);
+        let dot01 = p5.Vector.dot(v0, v1);
+        let dot02 = p5.Vector.dot(v0, v2);
+        let dot11 = p5.Vector.dot(v1, v1);
+        let dot12 = p5.Vector.dot(v1, v2);
 
-      // Compute barycentric coordinates
-      float invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
-      float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-      float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+        // Compute barycentric coordinates
+        const invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
+        const u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+        const v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-    // Check if point is in triangle
-    if ((u > 0) && (v > 0) && (u + v < 1)) {
-        return true;
+        // Check if point is in triangle
+        if ((u > 0) && (v > 0) && (u + v < 1)) {
+            return true;
+        }
+        return false;
     }
-    return false;
-}
 
     /* Law of Reflection
      * R = 2N(N.L)-L
@@ -167,57 +170,59 @@ void surfaceCollide() {
      * R = Reflection vector
      * L = Incidence Vector
      */
-    PVector getReflectVec(PVector direction, PVector N) {
-      PVector l = new PVector();
-      float vecMag = direction.mag();
-    l.set(direction);
-    l.normalize();
-      PVector r = PVector.mult(N, 2);
-      float dotN = PVector.dot(N, l);
-    r.mult(dotN);
-    r.sub(l);
-    r.mult(-1);
-    r.mult(vecMag);
+    getReflectVec(direction: p5.Vector, N: p5.Vector): p5.Vector {
+        const l = new p5.Vector();
+        const vecMag = direction.mag();
+        l.set(direction);
+        l.normalize();
+        let r = N.copy();
+        r.mult(2);
+        // let r = p5.Vector.mult(N, 2);
+        let dotN = p5.Vector.dot(N, l);
+        r.mult(dotN);
+        r.sub(l);
+        r.mult(-1);
+        r.mult(vecMag);
 
-    return r;
-}
-
-/* 
- * deform surface based on ball collision
- */
-void deformSurface(IGSphere s, Triangle3D t) {
-    t.v0.y += (abs(s.spd.y) * s.radius) * .05;
-    t.v1.y += (abs(s.spd.y) * s.radius) * .05;
-    t.v2.y += (abs(s.spd.y) * s.radius) * .05;
-}
-
-
-void run() {
-    for (int i = 0; i < spheres.length; i++) {
-        //spheres[i].spd.x=random(wind);
-        //spheres[i].spd.z+=.075;
-        //spheres[i].spd.y+=gravity;
-        //spheres[i].move(); // UNCOMMENT TO GET BALLS TO WORK
-    }
-    surf.start();
-    //ballCollide();
-    surfaceCollide();
-    render();
-}
-
-void render() {
-    surf.render(false, false, true);
-    //surf.render(true, true, true);
-    for (int i = 0; i < spheres.length; i++) {
-        pushMatrix();
-        translate(spheres[i].loc.x, spheres[i].loc.y, spheres[i].loc.z);
-        //spheres[i].render();
-        popMatrix();
+        return r;
     }
 
-    for (int i = 0; i < tris.length; i++) {
-        // tris[i].render();
-        //tris[i].renderNorm(30.0);
+    /* 
+     * deform surface based on ball collision
+     */
+    deformSurface(s: IGSphere, t: Triangle3): void {
+        t.v0.y += (Math.abs(s.spd.y) * s.radius) * .05;
+        t.v1.y += (Math.abs(s.spd.y) * s.radius) * .05;
+        t.v2.y += (Math.abs(s.spd.y) * s.radius) * .05;
+    }
+
+
+    run(): void {
+        for (let i = 0; i < this.spheres.length; i++) {
+            //spheres[i].spd.x=random(wind);
+            //spheres[i].spd.z+=.075;
+            //spheres[i].spd.y+=gravity;
+            //spheres[i].move(); // UNCOMMENT TO GET BALLS TO WORK
+        }
+        this.surf.start();
+        //ballCollide();
+        this.surfaceCollide();
+        this.render();
+    }
+
+    render(): void {
+        this.surf.render(false, false, true);
+        //surf.render(true, true, true);
+        for (let i = 0; i < this.spheres.length; i++) {
+            this.p.push();
+            this.p.translate(this.spheres[i].loc.x, this.spheres[i].loc.y, this.spheres[i].loc.z);
+            //spheres[i].render();
+            this.p.pop();
+        }
+
+        for (let i = 0; i < this.tris.length; i++) {
+            // tris[i].render();
+            //tris[i].renderNorm(30.0);
+        }
     }
 }
-  }

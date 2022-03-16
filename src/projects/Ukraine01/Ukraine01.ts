@@ -3,11 +3,13 @@
 // Dallas, TX
 
 import P5 from "p5";
+import { Cross } from "./Cross";
+import { Flower } from "./Flower";
 
 export class Ukraine01 {
 
-    crossCount: number
-    flowerCount: number;
+    crossCount: number = 0
+    flowerCount: number = 0
     crosses: Cross[] = [];
     flowers: Flower[] = [];
 

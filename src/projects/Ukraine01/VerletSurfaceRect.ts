@@ -5,71 +5,81 @@
  * December 2010
  */
 
+import p5 from "p5";
+import { VerletStick } from "src/libPByte_p5/VerletStick";
+import { Dimension3 } from "./Dimension3";
+import { TimeBomb } from "./TmeBomb";
+import { Triangle3 } from "./Triangle3";
+import { VerletSurface } from "./VerletSurface";
+
 class VerletSurfaceRect extends VerletSurface {
 
-    int rows, cols;
-    PImage img;
-  
-    TimeBomb[] tBombs;
-    int dynamicCount;
-    int timeIn;
+    p: p5;
+    rows = 0;
+    cols = 0;
+    img: p5.Image
 
-    VerletSurfaceRect() {
-    }
+    tBombs: TimeBomb[] = [];
+    dynamicCount: number;
+    timeIn: number;
 
-    VerletSurfaceRect(PVector loc, Dimension3D dim, int rows, int cols) {
+    // VerletSurfaceRect() {
+    // }
+
+    // VerletSurfaceRect(PVector loc, Dimension3D dim, int rows, int cols) {
+    //     super(loc, dim);
+    //     this.rows = rows;
+    //     this.cols = cols;
+    //     isFixedIndex = new boolean[4];
+    //     init();
+    // }
+
+    constructor(p: p5, loc: p5.Vector, dim: Dimension3, rows: number, cols: number, isFixedIndex: boolean[], tension: number) {
         super(loc, dim);
-        this.rows = rows;
-        this.cols = cols;
-        isFixedIndex = new boolean[4];
-        init();
-    }
-
-    VerletSurfaceRect(PVector loc, Dimension3D dim, int rows, int cols, boolean[] isFixedIndex, float tension) {
-        super(loc, dim);
+        this.p = p;
         this.rows = rows;
         this.cols = cols;
         this.isFixedIndex = isFixedIndex;
         this.tension = tension;
-        init();
+        this.init();
     }
-  
-    void init() {
-    vBalls = new VerletBall[rows * cols];
-    vBallInitPos = new PVector[rows * cols];
-    vBalls2D = new VerletBall[rows][cols];
-    uvs = new PVector[rows][cols];
 
-    tBombs = new TimeBomb[60];
-      int r = rows - 1;
-      int c = cols - 1;
-      int stickCount = cols * r + rows * c + r * c;
-    vSticks = new VerletStick[stickCount];
-    tris = new Triangle3D[r * c * 2];
+    init(): void {
+        // this.vBalls = new VerletBall[rows * cols];
+        // this.vBallInitPos = new PVector[rows * cols];
+        // this.vBalls2D = new VerletBall[rows][cols];
+        // this.uvs = new p5.Vector[rows][cols];
 
-    //sNorms = new PVector[tris.length];
-    vNorms = new PVector[rows * cols];
+        // tBombs = new TimeBomb[60];
+        let r = this.rows - 1;
+        let c = this.cols - 1;
+        let stickCount = this.cols * r + this.rows * c + r * c;
+        // this.vSticks = new VerletStick[stickCount];
+        // this.tris = new Triangle3[r * c * 2];
 
-    anchors = new PVector[4];
+        //sNorms = new PVector[tris.length];
+        // vNorms = new PVector[rows * cols];
 
-    createVBalls();
-    createVSticks();
-    createTris();
-    createAnchors();
-    setAnchors();
-    createTimeBombs();
+        // anchors = new PVector[4];
+
+        this.createVBalls();
+        this.createVSticks();
+        this.createTris();
+        this.createAnchors();
+        this.setAnchors();
+        this.createTimeBombs();
 
 
-    //img = loadImage("dad.jpg");
-    img = loadImage("skinny_buddah.jpg");
-    //img = loadImage("puppets1.jpg");
-    //img = loadImage("doll.jpg");
-    //img = loadImage("old_clock_face.jpg");
-    //img = loadImage("clockface2.jpg");
-    //img = loadImage("water.jpg");
+        //img = loadImage("dad.jpg");
+        img = loadImage("skinny_buddah.jpg");
+        //img = loadImage("puppets1.jpg");
+        //img = loadImage("doll.jpg");
+        //img = loadImage("old_clock_face.jpg");
+        //img = loadImage("clockface2.jpg");
+        //img = loadImage("water.jpg");
 
-    timeIn = millis();
-}
+        timeIn = millis();
+    }
 
 // Instantiate Vertex balls
 void createVBalls() {
@@ -176,15 +186,15 @@ void createTris() {
 }
 
 // Grab surface corner postions for anchors
-void createAnchors() {
+createAnchors(): void {
     // LT anchor
     anchors[0] = new PVector(vBalls[0].pos.x, vBalls[0].pos.y, vBalls[0].pos.z);
     // RT anchor
     anchors[1] = new PVector(vBalls[cols - 1].pos.x, vBalls[cols - 1].pos.y, vBalls[cols - 1].pos.z);
     // RB anchor
     anchors[2] = new PVector(vBalls[vBalls.length - 1].pos.x, vBalls[vBalls.length - 1].pos.y, vBalls[vBalls.length - 1].pos.z);
-      // LB anchor
-      int index = vBalls.length - 1 - (cols - 1);
+    // LB anchor
+    int index = vBalls.length - 1 - (cols - 1);
     anchors[3] = new PVector(vBalls[index].pos.x, vBalls[index].pos.y, vBalls[index].pos.z);
 }
 

@@ -107,11 +107,8 @@ export abstract class VerletSurface {
         }
     }
 
-    getTris(): Triangle3[] | null {
-        if (this.tris != null) {
-            return this.tris;
-        }
-        return null;
+    getTris(): Triangle3[] {
+        return this.tris;
     }
 
     getVBalls(): VerletNode[] {
