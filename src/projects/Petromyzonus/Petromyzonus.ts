@@ -4,7 +4,7 @@ import { VerletAnnulus } from "../../libPByte_p5/VerletAnnulus";
 import { VerletStrand } from "../../libPByte_p5/VerletStrand";
 import { VerletStyle } from "../../libPByte_p5/VerletStyle";
 
-export class Protobyte {
+export class Petromyzonus {
     p: P5;
     length: number;
     slices: number;
@@ -135,7 +135,7 @@ export class Protobyte {
                             tailCol = p.color(p.random(10, 80), p.random(150, 200), p.random(75, 100), p.random(35, 125));
                             break;
                     }
-                    this.tailStrands.push(new VerletStrand(p, csPts[j], p.random(5, 360), p.int(p.random(5, 7)),
+                    this.tailStrands.push(new VerletStrand(p, csPts[j], p.random(5, 500), p.int(p.random(5, 9)),
                         p.color(tailCol),
                         p.random(3, 22)));
                 } else if (j % 4 == 0) {
@@ -325,7 +325,7 @@ export class Protobyte {
         const z = this.spine[this.spine.length - 1].z - this.spine[0].z;
         let motionVec = this.p.createVector(x, y, z);
         motionVec.normalize();
-        motionVec.mult(this.p.random(-3.2));
+        motionVec.mult(this.p.random(-2, -6.2));
 
 
         for (let i = 0; i < this.tailStrands.length; i++) {

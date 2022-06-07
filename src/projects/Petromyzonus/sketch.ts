@@ -1,8 +1,8 @@
 import P5 from "p5";
 import { DustParticle } from "./DustParticle";
-import { Protobyte } from "./ProtoByte";
+import { Petromyzonus } from "./Petromyzonus";
 
-let pb: Protobyte;
+let pb: Petromyzonus;
 
 //dust vars
 let dps: DustParticle[] = [];
@@ -23,15 +23,15 @@ let startPosSeed: P5.Vector;
 const sketch = (p: P5) => {
     p.setup = () => {
         // p.camera(0, 0, 1300 + p.sin(p.frameCount * 0.1) * 400, 0, 0, 0, 0, 1, 0);
-        bgR = p.int(p.random(10, 40));
-        bgG = p.int(p.random(10, 40));
-        bgB = p.int(p.random(10, 40));
+        bgR = p.int(p.random(10, 60));
+        bgG = p.int(p.random(10, 50));
+        bgB = p.int(p.random(10, 60));
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
         //console.log(p.hex(bgR, 2));
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
 
-        let cnv = p.createCanvas(1200, 900, p.WEBGL);
+        let cnv = p.createCanvas(900, 900, p.WEBGL);
 
         bgAlpha = p.random(80, 140);
 
@@ -42,7 +42,7 @@ const sketch = (p: P5) => {
         // avoid scroll bars
         cnv.style('display', 'block');
 
-        pb = new Protobyte(p, 400, 14, 24, p.createVector(p.random(5, 25), p.random(25, 200)), p.int(p.random(1, 5)));
+        pb = new Petromyzonus(p, 400, 14, 24, p.createVector(p.random(5, 25), p.random(25, 200)), p.int(p.random(1, 5)));
 
         // start postion seed for translate in draw()
         startPosSeed = p.createVector(p.random(5000), p.random(5000), p.random(5000));
@@ -74,11 +74,13 @@ const sketch = (p: P5) => {
         p.fill(bgR, bgG, bgB, bgAlpha);
         p.rect(-p.width / 2 - 1, -p.height / 2 - 1, p.width + 2, p.height + 2);
 
-        let pbPos = p.createVector(60 + p.cos(startPosSeed.x + p.frameCount * p.PI / 620) * 250, 40 + p.cos(startPosSeed.y - p.frameCount * p.PI / 720) * 120, 600 + p.cos(startPosSeed.z - p.frameCount * p.PI / 720) * -200);
+        let pbPos = p.createVector(-20 + p.cos(startPosSeed.x + p.frameCount * p.PI / 620) * 150, 40 + p.cos(startPosSeed.y - p.frameCount * p.PI / 720) * 120, 600 + p.cos(startPosSeed.z - p.frameCount * p.PI / 720) * -200);
 
 
         //p.orbitControl();
         p.translate(0, 0, -300);
+
+
 
         let al = p.random(60, 65);
         p.ambientLight(al, al, al);

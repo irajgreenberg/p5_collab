@@ -79,7 +79,7 @@ export class VerletAnnulus extends VerletBase {
                     this.outerRingFreqs.push(outerRingFreqSeed);
                     this.outerRingAmps.push(outerRingAmpSeed);
 
-                    this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(40, 90), this.p.random(8, 11), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(20, 60)), this.p.random(.25, 2.9)));
+                    this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(5, 50), this.p.random(12, 21), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(20, 60)), this.p.random(.5, 1)));
                 }
             }
             this.nodes2D.push(ring);
@@ -121,7 +121,7 @@ export class VerletAnnulus extends VerletBase {
         //     }
         // }
         for (let i = 0; i < this.strands.length; i++) {
-            this.strands[i].setStickTension(this.p.createVector(.001, .005));
+            this.strands[i].setStickTension(this.p.createVector(.5, .5));
         }
     }
 
@@ -188,7 +188,7 @@ export class VerletAnnulus extends VerletBase {
         }
         for (let i = 0; i < this.strands.length; i++) {
             this.strands[i].move();
-            this.strands[i].draw();
+            this.strands[i].draw(true, false);
         }
 
     }

@@ -37,7 +37,7 @@ export class VerletStrand {
                     this.tail = n;
                 }
             }
-            this.nodes[i] = new VerletNode(p, n, .2, col);
+            this.nodes[i] = new VerletNode(p, n, 2.2, col);
             if (i > 0) {
                 this.sticks.push(new VerletStick(p, this.nodes[i - 1], this.nodes[i], p.random(this.stickTension.x, this.stickTension.y), 0, col));
             }
@@ -60,11 +60,13 @@ export class VerletStrand {
         }
     }
 
-    draw(): void {
+    draw(isNodeDrawable: boolean = false, isStickDrawable: boolean = true): void {
         this.p.strokeWeight(this.strokeWt);
         for (let i = 0; i < this.nodeCount; i++) {
-            this.nodes[i].draw();
-            if (i > 0) {
+            if (isNodeDrawable) {
+                this.nodes[i].draw();
+            }
+            if (i > 0 && isStickDrawable) {
                 this.sticks[i - 1].draw();
             }
         }
