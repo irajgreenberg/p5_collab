@@ -159,9 +159,10 @@ export class Petromyzonus {
 
         }
 
-        const vs = new VerletStyle(.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE,
+        const vs = new VerletStyle(25.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE,
             p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(50, 120)), p.random(.1, .3));
         // this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
+
         this.annulus2 = new VerletAnnulus(p, p.random(220, 300), p.int(p.random(5, 10)), this.pts2D[7], p.random(.01, .005), p.color(p.random(125, 200), p.random(125, 200), p.random(125, 200), p.random(20, 40)), vs);
         // this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
 
