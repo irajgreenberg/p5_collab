@@ -135,9 +135,13 @@ export class Petromyzonus {
                             tailCol = p.color(p.random(10, 80), p.random(150, 200), p.random(75, 100), p.random(35, 125));
                             break;
                     }
-                    this.tailStrands.push(new VerletStrand(p, csPts[j], p.random(5, 500), p.int(p.random(5, 9)),
-                        p.color(tailCol),
-                        p.random(3, 22)));
+                    this.tailStrands.push(
+                        new VerletStrand(p,
+                            csPts[j], //head
+                            p.random(100, 1000), // lenth
+                            p.int(p.random(5, 9)), // nodeCount
+                            p.color(tailCol), // color
+                            p.random(2, 19))); // strokeWeight
                 } else if (j % 4 == 0) {
                     // this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
                     this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(28, 150), p.int(p.random(5, 8)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(8, 44)));
@@ -159,12 +163,22 @@ export class Petromyzonus {
 
         }
 
-        const vs = new VerletStyle(25.3, p.color(255, p.random(205, 255), 0, 255), 255, NodeType.SPHERE,
-            p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(50, 120)), p.random(.1, .3));
-        // this.annulus = new VerletAnnulus(p, 90, 8, this.pts2D[4], .002, p.color(100, 200, 100), vs);
+        // Annulus
+        const vs = new VerletStyle(
+            2, // node Radius
+            p.color(p.random(200, 255), p.random(200, 255), p.random(200, 255), p.random(190, 225)),  // node color
+            p.random(190, 225), // node alpha
+            NodeType.SPHERE, // node type
+            p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(10, 75)), // stick color
+            p.random(.1, .6)); // stick weight
 
-        this.annulus2 = new VerletAnnulus(p, p.random(220, 300), p.int(p.random(5, 10)), this.pts2D[7], p.random(.01, .005), p.color(p.random(125, 200), p.random(125, 200), p.random(125, 200), p.random(20, 40)), vs);
-        // this.annulus3 = new VerletAnnulus(p, 90, 8, this.pts2D[11], .004, p.color(100, 200, 100), vs);
+        this.annulus2 = new VerletAnnulus(p,
+            p.random(570, 1100), // radius
+            p.int(p.random(6, 10)), // ring edge count
+            this.pts2D[7], // inner ring
+            p.random(.01, .005), // elasticity
+            p.color(p.random(125, 255), p.random(125, 255), p.random(125, 255), p.random(50, 90)), //fill color
+            vs); // verlet style
 
         // Bubbles
         this.bubbleFreqRange = this.p.createVector(this.p.PI / 45, this.p.PI / 5);
@@ -183,60 +197,47 @@ export class Petromyzonus {
             this.bubbleIsOn[i] = false;
         }
 
-        this.spineMotionAmp = p.createVector(p.random(80, 240), p.random(30, 60), p.random(30, 60));
-        this.spineMotionFreq = p.random(50, 150);
+        this.spineMotionAmp = p.createVector(p.random(120, 240), p.random(60, 90), p.random(60, 9));
+        this.spineMotionFreq = p.random(40, 90);
     }
 
 
     draw(): void {
-
-
-        // Spine
-        // this.p.noFill();
-        // this.p.stroke(255, 255);
-        // this.p.beginShape();
-        // for (let i = 0; i < this.spine.length; i++) {
-        //     this.p.vertex(this.spine[i].x, this.spine[i].y, this.spine[i].z);
-        // }
-        // this.p.endShape();
-
+        this.p.push();
+        //this.p.translate(0, 0, 500);
         //Body
         this.p.noStroke();
-
         for (let i = 0, k = 0; i < this.pts2D.length; i++) {
             // radial segments
             for (let j = 0; j < this.pts2D[i].length; j++) {
                 if (i < this.pts2D.length - 1) {
-
                     this.p.beginShape(this.p.LINES);
                     switch (this.bodyColIndex) {
                         case 0:
-                            this.p.fill(this.colR[k], this.colG[k], this.colB[k]);
+                            this.p.fill(this.colR[k], this.colG[k], this.colB[k], 170);
                             break;
                         case 1:
-                            this.p.fill(this.colR[k], this.colG[k], this.colR[k]);
+                            this.p.fill(this.colR[k], this.colG[k], this.colR[k], 170);
                             break;
                         case 2:
-                            this.p.fill(this.colR[k], this.colB[k], this.colB[k]);
+                            this.p.fill(this.colR[k], this.colB[k], this.colB[k], 170);
                             break;
                         case 3:
-                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * 1.2, this.colR[k] * 1.2);
+                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * 1.2, this.colR[k] * 1.2, 170);
                             break;
                         case 4:
-                            this.p.fill(this.colR[k] * 1.2, this.colG[k] * 1.2, this.colB[k] * 1.2);
+                            this.p.fill(this.colR[k] * 1.2, this.colG[k] * 1.2, this.colB[k] * 1.2), 170;
                             break;
                         case 5:
-                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * .85, this.colR[k] * 1.1);
+                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * .85, this.colR[k] * 1.1, 170);
                             break;
                         case 6:
-                            this.p.fill(this.colR[k] * .75, this.colG[k] * 1.1, this.colB[k] * 1.3);
+                            this.p.fill(this.colR[k] * .75, this.colG[k] * 1.1, this.colB[k] * 1.3, 170);
                             break;
                         case 7:
-                            this.p.fill(this.colR[k], this.colR[k], this.colR[k]);
+                            this.p.fill(this.colR[k], this.colR[k], this.colR[k], 170);
                             break;
-
                     }
-
 
                     if (j < this.pts2D[i].length - 1) {
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
@@ -270,17 +271,12 @@ export class Petromyzonus {
             this.bodyStrands[i].draw();
         }
 
-
-        this.p.strokeWeight(1.3);
-        //this.annulus!.draw();
+        //this.p.strokeWeight(1.3);
         this.annulus2!.draw();
-        // this.annulus3!.draw();
-        // this.annulus.verlet();
-
 
         // Bubbles
         this.p.noFill();
-        this.p.stroke(100, 100, 255, this.p.random(90, 220));
+        this.p.stroke(this.p.random(90, 220), this.p.random(90, 220), this.p.random(90, 220), this.p.random(40, 125));
         this.p.strokeWeight(.25);
         for (let i = 0; i < this.bubbleTempCount; i++) {
             this.p.push();
@@ -294,6 +290,7 @@ export class Petromyzonus {
             this.p.pop();
 
         }
+        this.p.pop();
     }
 
     move(): void {

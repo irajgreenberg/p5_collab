@@ -21,6 +21,7 @@ export class VerletAnnulus extends VerletBase {
     radialSeg: number = 0;
 
     strands: VerletStrand[] = [];
+    nodeCols: P5.Color[][] = [];
 
 
 
@@ -79,7 +80,8 @@ export class VerletAnnulus extends VerletBase {
                     this.outerRingFreqs.push(outerRingFreqSeed);
                     this.outerRingAmps.push(outerRingAmpSeed);
 
-                    this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(5, 50), this.p.random(12, 21), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(20, 60)), this.p.random(.5, 1)));
+                    this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(8, 15), this.p.random(6, 12), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(20, 60)), this.p.random(.5, 3), this.p.createVector(.003, .003)));
+                    // this.strands[this.strands.length - 1].setStickTension(this.p.createVector(.009, .009));
                 }
             }
             this.nodes2D.push(ring);
@@ -87,18 +89,21 @@ export class VerletAnnulus extends VerletBase {
 
         // create sticks
         for (let i = 0; i < this.nodes2D.length; i++) {
+            this.nodeCols[i] = [];
             for (let j = 0; j < this.nodes2D[i].length; j++) {
+                let rc = this.p.random(200, 255);
+                this.nodeCols[i][j] = this.p.color(rc, rc, rc, this.p.random(80, 150));
                 // rings
                 if (j < this.nodes2D[i].length - 1) {
-                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][j + 1], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 90))));
+                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][j + 1], this.elasticity, 0, this.style.stickCol));
                 } else {
-                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][0], this.elasticity, 0, this.p.color(200, 100, 100, this.p.random(20, 90))));
+                    this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][0], this.elasticity, 0, this.style.stickCol));
                 }
 
                 // spines
                 if (i < this.nodes2D.length - 1) {
                     this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i + 1][j], this.elasticity, 0,
-                        this.p.color(255, 255, 255, this.p.random(20, 90))));
+                        this.style.stickCol));
                 }
 
                 // cross-supports
@@ -121,7 +126,8 @@ export class VerletAnnulus extends VerletBase {
         //     }
         // }
         for (let i = 0; i < this.strands.length; i++) {
-            this.strands[i].setStickTension(this.p.createVector(.5, .5));
+            // this.strands[i].setStickTension(this.p.createVector(.9, .9));
+
         }
     }
 
@@ -136,9 +142,10 @@ export class VerletAnnulus extends VerletBase {
         this.centroid.div(this.innerRing.length);
 
         for (let i = 0, k = 0; i < this.nodes.length; i++) {
-            // this.nodes[i].draw();
+            this.nodes[i].draw();
             if (i > this.innerRing.length) {
                 this.nodes[i].verlet();
+                this.nodes[i].col = this.p.color(this.p.random(200, 255), this.p.random(200, 255), this.p.random(255));
             }
 
             // stablize annulus to outer ring
@@ -156,39 +163,48 @@ export class VerletAnnulus extends VerletBase {
         }
 
         for (let i = 0; i < this.sticks.length; i++) {
-            //this.sticks[i].draw();
             this.sticks[i].constrainLen();
         }
 
         // render annulus skin
-        this.p.fill(this.p.color(this.fillCol));
+        //this.p.fill(this.fillCol);
         this.p.stroke(this.p.color(this.style.stickCol));
         this.p.strokeWeight(this.style.stickWeight);
-        //this.p.noStroke();
+
         for (let i = 0; i < this.nodes2D.length; i++) {
             for (let j = 0; j < this.nodes2D[i].length; j++) {
                 this.p.beginShape();
                 if (i < this.nodes2D.length - 1) {
                     if (j < this.nodes2D[i].length - 1) {
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i][j].pos.x, this.nodes2D[i][j].pos.y, this.nodes2D[i][j].pos.z);
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i][j + 1].pos.x, this.nodes2D[i][j + 1].pos.y, this.nodes2D[i][j + 1].pos.z);
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i + 1][j + 1].pos.x, this.nodes2D[i + 1][j + 1].pos.y, this.nodes2D[i + 1][j + 1].pos.z);
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i + 1][j].pos.x, this.nodes2D[i + 1][j].pos.y, this.nodes2D[i + 1][j].pos.z);
                     } else {
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i][j].pos.x, this.nodes2D[i][j].pos.y, this.nodes2D[i][j].pos.z);
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i][0].pos.x, this.nodes2D[i][0].pos.y, this.nodes2D[i][0].pos.z);
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i + 1][0].pos.x, this.nodes2D[i + 1][0].pos.y, this.nodes2D[i + 1][0].pos.z);
+                        this.p.fill(this.nodeCols[i][j])
                         this.p.vertex(this.nodes2D[i + 1][j].pos.x, this.nodes2D[i + 1][j].pos.y, this.nodes2D[i + 1][j].pos.z);
 
                     }
                 }
                 this.p.endShape(this.p.CLOSE);
+                // this.nodes2D[i][j].draw();
             }
 
         }
         for (let i = 0; i < this.strands.length; i++) {
             this.strands[i].move();
-            this.strands[i].draw(true, false);
+            // this.strands[i].set
+            this.strands[i].draw(true, true);
         }
 
     }

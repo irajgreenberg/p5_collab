@@ -17,14 +17,14 @@ export class VerletStrand {
 
     stickTension: P5.Vector;
 
-    constructor(p: P5, head: P5.Vector, len: number, nodeCount: number, col: P5.Color, strokeWt: number) {
+    constructor(p: P5, head: P5.Vector, len: number, nodeCount: number, col: P5.Color, strokeWt: number, stickTension: P5.Vector = p.createVector(.01, .3)) {
         this.p = p;
         this.head = head;
         this.len = len;
         this.nodeCount = nodeCount;
         this.col = col;
         this.strokeWt = strokeWt;
-        this.stickTension = p.createVector(.01, .3);
+        this.stickTension = stickTension;
 
         const lenSeg = len / nodeCount;
         for (let i = 0; i < nodeCount; i++) {
@@ -44,6 +44,7 @@ export class VerletStrand {
         }
     }
 
+    // this doesn't due anything if I don't update Sticks
     setStickTension(stickTension: P5.Vector): void {
         this.stickTension = stickTension;
     }

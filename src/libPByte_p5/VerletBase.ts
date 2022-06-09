@@ -32,8 +32,8 @@ export abstract class VerletBase {
         // }
 
         for (let i = 0; i < this.sticks.length; i++) {
-            this.sticks[i].draw();
-            this.sticks[i].constrainLen();
+            // this.sticks[i].draw();
+            // this.sticks[i].constrainLen();
         }
     }
 
