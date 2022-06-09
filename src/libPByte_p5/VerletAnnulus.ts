@@ -46,10 +46,15 @@ export class VerletAnnulus extends VerletBase {
         for (let i = 0; i < this.innerRing.length; i++) {
             this.centroid.add(this.innerRing[i]);
         }
-        this.centroid.div(this.innerRing.length - 1);
+        this.centroid.div(this.innerRing.length);
 
         // calculate radial segment length between consective rings
-        this.radialSeg = (this.radius - this.innerRing[0].mag()) / this.ringEdgeCount;
+        // console.log("this.radius = ", this.radius);
+        // console.log("this.innerRing[0] = ", this.centroid.dist(this.innerRing[0]));
+        const innnerRingRadius = this.centroid.dist(this.innerRing[0]);
+        this.radius = innnerRingRadius * 6;
+        this.radialSeg = (this.radius - innnerRingRadius) / this.ringEdgeCount;
+        //this.radialSeg = (this.radius - this.innerRing[0].mag()) / this.ringEdgeCount;
         for (let i = 0; i < this.ringEdgeCount; i++) {
             const ring: VerletNode[] = [];
             let v = this.p.createVector(0, 0, 0);
@@ -66,6 +71,7 @@ export class VerletAnnulus extends VerletBase {
 
                 v.y += this.innerRing[j].y;
                 v.z += this.innerRing[j].z;
+                v.x = this.innerRing[j].x;
 
                 const vn = new VerletNode(this.p, v, this.style.nodeRadius, this.style.nodeCol);
                 ring[j] = vn;
@@ -149,17 +155,17 @@ export class VerletAnnulus extends VerletBase {
             }
 
             // stablize annulus to outer ring
-            if (i > this.nodes.length - this.innerRing.length - 1) {
-                this.outerRing[k].x = this.outerRingInit[k].x + this.p.sin(this.outerRingThetas[k]) * this.outerRingAmps[k];
-                // this.outerRing[k].y = this.outerRingInit[k].y + this.p.sin(this.outerRingThetas[k]) * 100;
-                // this.outerRing[k].z = this.outerRingInit[k].z + this.p.sin(this.outerRingThetas[k]) * 100;
-                this.nodes[i].pos.x = this.outerRing[k].x + this.centroid.x;
-                this.nodes[i].pos.y = this.outerRing[k].y + this.centroid.y;
-                this.nodes[i].pos.z = this.outerRing[k].z + this.centroid.z;
-                // this.outerRingThetas[k] += this.p.PI / 45;
-                this.outerRingThetas[k] += this.outerRingFreqs[k];
-                k++
-            }
+            // if (i > this.nodes.length - this.innerRing.length - 1) {
+            //     this.outerRing[k].x = this.outerRingInit[k].x + this.p.sin(this.outerRingThetas[k]) * this.outerRingAmps[k];
+            //     // this.outerRing[k].y = this.outerRingInit[k].y + this.p.sin(this.outerRingThetas[k]) * 100;
+            //     // this.outerRing[k].z = this.outerRingInit[k].z + this.p.sin(this.outerRingThetas[k]) * 100;
+            //     this.nodes[i].pos.x = this.outerRing[k].x + this.centroid.x;
+            //     this.nodes[i].pos.y = this.outerRing[k].y + this.centroid.y;
+            //     this.nodes[i].pos.z = this.outerRing[k].z + this.centroid.z;
+            //     // this.outerRingThetas[k] += this.p.PI / 45;
+            //     this.outerRingThetas[k] += this.outerRingFreqs[k];
+            //     k++
+            // }
         }
 
         for (let i = 0; i < this.sticks.length; i++) {

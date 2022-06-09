@@ -173,9 +173,9 @@ export class Petromyzonus {
             p.random(.1, .6)); // stick weight
 
         this.annulus2 = new VerletAnnulus(p,
-            p.random(570, 1100), // radius
-            p.int(p.random(6, 10)), // ring edge count
-            this.pts2D[7], // inner ring
+            p.random(370, 800), // radius
+            p.int(p.random(4, 6)), // ring edge count
+            this.pts2D[this.pts2D.length - 2], // inner ring
             p.random(.01, .005), // elasticity
             p.color(p.random(125, 255), p.random(125, 255), p.random(125, 255), p.random(50, 90)), //fill color
             vs); // verlet style
@@ -197,8 +197,8 @@ export class Petromyzonus {
             this.bubbleIsOn[i] = false;
         }
 
-        this.spineMotionAmp = p.createVector(p.random(120, 240), p.random(60, 90), p.random(60, 9));
-        this.spineMotionFreq = p.random(40, 90);
+        this.spineMotionAmp = p.createVector(p.random(120, 440), p.random(30, 90), p.random(30, 90));
+        this.spineMotionFreq = p.random(20, 90);
     }
 
 

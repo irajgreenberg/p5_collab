@@ -28,7 +28,9 @@ let petroTravelTheta: P5.Vector;
 let directionVal = 0;
 
 const sketch = (p: P5) => {
+    p.disableFriendlyErrors = true; // disables FES
     p.setup = () => {
+        p.pixelDensity(1); // turn off for mobile
         // p.camera(0, 0, 1300 + p.sin(p.frameCount * 0.1) * 400, 0, 0, 0, 0, 1, 0);
         bgR = p.int(p.random(10, 90));
         bgG = p.int(p.random(10, 90));
@@ -44,7 +46,7 @@ const sketch = (p: P5) => {
         document.body.style.backgroundColor = bgColor;
         // document.body.style.backgroundImage = "linear-gradient(, " + bgColor + ", " + bgColor2 + ")";
 
-        let cnv = p.createCanvas(900, 900, p.WEBGL);
+        let cnv = p.createCanvas(800, 800, p.WEBGL);
         p.perspective(p.PI / 1.5, p.width / p.height, 0.01, 10000);
 
         bgAlpha = p.random(80, 140);
@@ -63,10 +65,10 @@ const sketch = (p: P5) => {
         scl = p.random(.95, 1.3);
         petro = new Petromyzonus(p,
             p.random(400, 5400), // length
-            14, // slices
-            p.int(p.random(12, 16)), // radial detail
-            p.createVector(p.random(5, 65), p.random(15, 350)), // radius min/max
-            p.int(p.random(1, 6))); // body segments
+            p.floor(p.random(15, 50)), // slices
+            p.int(p.random(12, 24)), // radial detail
+            p.createVector(p.random(70, 150), p.random(150, 350)), // radius min/max
+            p.int(p.random(1, 3))); // body segments
 
         // start postion seed for translate in draw()
         startPosSeed = p.createVector(p.random(5000), p.random(5000), p.random(5000));
@@ -150,6 +152,7 @@ const sketch = (p: P5) => {
         const z = -100 + p.cos(petroTravelTheta.z) * 1000;
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
+        // move creature
         p.translate(x, y, z);
         if (directionVal == 0) {
             p.rotateY(p.PI / 2 - p.atan2(z, x));

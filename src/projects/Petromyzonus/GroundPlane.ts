@@ -17,7 +17,7 @@ export class GroundPlane {
             for (let j = 0; j < rows; j++) {
                 const x = -dim.x / 2 + colStep * i;
                 const z = -dim.z / 2 + rowStep * j;
-                this.verts2D[i][j] = p.createVector(x, p.random(dim.y), z);
+                this.verts2D[i][j] = p.createVector(x, p.random(dim.y * 2), z);
                 const tint = p.random(-.9, 1.1);
                 this.cols2D[i][j] = p.createVector(this.colRange.x * tint, this.colRange.y * tint, this.colRange.z * tint);
             }
