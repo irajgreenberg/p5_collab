@@ -40,7 +40,7 @@ export class VerletAnnulus extends VerletBase {
 
         // for outerRing
         const outerRingFreqSeed = this.p.random(this.p.PI / 20, this.p.PI / 120);
-        const outerRingAmpSeed = this.p.random(50, 90);
+        const outerRingAmpSeed = this.p.random(50, 130);
 
         // get centroid to properly scale annuli at origin
         for (let i = 0; i < this.innerRing.length; i++) {
@@ -52,7 +52,7 @@ export class VerletAnnulus extends VerletBase {
         // console.log("this.radius = ", this.radius);
         // console.log("this.innerRing[0] = ", this.centroid.dist(this.innerRing[0]));
         const innnerRingRadius = this.centroid.dist(this.innerRing[0]);
-        this.radius = innnerRingRadius * 6;
+        this.radius = innnerRingRadius * this.p.random(2, 4);
         this.radialSeg = (this.radius - innnerRingRadius) / this.ringEdgeCount;
         //this.radialSeg = (this.radius - this.innerRing[0].mag()) / this.ringEdgeCount;
         for (let i = 0; i < this.ringEdgeCount; i++) {
@@ -97,8 +97,10 @@ export class VerletAnnulus extends VerletBase {
         for (let i = 0; i < this.nodes2D.length; i++) {
             this.nodeCols[i] = [];
             for (let j = 0; j < this.nodes2D[i].length; j++) {
-                let rc = this.p.random(200, 255);
-                this.nodeCols[i][j] = this.p.color(rc, rc, rc, this.p.random(80, 150));
+                let rc = this.p.random(100, 255);
+
+                this.nodeCols[i][j] = this.p.color(rc + this.p.random(-50, 50), rc + this.p.random(-50, 50), rc + this.p.random(-50, 50), this.p.random(20, 90));
+
                 // rings
                 if (j < this.nodes2D[i].length - 1) {
                     this.sticks.push(new VerletStick(this.p, this.nodes2D[i][j], this.nodes2D[i][j + 1], this.elasticity, 0, this.style.stickCol));
@@ -155,17 +157,20 @@ export class VerletAnnulus extends VerletBase {
             }
 
             // stablize annulus to outer ring
-            // if (i > this.nodes.length - this.innerRing.length - 1) {
-            //     this.outerRing[k].x = this.outerRingInit[k].x + this.p.sin(this.outerRingThetas[k]) * this.outerRingAmps[k];
-            //     // this.outerRing[k].y = this.outerRingInit[k].y + this.p.sin(this.outerRingThetas[k]) * 100;
-            //     // this.outerRing[k].z = this.outerRingInit[k].z + this.p.sin(this.outerRingThetas[k]) * 100;
-            //     this.nodes[i].pos.x = this.outerRing[k].x + this.centroid.x;
-            //     this.nodes[i].pos.y = this.outerRing[k].y + this.centroid.y;
-            //     this.nodes[i].pos.z = this.outerRing[k].z + this.centroid.z;
-            //     // this.outerRingThetas[k] += this.p.PI / 45;
-            //     this.outerRingThetas[k] += this.outerRingFreqs[k];
-            //     k++
-            // }
+            if (i > this.nodes.length - this.innerRing.length - 1) {
+                this.outerRing[k].x = this.outerRingInit[k].x + this.p.sin(this.outerRingThetas[k]) * this.outerRingAmps[k];
+                // this.outerRing[k].y = this.outerRingInit[k].y + this.p.sin(this.outerRingThetas[k]) * 100;
+                // this.outerRing[k].z = this.outerRingInit[k].z + this.p.sin(this.outerRingThetas[k]) * 100;
+
+
+                this.nodes[i].pos.x = this.outerRing[k].x;
+                this.nodes[i].pos.y = this.outerRing[k].y;
+                this.nodes[i].pos.z = this.outerRing[k].z;
+
+                // this.outerRingThetas[k] += this.p.PI / 45;
+                this.outerRingThetas[k] += this.outerRingFreqs[k];
+                k++
+            }
         }
 
         for (let i = 0; i < this.sticks.length; i++) {
@@ -208,9 +213,9 @@ export class VerletAnnulus extends VerletBase {
 
         }
         for (let i = 0; i < this.strands.length; i++) {
-            this.strands[i].move();
+            // this.strands[i].move();
             // this.strands[i].set
-            this.strands[i].draw(true, true);
+            // this.strands[i].draw(true, true);
         }
 
     }

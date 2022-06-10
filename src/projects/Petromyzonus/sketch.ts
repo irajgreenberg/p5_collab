@@ -46,7 +46,7 @@ const sketch = (p: P5) => {
         document.body.style.backgroundColor = bgColor;
         // document.body.style.backgroundImage = "linear-gradient(, " + bgColor + ", " + bgColor2 + ")";
 
-        let cnv = p.createCanvas(800, 800, p.WEBGL);
+        let cnv = p.createCanvas(900, 900, p.WEBGL);
         p.perspective(p.PI / 1.5, p.width / p.height, 0.01, 10000);
 
         bgAlpha = p.random(80, 140);
@@ -65,10 +65,10 @@ const sketch = (p: P5) => {
         scl = p.random(.95, 1.3);
         petro = new Petromyzonus(p,
             p.random(400, 5400), // length
-            p.floor(p.random(15, 50)), // slices
-            p.int(p.random(12, 24)), // radial detail
-            p.createVector(p.random(70, 150), p.random(150, 350)), // radius min/max
-            p.int(p.random(1, 3))); // body segments
+            p.floor(p.random(6, 15)), // slices
+            p.int(p.random(8, 16)), // radial detail
+            p.createVector(p.random(1, 150), p.random(300, 650)), // radius min/max
+            p.int(p.random(1, 7))); // body segments
 
         // start postion seed for translate in draw()
         startPosSeed = p.createVector(p.random(5000), p.random(5000), p.random(5000));
@@ -106,7 +106,7 @@ const sketch = (p: P5) => {
 
         // draw rotating groundplane
         p.push();
-        p.translate(0, 900, 0);
+        p.translate(0, 1200, 0);
         p.rotateY(p.frameCount * p.PI / 6000);
         // ground light;
 
@@ -117,7 +117,7 @@ const sketch = (p: P5) => {
 
 
         p.orbitControl(1, 1);
-        p.translate(0, -300, -400);
+        p.translate(0, -600, -400);
 
 
 
@@ -147,9 +147,9 @@ const sketch = (p: P5) => {
         // const y = p.cos(p.frameCount * p.PI / 290) * 800
         // const z = -500 + p.cos(p.frameCount * p.PI / 590) * 1500;
 
-        const x = p.sin(petroTravelTheta.x) * 1000
-        const y = p.cos(petroTravelTheta.y) * 400
-        const z = -100 + p.cos(petroTravelTheta.z) * 1000;
+        const x = p.sin(petroTravelTheta.x) * 1200
+        const y = -500 + p.cos(petroTravelTheta.y) * 400
+        const z = -900 + p.cos(petroTravelTheta.z) * 2000;
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
         // move creature

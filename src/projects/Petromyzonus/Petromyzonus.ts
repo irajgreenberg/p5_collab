@@ -35,6 +35,9 @@ export class Petromyzonus {
     annulus2: VerletAnnulus | undefined;
     annulus3: VerletAnnulus | undefined;
 
+    annuliStyles: VerletStyle[] = [];
+    annuli: VerletAnnulus[] = [];
+
     // swarm
     smarmCount = 800;
     smarmSpd: P5.Vector[] = [];
@@ -138,10 +141,10 @@ export class Petromyzonus {
                     this.tailStrands.push(
                         new VerletStrand(p,
                             csPts[j], //head
-                            p.random(100, 1000), // lenth
-                            p.int(p.random(5, 9)), // nodeCount
+                            p.random(400, 2000), // lenth
+                            p.int(p.random(7, 12)), // nodeCount
                             p.color(tailCol), // color
-                            p.random(2, 19))); // strokeWeight
+                            p.random(2, 16))); // strokeWeight
                 } else if (j % 4 == 0) {
                     // this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
                     this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(28, 150), p.int(p.random(5, 8)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(8, 44)));
@@ -163,22 +166,24 @@ export class Petromyzonus {
 
         }
 
-        // Annulus
-        const vs = new VerletStyle(
-            2, // node Radius
-            p.color(p.random(200, 255), p.random(200, 255), p.random(200, 255), p.random(190, 225)),  // node color
-            p.random(190, 225), // node alpha
-            NodeType.SPHERE, // node type
-            p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(10, 75)), // stick color
-            p.random(.1, .6)); // stick weight
+        // Annuli
+        for (let i = 0; i < this.pts2D.length; i++) {
+            this.annuliStyles[i] = new VerletStyle(
+                2, // node Radius
+                p.color(p.random(200, 255), p.random(200, 255), p.random(200, 255), p.random(190, 225)),  // node color
+                p.random(190, 225), // node alpha
+                NodeType.SPHERE, // node type
+                p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(10, 75)), // stick color
+                p.random(.1, .6)); // stick weight
 
-        this.annulus2 = new VerletAnnulus(p,
-            p.random(370, 800), // radius
-            p.int(p.random(4, 6)), // ring edge count
-            this.pts2D[this.pts2D.length - 2], // inner ring
-            p.random(.01, .005), // elasticity
-            p.color(p.random(125, 255), p.random(125, 255), p.random(125, 255), p.random(50, 90)), //fill color
-            vs); // verlet style
+            this.annuli[i] = new VerletAnnulus(p,
+                p.random(370, 800), // radius
+                p.int(p.random(4, 12)), // ring edge count
+                this.pts2D[i], // inner ring
+                p.random(.01, .005), // elasticity
+                p.color(p.random(100, 255), p.random(100, 255), p.random(100, 255), p.random(50, 90)), //fill color
+                this.annuliStyles[i]); // verlet style
+        }
 
         // Bubbles
         this.bubbleFreqRange = this.p.createVector(this.p.PI / 45, this.p.PI / 5);
@@ -197,8 +202,8 @@ export class Petromyzonus {
             this.bubbleIsOn[i] = false;
         }
 
-        this.spineMotionAmp = p.createVector(p.random(120, 440), p.random(30, 90), p.random(30, 90));
-        this.spineMotionFreq = p.random(20, 90);
+        this.spineMotionAmp = p.createVector(p.random(130, 890), p.random(130, 890), p.random(30, 90));
+        this.spineMotionFreq = p.random(60, 90);
     }
 
 
@@ -206,7 +211,8 @@ export class Petromyzonus {
         this.p.push();
         //this.p.translate(0, 0, 500);
         //Body
-        this.p.noStroke();
+        // this.p.noStroke();
+        this.p.stroke(this.p.random(255), this.p.random(255), 0, 50);
         for (let i = 0, k = 0; i < this.pts2D.length; i++) {
             // radial segments
             for (let j = 0; j < this.pts2D[i].length; j++) {
@@ -271,8 +277,33 @@ export class Petromyzonus {
             this.bodyStrands[i].draw();
         }
 
-        //this.p.strokeWeight(1.3);
-        this.annulus2!.draw();
+        // draw annuli
+        for (let i = 0; i < this.pts2D.length; i++) {
+            if (i > 0 && i < this.pts2D.length - 1 && i % 2 == 0) {
+                this.annuli[i].draw();
+            }
+
+        }
+
+
+        // connect annuli
+        for (let i = 0; i < this.annuli.length; i++) {
+            for (let j = 0; j < this.annuli[i].ringEdgeCount; j++) {
+                this.p.strokeWeight(5.5);
+                this.p.stroke(255, 0, 0);
+                if (i < this.annuli.length - 1) {
+                    this.p.beginShape(this.p.LINES);
+                    const v0 = this.annuli[i].nodes2D[i][j].pos;
+                    //     const v1 = this.annuli[i].nodes2D[i + 1][j].pos;
+                    //     this.p.vertex(v0.x, v0.y, v0.z);
+                    //     this.p.vertex(v1.x, v1.y, v1.z);
+                    this.p.endShape();
+                }
+            }
+
+        }
+
+
 
         // Bubbles
         this.p.noFill();
@@ -296,14 +327,16 @@ export class Petromyzonus {
     move(): void {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
-            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.x;
-            this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.z
+            this.spine[i].x = this.spine_init[i].x + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.x;
+            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.y;
+            this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.z;
             this.spineThetas[i] += this.p.PI / this.spineMotionFreq;
 
             // deform body based on spine motion
             for (let j = 0; j < this.pts2D[i].length; j++) {
                 this.pts2D[i][j].x = this.pts2D_init[i][j].x + this.spine[i].z;
                 this.pts2D[i][j].y = this.pts2D_init[i][j].y + this.spine[i].y;
+                this.pts2D[i][j].z = this.pts2D_init[i][j].z + this.spine[i].z;
 
                 // mouth
                 if (i === this.spine.length - 1) {
