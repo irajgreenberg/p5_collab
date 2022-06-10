@@ -289,16 +289,16 @@ export class Petromyzonus {
         // connect annuli
         for (let i = 0; i < this.annuli.length; i++) {
             for (let j = 0; j < this.annuli[i].ringEdgeCount; j++) {
-                this.p.strokeWeight(5.5);
-                this.p.stroke(255, 0, 0);
-                if (i < this.annuli.length - 1) {
-                    this.p.beginShape(this.p.LINES);
-                    const v0 = this.annuli[i].nodes2D[i][j].pos;
-                    //     const v1 = this.annuli[i].nodes2D[i + 1][j].pos;
-                    //     this.p.vertex(v0.x, v0.y, v0.z);
-                    //     this.p.vertex(v1.x, v1.y, v1.z);
-                    this.p.endShape();
-                }
+                // this.p.strokeWeight(5.5);
+                // this.p.stroke(255, 0, 0);
+                // if (i < this.annuli.length - 1) {
+                //     this.p.beginShape(this.p.LINES);
+                //     const v0 = this.annuli[i].nodes2D[i][j].pos;
+                //     //     const v1 = this.annuli[i].nodes2D[i + 1][j].pos;
+                //     //     this.p.vertex(v0.x, v0.y, v0.z);
+                //     //     this.p.vertex(v1.x, v1.y, v1.z);
+                //     this.p.endShape();
+                // }
             }
 
         }
