@@ -47,7 +47,7 @@ const sketch = (p: P5) => {
         document.body.style.backgroundColor = bgColor;
         // document.body.style.backgroundImage = "linear-gradient(, " + bgColor + ", " + bgColor2 + ")";
 
-        let cnv = p.createCanvas(900, 900, p.WEBGL);
+        let cnv = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
         p.perspective(p.PI / 1.5, p.width / p.height, 0.01, 10000);
 
         bgAlpha = p.random(80, 140);
@@ -62,16 +62,16 @@ const sketch = (p: P5) => {
         directionVal = p.floor(p.random(2));
         // console.log(directionVal);
         // ground plane
-        gp = new GroundPlane(p, p.createVector(15000, 190, 15000), 30, 30, p.createVector(bgR, bgG, bgB));
+        gp = new GroundPlane(p, p.createVector(p.windowWidth * 20, 190, p.windowHeight * 20), 20, 20, p.createVector(bgR, bgG, bgB));
 
         // creature
         scl = p.random(.95, 1.3);
         petro = new Petromyzonus(p,
-            p.random(400, 5400), // length
-            p.floor(p.random(6, 15)), // slices
-            p.int(p.random(8, 16)), // radial detail
-            p.createVector(p.random(60, 150), p.random(300, 650)), // radius min/max
-            p.int(p.random(1, 7))); // body segments
+            p.random(1700, 5400), // length
+            p.floor(p.random(10, 20)), // slices
+            p.int(p.random(6, 12)), // radial detail
+            p.createVector(p.random(20, 150), p.random(300, 650)), // radius min/max
+            p.int(p.random(1, 9))); // body segments
 
         // start postion seed for translate in draw()
         startPosSeed = p.createVector(p.random(5000), p.random(5000), p.random(5000));
@@ -95,7 +95,7 @@ const sketch = (p: P5) => {
     const resizedSketch = (p: P5) => {
         p.windowResized = () => {
             document.body.style.backgroundColor = bgColor;
-            p.resizeCanvas(1000, 1000);
+            p.resizeCanvas(p.windowWidth, p.windowHeight);
         }
     };
 
@@ -109,7 +109,7 @@ const sketch = (p: P5) => {
 
         // draw rotating groundplane
         p.push();
-        p.translate(0, 1200, 0);
+        p.translate(0, 1500, 0);
         p.rotateY(p.frameCount * p.PI / 6000);
         // ground light;
 
@@ -146,8 +146,8 @@ const sketch = (p: P5) => {
         // const y = p.cos(p.frameCount * p.PI / 290) * 800
         // const z = -500 + p.cos(p.frameCount * p.PI / 590) * 1500;
 
-        const x = p.sin(petroTravelTheta.x) * 1200
-        const y = -500 + p.cos(petroTravelTheta.y) * 400
+        const x = p.sin(petroTravelTheta.x) * p.windowWidth * 2.5;//1200
+        const y = -p.windowWidth * .5 + p.cos(petroTravelTheta.y) * p.windowWidth
         const z = -900 + p.cos(petroTravelTheta.z) * 2000;
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
@@ -168,13 +168,13 @@ const sketch = (p: P5) => {
         petro.move();
 
         if (directionVal == 0) {
-            petroTravelTheta.x += p.PI / 590
-            petroTravelTheta.y += p.PI / 290
-            petroTravelTheta.z += p.PI / 590
+            petroTravelTheta.x += p.PI / 200; //590
+            petroTravelTheta.y += p.PI / 68
+            petroTravelTheta.z += p.PI / 200
         } else {
-            petroTravelTheta.x -= p.PI / 590
-            petroTravelTheta.y -= p.PI / 290
-            petroTravelTheta.z -= p.PI / 590
+            petroTravelTheta.x -= p.PI / 200; //590
+            petroTravelTheta.y -= p.PI / 68
+            petroTravelTheta.z -= p.PI / 200
 
         }
 

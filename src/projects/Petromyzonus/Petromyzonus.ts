@@ -82,9 +82,9 @@ export class Petromyzonus {
 
         // determine how many annuli to create based on slice count
         const bodySliceCount = slices; // avoid annuli on head and tail
-        if (slices <= 6) {
+        if (slices <= 7) {
             this.annuliMod = 1;
-        } else if (slices > 6 && slices < 14) {
+        } else if (slices > 7 && slices < 14) {
             this.annuliMod = 2;
         } else {
             this.annuliMod = 3;
@@ -104,6 +104,7 @@ export class Petromyzonus {
 
         for (let i = 0, k = 0, l = 0; i < slices; i++) {
             const radiusDelta = this.radiusMinMax.y - this.radiusMinMax.x;
+            //console.log("radiusDelta = ", radiusDelta)
             const csPts: P5.Vector[] = [];
             const csPts_init: P5.Vector[] = [];
             const x = -length / 2 + bodySeg * i;
@@ -113,8 +114,13 @@ export class Petromyzonus {
             let theta = 0;
             for (let j = 0; j < radialDetail; j++) {
                 l = i * radialDetail + j;
-                const y = p.sin(theta) * (radiusMinMax.x + p.sin(k) * radiusDelta);
-                const z = p.cos(theta) * (radiusMinMax.x + p.sin(k) * radiusDelta);
+                // const y = p.sin(theta) * (radiusMinMax.x + p.sin(k) * radiusDelta);
+                // const z = p.cos(theta) * (radiusMinMax.x + p.sin(k) * radiusDelta);
+
+                const y = p.sin(theta) * (radiusMinMax.x + p.abs(p.sin(k) * radiusDelta));
+                const z = p.cos(theta) * (radiusMinMax.x + p.abs(p.sin(k) * radiusDelta));
+
+
                 csPts[j] = p.createVector(x, y, z);
                 csPts_init[j] = p.createVector(x, y, z);
 
@@ -183,7 +189,7 @@ export class Petromyzonus {
         // Annuli
         for (let i = 0; i < this.pts2D.length; i++) {
             if (i % this.annuliMod == 0) {
-                this.annuliEdgeCounts.push(p.int(p.random(4, 12)));
+                this.annuliEdgeCounts.push(p.int(p.random(4, 7)));
                 this.annuliStyles.push(new VerletStyle(
                     2, // node Radius
                     p.color(p.random(200, 255), p.random(200, 255), p.random(200, 255), p.random(190, 225)),  // node color
@@ -219,8 +225,8 @@ export class Petromyzonus {
             this.bubbleIsOn[i] = false;
         }
 
-        this.spineMotionAmp = p.createVector(p.random(130, 890), p.random(130, 890), p.random(30, 90));
-        this.spineMotionFreq = p.random(60, 90);
+        this.spineMotionAmp = p.createVector(p.random(330, 400), p.random(330, 990), p.random(30, 90));
+        this.spineMotionFreq = p.random(100, 300);
     }
 
 
@@ -343,13 +349,13 @@ export class Petromyzonus {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
             this.spine[i].x = this.spine_init[i].x + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.x;
-            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.y;
+            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.y * 2;
             this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.z;
-            this.spineThetas[i] += this.p.PI / this.spineMotionFreq;
+
 
             // deform body based on spine motion
             for (let j = 0; j < this.pts2D[i].length; j++) {
-                this.pts2D[i][j].x = this.pts2D_init[i][j].x + this.spine[i].z;
+                this.pts2D[i][j].x = this.pts2D_init[i][j].x + this.spine[i].x;
                 this.pts2D[i][j].y = this.pts2D_init[i][j].y + this.spine[i].y;
                 this.pts2D[i][j].z = this.pts2D_init[i][j].z + this.spine[i].z;
 
@@ -361,6 +367,7 @@ export class Petromyzonus {
 
                 }
             }
+            this.spineThetas[i] += this.p.PI / 30;//this.spineMotionFreq;
         }
 
 
