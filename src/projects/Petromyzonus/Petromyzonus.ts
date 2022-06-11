@@ -37,6 +37,8 @@ export class Petromyzonus {
 
     annuliStyles: VerletStyle[] = [];
     annuli: VerletAnnulus[] = [];
+    annuliMod: number = 0; // controls how many annuli based on number of slices
+    annuliEdgeCounts: number[] = [];
 
     // swarm
     smarmCount = 800;
@@ -77,6 +79,18 @@ export class Petromyzonus {
         this.radiusMinMax = radiusMinMax;
         this.bodySegments = bodySegments;
         this.bodyColIndex = this.p.int(this.p.random(8));
+
+        // determine how many annuli to create based on slice count
+        const bodySliceCount = slices; // avoid annuli on head and tail
+        if (slices <= 6) {
+            this.annuliMod = 1;
+        } else if (slices > 6 && slices < 14) {
+            this.annuliMod = 2;
+        } else {
+            this.annuliMod = 3;
+        }
+
+        this.annuliMod = 1;
 
 
         // each cross-section built around x-axis
@@ -168,21 +182,24 @@ export class Petromyzonus {
 
         // Annuli
         for (let i = 0; i < this.pts2D.length; i++) {
-            this.annuliStyles[i] = new VerletStyle(
-                2, // node Radius
-                p.color(p.random(200, 255), p.random(200, 255), p.random(200, 255), p.random(190, 225)),  // node color
-                p.random(190, 225), // node alpha
-                NodeType.SPHERE, // node type
-                p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(10, 75)), // stick color
-                p.random(.1, .6)); // stick weight
+            if (i % this.annuliMod == 0) {
+                this.annuliEdgeCounts.push(p.int(p.random(4, 12)));
+                this.annuliStyles.push(new VerletStyle(
+                    2, // node Radius
+                    p.color(p.random(200, 255), p.random(200, 255), p.random(200, 255), p.random(190, 225)),  // node color
+                    p.random(190, 225), // node alpha
+                    NodeType.SPHERE, // node type
+                    p.color(p.random(135, 255), p.random(135, 255), p.random(135, 255), p.random(10, 75)), // stick color
+                    p.random(.1, .6))); // stick weight
 
-            this.annuli[i] = new VerletAnnulus(p,
-                p.random(370, 800), // radius
-                p.int(p.random(4, 12)), // ring edge count
-                this.pts2D[i], // inner ring
-                p.random(.01, .005), // elasticity
-                p.color(p.random(100, 255), p.random(100, 255), p.random(100, 255), p.random(50, 90)), //fill color
-                this.annuliStyles[i]); // verlet style
+                this.annuli.push(new VerletAnnulus(p,
+                    p.random(370, 800), // radius
+                    this.annuliEdgeCounts[this.annuliEdgeCounts.length - 1], // ring edge count
+                    this.pts2D[i], // inner ring
+                    p.random(.01, .005), // elasticity
+                    p.color(p.random(100, 255), p.random(100, 255), p.random(100, 255), p.random(50, 90)), //fill color
+                    this.annuliStyles[this.annuliStyles.length - 1])); // verlet style
+            }
         }
 
         // Bubbles
@@ -278,27 +295,25 @@ export class Petromyzonus {
         }
 
         // draw annuli
-        for (let i = 0; i < this.pts2D.length; i++) {
-            if (i > 0 && i < this.pts2D.length - 1 && i % 2 == 0) {
-                this.annuli[i].draw();
-            }
-
+        for (let i = 0; i < this.annuli.length; i++) {
+            this.annuli[i].draw();
         }
 
 
         // connect annuli
+        this.p.noStroke();
         for (let i = 0; i < this.annuli.length; i++) {
-            for (let j = 0; j < this.annuli[i].ringEdgeCount; j++) {
-                // this.p.strokeWeight(5.5);
-                // this.p.stroke(255, 0, 0);
-                // if (i < this.annuli.length - 1) {
-                //     this.p.beginShape(this.p.LINES);
-                //     const v0 = this.annuli[i].nodes2D[i][j].pos;
-                //     //     const v1 = this.annuli[i].nodes2D[i + 1][j].pos;
-                //     //     this.p.vertex(v0.x, v0.y, v0.z);
-                //     //     this.p.vertex(v1.x, v1.y, v1.z);
-                //     this.p.endShape();
-                // }
+            for (let j = 0; j < this.radialDetail; j++) {
+                this.p.strokeWeight(.25);
+                this.p.stroke(this.p.random(150, 255), this.p.random(255));
+                if (i < this.annuli.length - 1) {
+                    this.p.beginShape(this.p.LINES);
+                    const v0 = this.annuli[i].outerRingNodes[j].pos;
+                    const v1 = this.annuli[i + 1].outerRingNodes[j].pos;
+                    this.p.vertex(v0.x, v0.y, v0.z);
+                    this.p.vertex(v1.x, v1.y, v1.z);
+                    this.p.endShape();
+                }
             }
 
         }

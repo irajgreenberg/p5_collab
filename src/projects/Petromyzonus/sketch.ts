@@ -27,6 +27,7 @@ let startPosSeed: P5.Vector;
 let petroTravelTheta: P5.Vector;
 let directionVal = 0;
 
+
 const sketch = (p: P5) => {
     p.disableFriendlyErrors = true; // disables FES
     p.setup = () => {
@@ -61,13 +62,15 @@ const sketch = (p: P5) => {
         directionVal = p.floor(p.random(2));
         // console.log(directionVal);
         // ground plane
-        gp = new GroundPlane(p, p.createVector(15000, 190, 15000), 20, 20, p.createVector(bgR, bgG, bgB));
+        gp = new GroundPlane(p, p.createVector(15000, 190, 15000), 30, 30, p.createVector(bgR, bgG, bgB));
+
+        // creature
         scl = p.random(.95, 1.3);
         petro = new Petromyzonus(p,
             p.random(400, 5400), // length
             p.floor(p.random(6, 15)), // slices
             p.int(p.random(8, 16)), // radial detail
-            p.createVector(p.random(1, 150), p.random(300, 650)), // radius min/max
+            p.createVector(p.random(60, 150), p.random(300, 650)), // radius min/max
             p.int(p.random(1, 7))); // body segments
 
         // start postion seed for translate in draw()
@@ -110,16 +113,12 @@ const sketch = (p: P5) => {
         p.rotateY(p.frameCount * p.PI / 6000);
         // ground light;
 
-
         // p.spotLight(255, 255, 255, 100, -300, 0, 0, 0, 0);
         gp.draw();
         p.pop();
 
-
         p.orbitControl(1, 1);
         p.translate(0, -600, -400);
-
-
 
         //let al = p.random(60, 265);
         let al = 100 + p.cos(p.frameCount * p.PI / 730) * 100;

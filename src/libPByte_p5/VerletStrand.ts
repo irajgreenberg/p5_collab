@@ -51,12 +51,19 @@ export class VerletStrand {
 
 
 
-    move(): void {
+    move(lockedNode: number = 0): void {
         for (let i = 0; i < this.nodeCount; i++) {
             // this.nodes[i].verlet();
-            if (i > 0) {
-                this.nodes[i].verlet();
-                this.sticks[i - 1].constrainLen();
+            if (lockedNode == 0) {
+                if (i > 0) {
+                    this.nodes[i].verlet();
+                    this.sticks[i - 1].constrainLen();
+                }
+            } else if (lockedNode == 1) {
+                if (i < this.nodes.length - 2) {
+                    this.nodes[i].verlet();
+                    this.sticks[i].constrainLen();
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ export class VerletAnnulus extends VerletBase {
 
     ringLen: number;
     outerRing: P5.Vector[] = [];
+    outerRingNodes: VerletNode[] = [];
     outerRingInit: P5.Vector[] = [];
     outerRingThetas: number[] = [];
     outerRingFreqs: number[] = [];
@@ -85,6 +86,7 @@ export class VerletAnnulus extends VerletBase {
                     this.outerRingThetas.push(this.p.sin(this.p.PI / this.ringEdgeCount) * j);
                     this.outerRingFreqs.push(outerRingFreqSeed);
                     this.outerRingAmps.push(outerRingAmpSeed);
+
 
                     this.strands.push(new VerletStrand(this.p, vn.pos, this.p.random(8, 15), this.p.random(6, 12), this.p.color(255, this.p.random(125, 185), this.p.random(125, 185), this.p.random(20, 60)), this.p.random(.5, 3), this.p.createVector(.003, .003)));
                     // this.strands[this.strands.length - 1].setStickTension(this.p.createVector(.009, .009));
@@ -182,6 +184,8 @@ export class VerletAnnulus extends VerletBase {
         this.p.stroke(this.p.color(this.style.stickCol));
         this.p.strokeWeight(this.style.stickWeight);
 
+        this.outerRingNodes = [];
+
         for (let i = 0; i < this.nodes2D.length; i++) {
             for (let j = 0; j < this.nodes2D[i].length; j++) {
                 this.p.beginShape();
@@ -209,6 +213,12 @@ export class VerletAnnulus extends VerletBase {
                 }
                 this.p.endShape(this.p.CLOSE);
                 // this.nodes2D[i][j].draw();
+
+                // collect reference to outer nodes for annulli attachment.
+                if (i == this.nodes2D.length - 1) {
+                    this.outerRingNodes.push(this.nodes2D[i][j]);
+                }
+
             }
 
         }
