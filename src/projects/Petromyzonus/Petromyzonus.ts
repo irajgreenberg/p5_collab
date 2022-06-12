@@ -82,15 +82,15 @@ export class Petromyzonus {
 
         // determine how many annuli to create based on slice count
         const bodySliceCount = slices; // avoid annuli on head and tail
-        if (slices <= 7) {
+        if (slices <= 15) {
             this.annuliMod = 1;
-        } else if (slices > 7 && slices < 14) {
+        } else if (slices > 15 && slices < 20) {
             this.annuliMod = 2;
         } else {
             this.annuliMod = 3;
         }
 
-        this.annuliMod = 1;
+        // this.annuliMod = 1;
 
 
         // each cross-section built around x-axis
@@ -225,8 +225,8 @@ export class Petromyzonus {
             this.bubbleIsOn[i] = false;
         }
 
-        this.spineMotionAmp = p.createVector(p.random(330, 400), p.random(330, 990), p.random(30, 90));
-        this.spineMotionFreq = p.random(100, 300);
+        this.spineMotionAmp = p.createVector(p.random(180, 400), p.random(300, 700), p.random(30, 90));
+        this.spineMotionFreq = p.random(45, 125);
     }
 
 
@@ -345,11 +345,19 @@ export class Petromyzonus {
         this.p.pop();
     }
 
+    changeAmplitudeY(val: number) {
+        this.spineMotionAmp.y += val;
+    }
+
+    changeFreq(val: number) {
+        this.spineMotionFreq += val;
+    }
+
     move(): void {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
             this.spine[i].x = this.spine_init[i].x + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.x;
-            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.y * 2;
+            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.y;
             this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.z;
 
 
@@ -367,7 +375,7 @@ export class Petromyzonus {
 
                 }
             }
-            this.spineThetas[i] += this.p.PI / 30;//this.spineMotionFreq;
+            this.spineThetas[i] += this.p.PI / this.spineMotionFreq;
         }
 
 

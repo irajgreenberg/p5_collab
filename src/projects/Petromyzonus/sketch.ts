@@ -67,10 +67,10 @@ const sketch = (p: P5) => {
         // creature
         scl = p.random(.95, 1.3);
         petro = new Petromyzonus(p,
-            p.random(1700, 5400), // length
+            p.random(700, 4400), // length
             p.floor(p.random(10, 20)), // slices
-            p.int(p.random(6, 12)), // radial detail
-            p.createVector(p.random(20, 150), p.random(300, 650)), // radius min/max
+            p.int(p.random(3, 12)), // radial detail
+            p.createVector(p.random(30, 200), p.random(400, 1050)), // radius min/max
             p.int(p.random(1, 9))); // body segments
 
         // start postion seed for translate in draw()
@@ -98,6 +98,28 @@ const sketch = (p: P5) => {
             p.resizeCanvas(p.windowWidth, p.windowHeight);
         }
     };
+
+
+
+    p.keyPressed = () => {
+        // amplitude
+        if (p.key === '}') {
+            petro.changeAmplitudeY(15);
+
+        } else if (p.key === '{') {
+            petro.changeAmplitudeY(-15);
+        }
+        // frequency
+        else if (p.key === ']') {
+            petro.changeFreq(-1);
+
+        } else if (p.key === '[') {
+            petro.changeFreq(+1);
+        }
+    }
+
+
+
 
     p.draw = () => {
         p.background(bgR, bgG, bgB);
@@ -168,44 +190,44 @@ const sketch = (p: P5) => {
         petro.move();
 
         if (directionVal == 0) {
-            petroTravelTheta.x += p.PI / 200; //590
-            petroTravelTheta.y += p.PI / 68
-            petroTravelTheta.z += p.PI / 200
+            petroTravelTheta.x += p.PI / 500; //590
+            petroTravelTheta.y += p.PI / 168
+            petroTravelTheta.z += p.PI / 500
         } else {
-            petroTravelTheta.x -= p.PI / 200; //590
-            petroTravelTheta.y -= p.PI / 68
-            petroTravelTheta.z -= p.PI / 200
+            petroTravelTheta.x -= p.PI / 500; //590
+            petroTravelTheta.y -= p.PI / 168
+            petroTravelTheta.z -= p.PI / 500
 
         }
 
-        // // Dust
-        // for (let i = 0; i < dustCount; i++) {
-        //     dps[i].move();
-        //     dps[i].draw();
+        // Dust
+        for (let i = 0; i < dustCount; i++) {
+            dps[i].move();
+            dps[i].draw();
 
-        //     // statc
-        //     // p.noFill();
-        //     p.stroke(255, p.random(60, 170), p.random(60, 170), p.random(.5));
-        //     p.strokeWeight(p.random(.1, .31));
-        //     for (let j = 0; j < dustCount; j++) {
-        //         const d = dps[i].pos.dist(dps[j].pos);
-        //         if (i != j) {
-        //             if (d > 250 && d < 250.01) {
-        //                 const extraPt = p.int(p.random(dustCount));
-        //                 p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[extraPt].pos.x, dps[extraPt].pos.y, dps[extraPt].pos.z)
+            // statc
+            // p.noFill();
+            p.stroke(255, p.random(60, 170), p.random(60, 170), p.random(.5));
+            p.strokeWeight(p.random(.1, .31));
+            for (let j = 0; j < dustCount; j++) {
+                const d = dps[i].pos.dist(dps[j].pos);
+                if (i != j) {
+                    if (d > 250 && d < 250.01) {
+                        const extraPt = p.int(p.random(dustCount));
+                        p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[extraPt].pos.x, dps[extraPt].pos.y, dps[extraPt].pos.z)
 
-        //                 p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[j].pos.x, dps[j].pos.y, dps[j].pos.z)
+                        p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[j].pos.x, dps[j].pos.y, dps[j].pos.z)
 
-        //                 //  dps[i].col = p.color(255);
-        //                 //  dps[j].col = p.color(255);
-        //             } else {
-        //                 //  dps[i].col = p.color(255, 60);
-        //                 //   dps[j].col = p.color(255, 60);
-        //             }
+                        //  dps[i].col = p.color(255);
+                        //  dps[j].col = p.color(255);
+                    } else {
+                        //  dps[i].col = p.color(255, 60);
+                        //   dps[j].col = p.color(255, 60);
+                    }
 
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
 
     };
 
