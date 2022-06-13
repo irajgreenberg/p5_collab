@@ -152,7 +152,7 @@ export class VerletAnnulus extends VerletBase {
         this.centroid.div(this.innerRing.length);
 
         for (let i = 0, k = 0; i < this.nodes.length; i++) {
-            this.nodes[i].draw();
+            this.nodes[i].draw(4);
             if (i > this.innerRing.length) {
                 this.nodes[i].verlet();
                 this.nodes[i].col = this.p.color(this.p.random(200, 255), this.p.random(200, 255), this.p.random(255));

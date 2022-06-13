@@ -36,12 +36,12 @@ export class VerletNode {
 		this.posOld.set(posTemp);
 	}
 
-	draw(): void {
+	draw(detail: number = 10): void {
 		this.p.fill(this.col);
 		this.p.noStroke();
 		this.p.push();
 		this.p.translate(this.pos.x, this.pos.y, this.pos.z);
-		this.p.sphere(this.radius * 2)
+		this.p.sphere(this.radius * 2, detail, detail)
 		this.p.pop();
 		//this.p.noFill();
 	}

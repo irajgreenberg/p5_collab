@@ -422,9 +422,16 @@ export class Petromyzonus {
         if (this.bubbleTempCount < this.bubbleCount - this.bubbleEmissionRate) {
             this.bubbleTempCount += this.bubbleEmissionRate;
         }
-
-
-
     }
 
+    getAnnuliEdgeVerts(): P5.Vector[] {
+        const edgeVerts: P5.Vector[] = [];
+        for (let i = 0; i < this.annuli.length; i++) {
+            for (let j = 0; j < this.annuli[i].outerRingNodes.length; j++) {
+                edgeVerts.push(this.annuli[i].outerRingNodes[j].pos);
+            }
+
+        }
+        return edgeVerts;
+    }
 }

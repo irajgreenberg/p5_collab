@@ -11,7 +11,14 @@ export class GroundPlane {
 
     // seaweed stalks
     seaWeedStalks: VerletStrand[] = [];
+    reedTipverts: P5.Vector[] = []; // for elctrical transmissio between reeds and creature
     //motionVecs
+
+    // pulsing reed tips
+    lights: P5.Color[] = [];
+    lightAmps: number[] = [];
+    lightFreqs: number[] = [];
+    lightThetas: number[] = [];
 
     constructor(p: P5, dim: P5.Vector, cols: number, rows: number, colRange: P5.Vector) {
         this.p = p;
@@ -35,8 +42,8 @@ export class GroundPlane {
                         this.verts2D[i][j], //head
                         p.random(-500, -50), // lenth
                         p.int(p.random(3, 6)), // nodeCount
-                        p.color(this.p.color(p.random(255), p.random(5, 30))), // color
-                        p.random(.5, 6)));  // strokeWeight
+                        p.color(this.p.color(p.random(255), p.random(30, 140))), // color
+                        p.random(1, 2)));  // strokeWeight
                 }
             }
         }
@@ -44,6 +51,12 @@ export class GroundPlane {
             // console.log("test");
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.x += this.p.random(-20, 20);
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.z += this.p.random(-20, 20);
+
+            // pulsing reed tips
+            this.lights.push(p.color(255 - p.random(40), 255 - p.random(40), 255 - p.random(40), 255));
+            this.lightAmps.push(255);
+            this.lightFreqs.push(p.PI / p.random(30, 90));
+            this.lightThetas.push(0);
         }
     }
 
@@ -59,6 +72,7 @@ export class GroundPlane {
                 this.p.vertex(this.vertsInit2D[i + 1][j + 1].x, this.vertsInit2D[i + 1][j + 1].y, this.vertsInit2D[i + 1][j + 1].z);
                 this.p.vertex(this.vertsInit2D[i][j + 1].x, this.vertsInit2D[i][j + 1].y, this.vertsInit2D[i][j + 1].z);
                 this.p.endShape(this.p.CLOSE);
+
             }
         }
 
@@ -77,12 +91,29 @@ export class GroundPlane {
             motionVec.mult(this.p.random(.2, .75));
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.y += motionVec.y;
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.x += this.p.random(-1, 1)
+            this.seaWeedStalks[i].nodes[0].pos.y += this.p.random(-1, 1)
 
 
             this.seaWeedStalks[i].draw();
             this.seaWeedStalks[i].move(0);
+
+
+            // blinking lights
+            this.p.push();
+            this.p.translate(this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos);
+            this.p.noStroke();
+            this.p.fill(this.lights[i]);
+            this.p.box(10);
+            this.p.pop();
+            let ColComp = this.p.sin(this.lightThetas[i]) * this.lightAmps[i];
+            this.lights[i] = this.p.color(255 - this.p.random(80), 255 - this.p.random(80), 255 - this.p.random(80), ColComp);
+            this.lightThetas[i] += this.lightFreqs[i];
+
+            this.reedTipverts[i] = this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos;
         }
+    }
 
-
+    getReedTipverts(): P5.Vector[] {
+        return this.reedTipverts;
     }
 }

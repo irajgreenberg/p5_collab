@@ -26,6 +26,7 @@ let startPosSeed: P5.Vector;
 
 let petroTravelTheta: P5.Vector;
 let directionVal = 0;
+let petroTransPos: P5.Vector;
 
 
 const sketch = (p: P5) => {
@@ -62,7 +63,7 @@ const sketch = (p: P5) => {
         directionVal = p.floor(p.random(2));
         // console.log(directionVal);
         // ground plane
-        gp = new GroundPlane(p, p.createVector(p.windowWidth * 20, 190, p.windowHeight * 20), 20, 20, p.createVector(bgR, bgG, bgB));
+        gp = new GroundPlane(p, p.createVector(p.windowWidth * 20, 190, p.windowHeight * 10), 20, 20, p.createVector(bgR, bgG, bgB));
 
         // creature
         scl = p.random(.95, 1.3);
@@ -90,6 +91,8 @@ const sketch = (p: P5) => {
                 p.createVector(p.random(.5, 1.5), p.random(.5, 1.5), p.random(.5, 1.5))  /*scl*/
             );
         }
+
+        petroTransPos = p.createVector(0, 0, 0);
     };
 
     const resizedSketch = (p: P5) => {
@@ -131,11 +134,8 @@ const sketch = (p: P5) => {
 
         // draw rotating groundplane
         p.push();
-        p.translate(0, 1500, 0);
-        p.rotateY(p.frameCount * p.PI / 6000);
-        // ground light;
-
-        // p.spotLight(255, 255, 255, 100, -300, 0, 0, 0, 0);
+        //p.translate(0, 1500, 0);
+        // p.rotateY(p.frameCount * p.PI / 6000);
         gp.draw();
         p.pop();
 
@@ -157,9 +157,6 @@ const sketch = (p: P5) => {
         p.shininess(220 + p.sin(p.frameCount * p.PI / 25) * 200);
 
 
-
-
-
         // Draw Petromyzonus
         p.stroke(255, 150);
         p.strokeWeight(.2);
@@ -174,17 +171,21 @@ const sketch = (p: P5) => {
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
         // move creature
-        p.translate(x, y, z);
-        if (directionVal == 0) {
-            p.rotateY(p.PI / 2 - p.atan2(z, x));
-        } else {
-            p.rotateY(-p.PI / 2 - p.atan2(z, x));
-        }
+        petroTransPos.x = x;
+        petroTransPos.y = y;
+        petroTransPos.z = z;
+        // p.translate(petroTransPos);
+        // if (directionVal == 0) {
+        //     p.rotateY(p.PI / 2 - p.atan2(z, x));
+        // } else {
+        //     p.rotateY(-p.PI / 2 - p.atan2(z, x));
+        // }
 
 
-        p.scale(scl);
+        // p.scale(scl);
         // p.rotateY(startPosSeed.x + p.frameCount * p.PI / 360);
         p.strokeWeight(.4);
+        // p.resetMatrix();
 
         petro.draw();
         petro.move();
@@ -229,7 +230,63 @@ const sketch = (p: P5) => {
             }
         }
 
+        //  check reed tip and creature interaction
+        // const edgeVerts = petro.getAnnuliEdgeVerts();
+        // const reedtipVerts = gp.getReedTipverts();
+        // for (let i = 0; i < edgeVerts.length; i++) {
+        //     const ev = p.createVector(
+        //         edgeVerts[i].x + petroTransPos.x,
+        //         edgeVerts[i].y + petroTransPos.y,
+        //         edgeVerts[i].z + petroTransPos.z);
+        //     for (let j = 0; j < reedtipVerts.length; j++) {
+        //         const rtv = p.createVector(
+        //             reedtipVerts[j].x + 0,
+        //             reedtipVerts[j].y + 0,
+        //             reedtipVerts[j].z + 0);
+        //         if (ev.dist(rtv) < 2000) {
+        //             p.beginShape(p.LINES);
+        //             p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
+        //             p.vertex(reedtipVerts[j].x, reedtipVerts[j].y, reedtipVerts[j].z);
+        //             p.endShape();
+        //         }
+        //     }
+        // }
+
+
+        const edgeVerts = petro.getAnnuliEdgeVerts();
+        const reedtipVerts = gp.getReedTipverts();
+        for (let i = 0; i < edgeVerts.length; i++) {
+            const ev = p.createVector(
+                edgeVerts[i].x,
+                edgeVerts[i].y,
+                edgeVerts[i].z);
+            for (let j = 0; j < reedtipVerts.length; j++) {
+                //     const rtv = p.createVector(
+                //         reedtipVerts[j].x + 0,
+                //         reedtipVerts[j].y + 0,
+                //         reedtipVerts[j].z + 0);
+                //     if (ev.dist(rtv) < 2000) {
+                //         p.beginShape(p.LINES);
+                //         p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
+                //         p.vertex(reedtipVerts[j].x, reedtipVerts[j].y, reedtipVerts[j].z);
+                //         p.endShape();
+                //     }
+
+                p.strokeWeight(1);
+                p.beginShape(p.LINES);
+                p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
+                p.vertex(reedtipVerts[150].x, reedtipVerts[150].y, reedtipVerts[150].z);
+                p.endShape();
+
+            }
+
+
+        }
+
+
+
     };
+
 
 };
 
