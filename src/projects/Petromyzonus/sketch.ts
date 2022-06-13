@@ -27,6 +27,7 @@ let startPosSeed: P5.Vector;
 let petroTravelTheta: P5.Vector;
 let directionVal = 0;
 let petroTransPos: P5.Vector;
+const groundPlaneY = 2500;
 
 
 const sketch = (p: P5) => {
@@ -132,15 +133,18 @@ const sketch = (p: P5) => {
 
         let pbPos = p.createVector(-20 + p.cos(startPosSeed.x + p.frameCount * p.PI / 620) * 150, 40 + p.cos(startPosSeed.y - p.frameCount * p.PI / 720) * 120, 600 + p.cos(startPosSeed.z - p.frameCount * p.PI / 720) * -200);
 
+
+        p.orbitControl(1, 1);
+        p.translate(0, -600, -400);
+
+
         // draw rotating groundplane
         p.push();
-        //p.translate(0, 1500, 0);
+        p.translate(0, groundPlaneY, 0);
         // p.rotateY(p.frameCount * p.PI / 6000);
         gp.draw();
         p.pop();
 
-        p.orbitControl(1, 1);
-        p.translate(0, -600, -400);
 
         //let al = p.random(60, 265);
         let al = 100 + p.cos(p.frameCount * p.PI / 730) * 100;
@@ -174,19 +178,20 @@ const sketch = (p: P5) => {
         petroTransPos.x = x;
         petroTransPos.y = y;
         petroTransPos.z = z;
-        // p.translate(petroTransPos);
-        // if (directionVal == 0) {
-        //     p.rotateY(p.PI / 2 - p.atan2(z, x));
-        // } else {
-        //     p.rotateY(-p.PI / 2 - p.atan2(z, x));
-        // }
+        p.translate(petroTransPos);
+        if (directionVal == 0) {
+            p.rotateY(p.PI / 2 - p.atan2(z, x));
+        } else {
+            p.rotateY(-p.PI / 2 - p.atan2(z, x));
+        }
 
 
-        // p.scale(scl);
+        p.scale(scl);
         // p.rotateY(startPosSeed.x + p.frameCount * p.PI / 360);
         p.strokeWeight(.4);
         // p.resetMatrix();
-
+        // let testMatrix = [1, 0, 0, 1, 0, 0];
+        // applyMatrix(testMatrix);
         petro.draw();
         petro.move();
 
@@ -230,54 +235,27 @@ const sketch = (p: P5) => {
             }
         }
 
-        //  check reed tip and creature interaction
-        // const edgeVerts = petro.getAnnuliEdgeVerts();
-        // const reedtipVerts = gp.getReedTipverts();
-        // for (let i = 0; i < edgeVerts.length; i++) {
-        //     const ev = p.createVector(
-        //         edgeVerts[i].x + petroTransPos.x,
-        //         edgeVerts[i].y + petroTransPos.y,
-        //         edgeVerts[i].z + petroTransPos.z);
-        //     for (let j = 0; j < reedtipVerts.length; j++) {
-        //         const rtv = p.createVector(
-        //             reedtipVerts[j].x + 0,
-        //             reedtipVerts[j].y + 0,
-        //             reedtipVerts[j].z + 0);
-        //         if (ev.dist(rtv) < 2000) {
-        //             p.beginShape(p.LINES);
-        //             p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
-        //             p.vertex(reedtipVerts[j].x, reedtipVerts[j].y, reedtipVerts[j].z);
-        //             p.endShape();
-        //         }
-        //     }
-        // }
-
 
         const edgeVerts = petro.getAnnuliEdgeVerts();
         const reedtipVerts = gp.getReedTipverts();
         for (let i = 0; i < edgeVerts.length; i++) {
             const ev = p.createVector(
-                edgeVerts[i].x,
-                edgeVerts[i].y,
-                edgeVerts[i].z);
+                edgeVerts[i].x + petroTransPos.x,
+                edgeVerts[i].y + petroTransPos.y,
+                edgeVerts[i].z + petroTransPos.z);
             for (let j = 0; j < reedtipVerts.length; j++) {
-                //     const rtv = p.createVector(
-                //         reedtipVerts[j].x + 0,
-                //         reedtipVerts[j].y + 0,
-                //         reedtipVerts[j].z + 0);
-                //     if (ev.dist(rtv) < 2000) {
-                //         p.beginShape(p.LINES);
-                //         p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
-                //         p.vertex(reedtipVerts[j].x, reedtipVerts[j].y, reedtipVerts[j].z);
-                //         p.endShape();
-                //     }
-
-                p.strokeWeight(1);
-                p.beginShape(p.LINES);
-                p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
-                p.vertex(reedtipVerts[150].x, reedtipVerts[150].y, reedtipVerts[150].z);
-                p.endShape();
-
+                const rtv = p.createVector(
+                    reedtipVerts[j].x,
+                    reedtipVerts[j].y + groundPlaneY,
+                    reedtipVerts[j].z);
+                if (ev.dist(rtv) < 600) {
+                    p.strokeWeight(.5);
+                    p.stroke(255, p.random(50, 100));
+                    p.beginShape(p.LINES);
+                    p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
+                    p.vertex(reedtipVerts[j].x - petroTransPos.x, reedtipVerts[j].y - petroTransPos.y + groundPlaneY, reedtipVerts[j].z - petroTransPos.z);
+                    p.endShape();
+                }
             }
 
 

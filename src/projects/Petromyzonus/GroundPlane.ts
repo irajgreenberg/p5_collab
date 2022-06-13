@@ -40,10 +40,10 @@ export class GroundPlane {
                 if (i % 1 == 0 && j % 1 == 0) {
                     this.seaWeedStalks.push(new VerletStrand(this.p,
                         this.verts2D[i][j], //head
-                        p.random(-500, -50), // lenth
-                        p.int(p.random(3, 6)), // nodeCount
+                        p.random(-900, -50), // lenth
+                        p.int(p.random(2, 4)), // nodeCount
                         p.color(this.p.color(p.random(255), p.random(30, 140))), // color
-                        p.random(1, 2)));  // strokeWeight
+                        p.random(.5, 1)));  // strokeWeight
                 }
             }
         }
@@ -55,7 +55,7 @@ export class GroundPlane {
             // pulsing reed tips
             this.lights.push(p.color(255 - p.random(40), 255 - p.random(40), 255 - p.random(40), 255));
             this.lightAmps.push(255);
-            this.lightFreqs.push(p.PI / p.random(30, 90));
+            this.lightFreqs.push(p.PI / p.random(2, 15));
             this.lightThetas.push(0);
         }
     }
