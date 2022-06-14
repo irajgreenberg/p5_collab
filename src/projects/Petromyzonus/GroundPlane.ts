@@ -40,10 +40,10 @@ export class GroundPlane {
                 if (i % 1 == 0 && j % 1 == 0) {
                     this.seaWeedStalks.push(new VerletStrand(this.p,
                         this.verts2D[i][j], //head
-                        p.random(-900, -50), // lenth
+                        p.random(-600, -150), // lenth
                         p.int(p.random(2, 4)), // nodeCount
-                        p.color(this.p.color(p.random(255), p.random(30, 140))), // color
-                        p.random(.5, 1)));  // strokeWeight
+                        p.color(this.p.color(p.random(255), p.random(50, 90))), // color
+                        p.random(.75, 1)));  // strokeWeight
                 }
             }
         }

@@ -64,7 +64,7 @@ const sketch = (p: P5) => {
         directionVal = p.floor(p.random(2));
         // console.log(directionVal);
         // ground plane
-        gp = new GroundPlane(p, p.createVector(p.windowWidth * 20, 190, p.windowHeight * 10), 20, 20, p.createVector(bgR, bgG, bgB));
+        gp = new GroundPlane(p, p.createVector(p.windowWidth * 20, 190, p.windowHeight * 20), 20, 20, p.createVector(bgR, bgG, bgB));
 
         // creature
         scl = p.random(.95, 1.3);
@@ -141,7 +141,7 @@ const sketch = (p: P5) => {
         // draw rotating groundplane
         p.push();
         p.translate(0, groundPlaneY, 0);
-        // p.rotateY(p.frameCount * p.PI / 6000);
+        p.rotateY(p.frameCount * p.PI / 6000);
         gp.draw();
         p.pop();
 
@@ -221,7 +221,6 @@ const sketch = (p: P5) => {
                     if (d > 250 && d < 250.01) {
                         const extraPt = p.int(p.random(dustCount));
                         p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[extraPt].pos.x, dps[extraPt].pos.y, dps[extraPt].pos.z)
-
                         p.line(dps[i].pos.x, dps[i].pos.y, dps[i].pos.z, dps[j].pos.x, dps[j].pos.y, dps[j].pos.z)
 
                         //  dps[i].col = p.color(255);
@@ -248,13 +247,16 @@ const sketch = (p: P5) => {
                     reedtipVerts[j].x,
                     reedtipVerts[j].y + groundPlaneY,
                     reedtipVerts[j].z);
-                if (ev.dist(rtv) < 600) {
-                    p.strokeWeight(.5);
-                    p.stroke(255, p.random(50, 100));
+                if (ev.dist(rtv) < 2000) {
+                    p.strokeWeight(.2);
+                    p.stroke(p.random(200, 255), p.random(100, 200), p.random(100, 200), 50);
+                    p.push();
+                    p.rotateY(-p.PI / 2 - p.atan2(petroTransPos.z, petroTransPos.x));
                     p.beginShape(p.LINES);
                     p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
                     p.vertex(reedtipVerts[j].x - petroTransPos.x, reedtipVerts[j].y - petroTransPos.y + groundPlaneY, reedtipVerts[j].z - petroTransPos.z);
                     p.endShape();
+                    p.pop();
                 }
             }
 
