@@ -167,7 +167,7 @@ export class Petromyzonus {
                             p.random(2, 16))); // strokeWeight
                 } else if (j % 4 == 0) {
                     // this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
-                    this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(28, 150), p.int(p.random(5, 8)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(8, 44)));
+                    this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(48, 350), p.int(p.random(5, 8)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(8, 44)));
                 }
                 // this.colR[l] = 30 + p.random(70);
                 // this.colG[l] = 30 + p.random(70);

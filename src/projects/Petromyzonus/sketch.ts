@@ -29,6 +29,8 @@ let directionVal = 0;
 let petroTransPos: P5.Vector;
 const groundPlaneY = 2500;
 
+let tetherDist = 3000;
+
 
 const sketch = (p: P5) => {
     p.disableFriendlyErrors = true; // disables FES
@@ -120,6 +122,11 @@ const sketch = (p: P5) => {
         } else if (p.key === '[') {
             petro.changeFreq(+1);
         }
+        else if (p.key === 'm') {
+            tetherDist += 100;
+        } else if (p.key === 'n') {
+            tetherDist -= 100;
+        }
     }
 
 
@@ -136,12 +143,12 @@ const sketch = (p: P5) => {
 
         p.orbitControl(1, 1);
         p.translate(0, -600, -400);
-
+        p.rotateY(p.frameCount * p.PI / 600);
 
         // draw rotating groundplane
         p.push();
         p.translate(0, groundPlaneY, 0);
-        p.rotateY(p.frameCount * p.PI / 6000);
+        //p.rotateY(p.frameCount * p.PI / 6000);
         gp.draw();
         p.pop();
 
@@ -247,14 +254,14 @@ const sketch = (p: P5) => {
                     reedtipVerts[j].x,
                     reedtipVerts[j].y + groundPlaneY,
                     reedtipVerts[j].z);
-                if (ev.dist(rtv) < 2000) {
+                if (ev.dist(rtv) < tetherDist) {
                     p.strokeWeight(.2);
                     p.stroke(p.random(200, 255), p.random(100, 200), p.random(100, 200), 50);
                     p.push();
-                    p.rotateY(-p.PI / 2 - p.atan2(petroTransPos.z, petroTransPos.x));
+                    //p.rotateY(-p.PI / 2 - p.atan2(petroTransPos.z, petroTransPos.x));
                     p.beginShape(p.LINES);
-                    p.vertex(edgeVerts[i].x, edgeVerts[i].y, edgeVerts[i].z);
-                    p.vertex(reedtipVerts[j].x - petroTransPos.x, reedtipVerts[j].y - petroTransPos.y + groundPlaneY, reedtipVerts[j].z - petroTransPos.z);
+                    p.vertex(ev.x, ev.y, ev.z);
+                    p.vertex(reedtipVerts[j].x, reedtipVerts[j].y + groundPlaneY, reedtipVerts[j].z);
                     p.endShape();
                     p.pop();
                 }
