@@ -434,4 +434,8 @@ export class Petromyzonus {
         }
         return edgeVerts;
     }
+
+    move() {
+
+    }
 }
