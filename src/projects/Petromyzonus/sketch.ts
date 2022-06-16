@@ -150,7 +150,7 @@ const sketch = (p: P5) => {
 
         // world transform
         p.orbitControl(1, 1);
-        p.translate(0, -600, -800);
+        p.translate(0, -600, -1000);
         //p.rotateY(p.frameCount * p.PI / 1200);
 
 
@@ -194,7 +194,7 @@ const sketch = (p: P5) => {
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
-            petroTravelTheta.x, petroTravelTheta.y, petroTravelTheta.z, 0, 1
+            petroTravelTheta.x, petroTravelTheta.y, petroTravelTheta.z, 1
         ];
 
         p.applyMatrix(m, 0, 0, 0, 0, 0);
