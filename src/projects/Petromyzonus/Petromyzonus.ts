@@ -90,7 +90,7 @@ export class Petromyzonus {
             this.annuliMod = 3;
         }
 
-        // this.annuliMod = 1;
+        //this.annuliMod = 6;
 
 
         // each cross-section built around x-axis
@@ -167,7 +167,7 @@ export class Petromyzonus {
                             p.random(2, 16))); // strokeWeight
                 } else if (j % 4 == 0) {
                     // this.strands.push(new VerletStrand(p, csPts[j], p.random(28, 120), p.int(p.random(3, 6)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(14, 44)));
-                    this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(28, 150), p.int(p.random(5, 8)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(5, 45)), p.random(8, 44)));
+                    this.bodyStrands.push(new VerletStrand(p, csPts[j], p.random(48, 250), p.int(p.random(5, 15)), p.color(p.random(140, 155), p.random(125, 200), p.random(45, 225), p.random(35, 145)), p.random(.003, .1)));
                 }
                 // this.colR[l] = 30 + p.random(70);
                 // this.colG[l] = 30 + p.random(70);
@@ -296,6 +296,8 @@ export class Petromyzonus {
         for (let i = 0; i < this.tailStrands.length; i++) {
             this.tailStrands[i].draw();
         }
+
+        this.p.strokeWeight(50);
         for (let i = 0; i < this.bodyStrands.length; i++) {
             this.bodyStrands[i].draw();
         }
@@ -435,7 +437,7 @@ export class Petromyzonus {
         return edgeVerts;
     }
 
-    move() {
+    // move() {
 
-    }
+    // }
 }
