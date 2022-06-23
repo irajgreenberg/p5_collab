@@ -37,7 +37,7 @@ export class GroundPlane {
                 const tint = p.random(-.9, 1.1);
                 this.cols2D[i][j] = p.createVector(this.colRange.x * tint, this.colRange.y * tint, this.colRange.z * tint);
 
-                if (i % 2 == 0 && j % 2 == 0) {
+                if (i % 1 == 0 && j % 2 == 0) {
                     this.seaWeedStalks.push(new VerletStrand(this.p,
                         this.verts2D[i][j], //head
                         p.random(-600, -150), // lenth
@@ -102,7 +102,7 @@ export class GroundPlane {
             this.p.translate(this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos);
             this.p.noStroke();
             this.p.fill(this.lights[i]);
-            this.p.box(20);
+            this.p.rect(-40, -40, 80, 80);
             this.p.pop();
             let ColComp = this.p.sin(this.lightThetas[i]) * this.lightAmps[i];
             this.lights[i] = this.p.color(255 - this.p.random(80), 255 - this.p.random(80), 255 - this.p.random(80), ColComp);

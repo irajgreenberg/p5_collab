@@ -20,16 +20,17 @@ let bgB = 30;
 let bgColor: string
 let bgColor2: string
 let bgAlpha = 0;
-let scl: number = 1;
+let scl: number = .85;
 
 // starting postion seed
 let startPosSeed: P5.Vector;
 
 let petroTravelTheta: P5.Vector;
+let petroPointToTheta: number;
 let directionVal = 0;
 let petroTransPos: P5.Vector;
 const groundPlaneY = 4500;
-let petroNodeToReedDistThreshold = 4000;
+let petroNodeToReedDistThreshold = 5500;
 
 let modelMat3: ProtoMatrix3;
 //let modelMat3: P5.Matrix
@@ -68,10 +69,11 @@ const sketch = (p: P5) => {
         directionVal = p.floor(p.random(2));
         // console.log(directionVal);
         // ground plane
-        gp = new GroundPlane(p, p.createVector(p.windowWidth * 30, 190, p.windowHeight * 30), 20, 20, p.createVector(bgR, bgG, bgB));
+        gp = new GroundPlane(p, p.createVector(p.windowWidth * 25, 190, p.windowHeight * 25), 30, 30, p.createVector(bgR, bgG, bgB));
 
         // creature
-        scl = p.random(.95, 1.3);
+        // scl = p.random(.95, 1.3);
+        scl = 1;
         petro = new Petromyzonus(p,
             p.random(700, 4400), // length
             p.floor(p.random(10, 20)), // slices
@@ -83,6 +85,7 @@ const sketch = (p: P5) => {
         startPosSeed = p.createVector(p.random(5000), p.random(5000), p.random(5000));
 
         petroTravelTheta = p.createVector(0, p.random(-p.PI), 0);
+        petroPointToTheta = 0;
 
         // dust
         //constructor(pos: P5.Vector, spd: P5.Vector, rot: P5.Vector, amp: P5.Vector, freq: P5.Vector, scl: P5.Vector)
@@ -149,9 +152,9 @@ const sketch = (p: P5) => {
 
 
         // world transform
-        p.orbitControl(1, 1);
+        //p.orbitControl(1, 1);
         p.translate(0, -600, -1000);
-        //p.rotateY(p.frameCount * p.PI / 1200);
+        p.rotateY(p.frameCount * p.PI / 1200);
 
 
 
@@ -176,44 +179,34 @@ const sketch = (p: P5) => {
 
         const x = p.sin(petroTravelTheta.x) * p.windowWidth * 2.5;//1200
         const y = -p.windowWidth * .5 + p.cos(petroTravelTheta.y) * p.windowWidth
-        const z = -900 + p.cos(petroTravelTheta.z) * 2000;
+        const z = -1500 + p.cos(petroTravelTheta.z) * 3500;
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
         // move creature
         petroTransPos.x = x;
         petroTransPos.y = -1400;
         petroTransPos.z = z;
-        // p.translate(petroTransPos);
-        // if (directionVal == 0) {
-        //     p.rotateY(p.PI / 2 - p.atan2(z, x));
-        // } else {
-        //     p.rotateY(-p.PI / 2 - p.atan2(z, x));
-        // }
+        p.translate(petroTransPos);
+        if (directionVal == 0) {
+            petroPointToTheta = p.PI / 2 - p.atan2(z, x);
+        } else {
+            petroPointToTheta = -p.PI / 2 - p.atan2(z, x);
+        }
+        p.rotateY(petroPointToTheta);
 
-        let m = [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            petroTravelTheta.x, petroTravelTheta.y, petroTravelTheta.z, 1
-        ];
-
-        p.applyMatrix(m, 0, 0, 0, 0, 0);
-
-
-        // p.scale(scl);
-        // p.rotateY(startPosSeed.x + p.frameCount * p.PI / 360);
+        p.scale(1);
         p.strokeWeight(.4);
         petro.draw();
         petro.move();
 
         if (directionVal == 0) {
             petroTravelTheta.x += p.PI / 500; //590
-            petroTravelTheta.y += p.PI / 168
-            petroTravelTheta.z += p.PI / 500
+            petroTravelTheta.y += p.PI / 168;
+            petroTravelTheta.z += p.PI / 500;
         } else {
             petroTravelTheta.x -= p.PI / 500; //590
-            petroTravelTheta.y -= p.PI / 168
-            petroTravelTheta.z -= p.PI / 500
+            petroTravelTheta.y -= p.PI / 168;
+            petroTravelTheta.z -= p.PI / 500;
 
         }
         // p.pop();
@@ -253,22 +246,26 @@ const sketch = (p: P5) => {
         const reedtipVerts = gp.getReedTipverts();
         for (let i = 0; i < edgeVerts.length; i++) {
             const ev = p.createVector(
-                edgeVerts[i].x + petroTransPos.x,
-                edgeVerts[i].y + petroTransPos.y,
-                edgeVerts[i].z + petroTransPos.z);
+                edgeVerts[i].x,
+                edgeVerts[i].y,
+                edgeVerts[i].z);
             for (let j = 0; j < reedtipVerts.length; j++) {
+                const rx = reedtipVerts[j].x - petroTransPos.x;
+                const ry = reedtipVerts[j].y + groundPlaneY - petroTransPos.y
+                const rz = reedtipVerts[j].z - petroTransPos.z;
                 const rtv = p.createVector(
-                    reedtipVerts[j].x,
-                    reedtipVerts[j].y + groundPlaneY,
-                    reedtipVerts[j].z);
+                    p.sin(-petroPointToTheta) * rz + p.cos(-petroPointToTheta) * rx,
+                    ry,
+                    p.cos(-petroPointToTheta) * rz - p.sin(-petroPointToTheta) * rx
+                )
                 if (ev.dist(rtv) < petroNodeToReedDistThreshold) {
                     p.strokeWeight(.2);
                     p.stroke(p.random(200, 255), p.random(100, 200), p.random(100, 200), 50);
                     p.push();
                     // p.rotateY(-p.PI / 2 - p.atan2(petroTransPos.z, petroTransPos.x));
                     p.beginShape(p.LINES);
-                    p.vertex(ev.x, edgeVerts[i].y + petroTransPos.y, ev.z);
-                    p.vertex(reedtipVerts[j].x - petroTransPos.x, reedtipVerts[j].y - petroTransPos.y + groundPlaneY, reedtipVerts[j].z - petroTransPos.z);
+                    p.vertex(ev.x, ev.y, ev.z);
+                    p.vertex(rtv.x, rtv.y, rtv.z);
                     p.endShape();
                     p.pop();
                 }
@@ -311,3 +308,4 @@ const sketch = (p: P5) => {
 };
 
 let _instance = new P5(sketch);
+
