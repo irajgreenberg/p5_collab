@@ -225,8 +225,8 @@ export class Petromyzonus {
             this.bubbleIsOn[i] = false;
         }
 
-        this.spineMotionAmp = p.createVector(p.random(180, 400), p.random(300, 700), p.random(30, 90));
-        this.spineMotionFreq = p.random(45, 125);
+        this.spineMotionAmp = p.createVector(p.random(480, 800), p.random(800, 1300), p.random(30, 90));
+        this.spineMotionFreq = p.random(35, 75);
     }
 
 

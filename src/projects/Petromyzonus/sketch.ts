@@ -27,13 +27,19 @@ let startPosSeed: P5.Vector;
 
 let petroTravelTheta: P5.Vector;
 let petroPointToTheta: number;
+let groundRotateTheta = 0;
 let directionVal = 0;
 let petroTransPos: P5.Vector;
 const groundPlaneY = 4500;
-let petroNodeToReedDistThreshold = 5500;
+let petroNodeToReedDistThreshold = 3500;
 
 let modelMat3: ProtoMatrix3;
 //let modelMat3: P5.Matrix
+
+let storyCounter = 0;
+let petroStartingHeight = -100;
+let petroDynamicHeight = 0;
+let petroClimbingSpd = 5.3;
 
 const sketch = (p: P5) => {
     p.disableFriendlyErrors = true; // disables FES
@@ -69,7 +75,7 @@ const sketch = (p: P5) => {
         directionVal = p.floor(p.random(2));
         // console.log(directionVal);
         // ground plane
-        gp = new GroundPlane(p, p.createVector(p.windowWidth * 25, 190, p.windowHeight * 25), 30, 30, p.createVector(bgR, bgG, bgB));
+        gp = new GroundPlane(p, p.createVector(p.windowWidth * 25, 190, p.windowHeight * 25), 20, 20, p.createVector(bgR, bgG, bgB));
 
         // creature
         // scl = p.random(.95, 1.3);
@@ -84,7 +90,7 @@ const sketch = (p: P5) => {
         // start postion seed for translate in draw()
         startPosSeed = p.createVector(p.random(5000), p.random(5000), p.random(5000));
 
-        petroTravelTheta = p.createVector(0, p.random(-p.PI), 0);
+        petroTravelTheta = p.createVector(p.PI, 0, p.PI);
         petroPointToTheta = 0;
 
         // dust
@@ -154,14 +160,15 @@ const sketch = (p: P5) => {
         // world transform
         //p.orbitControl(1, 1);
         p.translate(0, -600, -1000);
-        p.rotateY(p.frameCount * p.PI / 1200);
+        p.rotateY(groundRotateTheta);
+
 
 
 
         // draw rotating groundplane
         p.push();
         p.translate(0, groundPlaneY, 0);
-        // p.rotateY(p.frameCount * p.PI / 6000);
+        // p.rotateY(groundRotateTheta);
         gp.draw();
         p.pop();
 
@@ -176,21 +183,23 @@ const sketch = (p: P5) => {
         // const x = p.sin(petroTravelTheta.xp.frameCount * p.PI / 590) * 800
         // const y = p.cos(p.frameCount * p.PI / 290) * 800
         // const z = -500 + p.cos(p.frameCount * p.PI / 590) * 1500;
-
+        console.log(petroTravelTheta.x, petroTravelTheta.z);
         const x = p.sin(petroTravelTheta.x) * p.windowWidth * 2.5;//1200
         const y = -p.windowWidth * .5 + p.cos(petroTravelTheta.y) * p.windowWidth
-        const z = -1500 + p.cos(petroTravelTheta.z) * 3500;
+        const z = -2500 + p.cos(petroTravelTheta.z) * 3500;
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
         // move creature
         petroTransPos.x = x;
-        petroTransPos.y = -1400;
+        petroTransPos.y = y; //petroStartingHeight + petroDynamicHeight;
         petroTransPos.z = z;
         p.translate(petroTransPos);
         if (directionVal == 0) {
             petroPointToTheta = p.PI / 2 - p.atan2(z, x);
+            groundRotateTheta -= p.PI / 2720
         } else {
             petroPointToTheta = -p.PI / 2 - p.atan2(z, x);
+            groundRotateTheta += p.PI / 2720
         }
         p.rotateY(petroPointToTheta);
 
@@ -199,15 +208,21 @@ const sketch = (p: P5) => {
         petro.draw();
         petro.move();
 
-        if (directionVal == 0) {
-            petroTravelTheta.x += p.PI / 500; //590
-            petroTravelTheta.y += p.PI / 168;
-            petroTravelTheta.z += p.PI / 500;
-        } else {
-            petroTravelTheta.x -= p.PI / 500; //590
-            petroTravelTheta.y -= p.PI / 168;
-            petroTravelTheta.z -= p.PI / 500;
+        if (storyCounter > 100) {
+            if (directionVal == 0) {
+                petroTravelTheta.x += p.PI / 500 * 2; //590
+                petroTravelTheta.y += p.PI / 368 * 2;
+                petroTravelTheta.z += p.PI / 500 * 2;
+            } else {
+                petroTravelTheta.x -= p.PI / 500 * 2; //590
+                petroTravelTheta.y -= p.PI / 368 * 2;
+                petroTravelTheta.z -= p.PI / 500 * 2;
 
+            }
+        }
+
+        if (petroDynamicHeight > -2000) {
+            petroDynamicHeight -= petroClimbingSpd;
         }
         // p.pop();
         // END draw Petro
@@ -273,7 +288,8 @@ const sketch = (p: P5) => {
 
 
         }
-
+        // control narrative
+        storyCounter++;
     };
 
     p.keyPressed = () => {
