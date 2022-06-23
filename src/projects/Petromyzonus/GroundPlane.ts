@@ -48,7 +48,6 @@ export class GroundPlane {
             }
         }
         for (let i = 0; i < this.seaWeedStalks.length; i++) {
-            // console.log("test");
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.x += this.p.random(-20, 20);
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.z += this.p.random(-20, 20);
 
