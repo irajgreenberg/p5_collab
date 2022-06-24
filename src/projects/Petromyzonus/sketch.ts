@@ -1,3 +1,9 @@
+// Petromyzonus
+// @fxhash_
+// Original Author: Ira Greenberg, 2022
+// Dallas, TX | Santa Fe, NM
+//----------------------------------------------
+
 import P5 from "p5";
 import { DustParticle } from "./DustParticle";
 import { Petromyzonus } from "./Petromyzonus";
@@ -50,6 +56,8 @@ let font: P5.Font;
 
 let isBackgrounOn = true;
 
+let worldTranslate: P5.Vector
+
 // const preload = (p: P5) => {
 //     font = p.loadFont('./exo/Exo-Regular.otf');
 // };
@@ -66,6 +74,8 @@ const sketch = (p: P5) => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
         p.background(bgR, bgG, bgB);
         font = p.loadFont('./exo/Exo-Regular.otf');
+
+        worldTranslate = p.createVector(0, -3500, 5000);
 
         // bgR = p.int(p.random(1, 30));
         // bgG = p.int(p.random(1, 30));
@@ -192,10 +202,18 @@ const sketch = (p: P5) => {
 
         // world transform
         p.orbitControl(1, 1);
-        p.translate(0, -600, -1000);
+
+        //worldTranslate = p.createVector(0, -3500, 4800);
+        //0, -600, -1000
+        p.translate(worldTranslate);
         //p.rotateY(groundRotateTheta);
 
-
+        if (worldTranslate.y < -600) {
+            worldTranslate.y += 30;
+        }
+        if (worldTranslate.z > -1000) {
+            worldTranslate.z -= 30;
+        }
 
 
         // draw rotating groundplane
@@ -373,30 +391,30 @@ const sketch = (p: P5) => {
 
     p.keyPressed = () => {
         //X amplitude
-        if (p.key === ']') {
+        if (p.key === '}') {
             petro.changeAmplitudeX(15);
             if (isBackgrounOn) {
                 info = "Increase X-Axis Wave Amplitude"
             }
-        } else if (p.key === '[') {
+        } else if (p.key === '{') {
             petro.changeAmplitudeX(-15);
             if (isBackgrounOn) {
                 info = "Decrease X-Axis Wave Amplitude"
             }
         }  //Y amplitude
-        else if (p.key === '}') {
+        else if (p.key === ']') {
             petro.changeAmplitudeY(15);
             if (isBackgrounOn) {
                 info = "Increase Y-Axis Wave Amplitude"
             }
-        } else if (p.key === '{') {
+        } else if (p.key === '[') {
             petro.changeAmplitudeY(-15);
             if (isBackgrounOn) {
                 info = "Decrease Y-Axis Wave Amplitude"
             }
         }
 
-        // frequency
+        //X frequency
         else if (p.key === '<') {
             petro.changeFreqX(1);
             if (isBackgrounOn) {
@@ -407,7 +425,9 @@ const sketch = (p: P5) => {
             if (isBackgrounOn) {
                 info = "Increase X-Axis Wave Frequency"
             }
-        } else if (p.key === ',') {
+        }
+        //Y frequency
+        else if (p.key === ',') {
             petro.changeFreqY(1);
             if (isBackgrounOn) {
                 info = "Decrease Y-Axis Wave Frequency"
@@ -442,14 +462,14 @@ const sketch = (p: P5) => {
 
         // star rotation speed
         else if (p.key === '2') {
-            gp.changeStarRotation(p.random(.1, .5));
+            gp.changeStarRotation(p.random(.01, .05));
             if (isBackgrounOn) {
-                info = "Increase Star Rotation Speed"
+                info = "Stars Rotation--> "
             }
         } else if (p.key === '1') {
-            gp.changeStarRotation(-p.random(.1, .5));
+            gp.changeStarRotation(-p.random(.01, .05));
             if (isBackgrounOn) {
-                info = "Decrease Star Rotation Speed"
+                info = "<--Stars Rotation"
             }
         }
 

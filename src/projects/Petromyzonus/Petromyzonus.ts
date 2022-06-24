@@ -1,3 +1,9 @@
+// Petromyzonus
+// @fxhash_
+// Original Author: Ira Greenberg, 2022
+// Dallas, TX | Santa Fe, NM
+//----------------------------------------------
+
 import P5 from "p5";
 import { NodeType } from "../../libPByte_p5/PByte_utils";
 import { VerletAnnulus } from "../../libPByte_p5/VerletAnnulus";
