@@ -245,39 +245,54 @@ export class Petromyzonus {
                     this.p.beginShape(this.p.LINES);
                     switch (this.bodyColIndex) {
                         case 0:
-                            this.p.fill(this.colR[k], this.colG[k], this.colB[k], 170);
+                            this.p.fill(this.colR[k], this.colG[k], this.colB[k], 255);
                             break;
                         case 1:
-                            this.p.fill(this.colR[k], this.colG[k], this.colR[k], 170);
+                            this.p.fill(this.colR[k], this.colG[k], this.colR[k], 255);
                             break;
                         case 2:
-                            this.p.fill(this.colR[k], this.colB[k], this.colB[k], 170);
+                            this.p.fill(this.colR[k], this.colB[k], this.colB[k], 255);
                             break;
                         case 3:
-                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * 1.2, this.colR[k] * 1.2, 170);
+                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * 1.2, this.colR[k] * 1.2, 255);
                             break;
                         case 4:
-                            this.p.fill(this.colR[k] * 1.2, this.colG[k] * 1.2, this.colB[k] * 1.2), 170;
+                            this.p.fill(this.colR[k] * 1.2, this.colG[k] * 1.2, this.colB[k] * 1.2), 255;
                             break;
                         case 5:
-                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * .85, this.colR[k] * 1.1, 170);
+                            this.p.fill(this.colR[k] * 1.2, this.colR[k] * .85, this.colR[k] * 1.1, 255);
                             break;
                         case 6:
-                            this.p.fill(this.colR[k] * .75, this.colG[k] * 1.1, this.colB[k] * 1.3, 170);
+                            this.p.fill(this.colR[k] * .75, this.colG[k] * 1.1, this.colB[k] * 1.3, 255);
                             break;
                         case 7:
-                            this.p.fill(this.colR[k], this.colR[k], this.colR[k], 170);
+                            this.p.fill(this.colR[k], this.colR[k], this.colR[k], 255);
                             break;
                     }
 
+                    //this.p.normalMaterial();
                     if (j < this.pts2D[i].length - 1) {
+                        //  this.p.normalMaterial();
+                        // let n = this.pts2D[i][j].cross(this.pts2D[i][j + 1]);
+                        // this.p.normal(n);
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
                         this.p.vertex(this.pts2D[i + 1][j].x, this.pts2D[i + 1][j].y, this.pts2D[i + 1][j].z);
+
+                        // n = this.pts2D[i + 1][j + 1].cross(this.pts2D[i][j + 1]);
+                        // this.p.normal(n);
                         this.p.vertex(this.pts2D[i + 1][j + 1].x, this.pts2D[i + 1][j + 1].y, this.pts2D[i + 1][j + 1].z);
                         this.p.vertex(this.pts2D[i][j + 1].x, this.pts2D[i][j + 1].y, this.pts2D[i][j + 1].z);
+
+
                     } else {
+                        // this.p.normalMaterial();
+                        // let n = this.pts2D[i][j].cross(this.pts2D[i][0]);
+                        // this.p.normal(n);
                         this.p.vertex(this.pts2D[i][j].x, this.pts2D[i][j].y, this.pts2D[i][j].z);
                         this.p.vertex(this.pts2D[i + 1][j].x, this.pts2D[i + 1][j].y, this.pts2D[i + 1][j].z);
+
+                        // n = this.pts2D[i + 1][0].cross(this.pts2D[i][0]);
+                        // this.p.normal(n);
                         this.p.vertex(this.pts2D[i + 1][0].x, this.pts2D[i + 1][0].y, this.pts2D[i + 1][0].z);
                         this.p.vertex(this.pts2D[i][0].x, this.pts2D[i][0].y, this.pts2D[i][0].z);
                     }

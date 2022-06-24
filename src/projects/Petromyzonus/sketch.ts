@@ -32,6 +32,7 @@ let directionVal = 0;
 let petroTransPos: P5.Vector;
 const groundPlaneY = 4500;
 let petroNodeToReedDistThreshold = 4700;
+let petroNodeToStarDistThreshold = 12000;
 
 let modelMat3: ProtoMatrix3;
 //let modelMat3: P5.Matrix
@@ -41,10 +42,17 @@ let petroStartingHeight = -3500;
 let petroDynamicHeight = -3000;
 let petroClimbingStep = 30;
 let isOrbitable = false;
-let petroRotationSpeedBoost = 2;
+let petroRotationSpeedBoost = 1;
 let isSwimmable = true;
 
-let info: string = "Test";
+let info: string = "";
+let font: P5.Font;
+
+let isBackgrounOn = true;
+
+// const preload = (p: P5) => {
+//     font = p.loadFont('./exo/Exo-Regular.otf');
+// };
 
 
 const sketch = (p: P5) => {
@@ -57,6 +65,7 @@ const sketch = (p: P5) => {
         bgB = p.int(p.random(10, 90));
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
         p.background(bgR, bgG, bgB);
+        font = p.loadFont('./exo/Exo-Regular.otf');
 
         // bgR = p.int(p.random(1, 30));
         // bgG = p.int(p.random(1, 30));
@@ -101,16 +110,16 @@ const sketch = (p: P5) => {
 
         // dust
         //constructor(pos: P5.Vector, spd: P5.Vector, rot: P5.Vector, amp: P5.Vector, freq: P5.Vector, scl: P5.Vector)
-        for (let i = 0; i < dustCount; i++) {
-            dps[i] = new DustParticle(p,
-                p.createVector(0, 0, 0), /*pos*/
-                p.createVector(0, 0, 0), /*spd*/
-                p.createVector(p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02), /*rot*/
-                p.createVector(p.random(30, 150), p.random(60, 120), p.random(30, 140)), /*amp*/
-                p.createVector(p.random(p.PI / 360, p.PI / 180), p.random(p.PI / 320, p.PI / 90), p.random(p.PI / 320, p.PI / 90)), /*freq*/
-                p.createVector(p.random(.5, 1.5), p.random(.5, 1.5), p.random(.5, 1.5))  /*scl*/
-            );
-        }
+        // for (let i = 0; i < dustCount; i++) {
+        //     dps[i] = new DustParticle(p,
+        //         p.createVector(0, 0, 0), /*pos*/
+        //         p.createVector(0, 0, 0), /*spd*/
+        //         p.createVector(p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02, p.random(p.TWO_PI) * .02), /*rot*/
+        //         p.createVector(p.random(30, 150), p.random(60, 120), p.random(30, 140)), /*amp*/
+        //         p.createVector(p.random(p.PI / 360, p.PI / 180), p.random(p.PI / 320, p.PI / 90), p.random(p.PI / 320, p.PI / 90)), /*freq*/
+        //         p.createVector(p.random(.5, 1.5), p.random(.5, 1.5), p.random(.5, 1.5))  /*scl*/
+        //     );
+        // }
 
         petroTransPos = p.createVector(0, 0, 0);
 
@@ -141,7 +150,20 @@ const sketch = (p: P5) => {
 
 
     p.draw = () => {
-        p.background(bgR, bgG, bgB);
+        if (isBackgrounOn) {
+            p.background(bgR, bgG, bgB);
+        } else {
+
+        }
+        //p.background(bgR, bgG, bgB);
+        // p.fill(100, 10);
+        // p.rect(-1000, -1000, 2000, 2000);
+
+        p.fill(255, 50);
+        p.textFont(font);
+        p.textSize(p.width / 8);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.text(info, 0, -p.windowHeight / 2);
 
         // p.fill(255);
         // p.textSize(100)
@@ -169,7 +191,7 @@ const sketch = (p: P5) => {
 
 
         // world transform
-        //p.orbitControl(1, 1);
+        p.orbitControl(1, 1);
         p.translate(0, -600, -1000);
         //p.rotateY(groundRotateTheta);
 
@@ -195,7 +217,7 @@ const sketch = (p: P5) => {
         // const y = p.cos(p.frameCount * p.PI / 290) * 800
         // const z = -500 + p.cos(p.frameCount * p.PI / 590) * 1500;
         const x = p.sin(petroTravelTheta.x) * p.windowWidth * 4;//1200
-        const y = -p.windowWidth * .5 + p.cos(petroTravelTheta.y) * p.windowWidth * .4
+        const y = -p.windowWidth * .5 + p.cos(petroTravelTheta.y) * p.windowWidth * .6
         const z = -2500 + p.cos(petroTravelTheta.z) * 3500;
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
@@ -270,6 +292,7 @@ const sketch = (p: P5) => {
 
         const edgeVerts = petro.getAnnuliEdgeVerts();
         const reedtipVerts = gp.getReedTipverts();
+        const starVerts = gp.getStarVerts();
         for (let i = 0; i < edgeVerts.length; i++) {
             const ev = p.createVector(
                 edgeVerts[i].x,
@@ -287,35 +310,64 @@ const sketch = (p: P5) => {
                 if (ev.dist(rtv) < petroNodeToReedDistThreshold) {
                     p.strokeWeight(.2);
                     p.stroke(p.random(200, 255), p.random(100, 200), p.random(100, 200), 50);
-                    p.push();
+                    // p.push();
                     // p.rotateY(-p.PI / 2 - p.atan2(petroTransPos.z, petroTransPos.x));
                     p.beginShape(p.LINES);
                     p.vertex(ev.x, ev.y, ev.z);
                     p.vertex(rtv.x, rtv.y, rtv.z);
                     p.endShape();
-                    p.pop();
+                    // p.pop();
+                }
+            }
+
+            // star contacts
+            for (let j = 0; j < starVerts.length; j++) {
+                const rx = starVerts[j].x - petroTransPos.x;
+                const ry = starVerts[j].y + groundPlaneY - petroTransPos.y
+                const rz = starVerts[j].z - petroTransPos.z;
+                const rtv = p.createVector(
+                    p.sin(-petroPointToTheta) * rz + p.cos(-petroPointToTheta) * rx,
+                    ry,
+                    p.cos(-petroPointToTheta) * rz - p.sin(-petroPointToTheta) * rx
+                )
+                if (ev.dist(rtv) < petroNodeToStarDistThreshold) {
+                    p.strokeWeight(.2);
+                    p.stroke(p.random(160, 200), p.random(130, 150), p.random(220, 255), 50);
+                    //p.push();
+                    // p.rotateY(-p.PI / 2 - p.atan2(petroTransPos.z, petroTransPos.x));
+                    p.beginShape(p.LINES);
+                    p.vertex(ev.x, ev.y, ev.z);
+                    p.vertex(rtv.x, rtv.y, rtv.z);
+                    p.endShape();
+                    // p.pop();
+
+                    // for (let k = 0; k < starVerts.length; k++) {
+                    //     if (j !== k) {
+                    //         if (starVerts[j].dist(starVerts[k]) < 9000) {
+                    //             p.strokeWeight(.2);
+                    //             p.stroke(p.random(160, 200), p.random(230, 250), p.random(120, 155), 50);
+                    //             //p.push();
+                    //             // p.rotateY(-p.PI / 2 - p.atan2(petroTransPos.z, petroTransPos.x));
+                    //             p.beginShape(p.LINES);
+                    //             p.vertex(starVerts[j].x, starVerts[j].y, starVerts[j].z);
+                    //             p.vertex(starVerts[k].x, starVerts[k].y, starVerts[k].z);
+                    //             p.endShape();
+                    //         }
+                    //     }
+
+                    // }
+
                 }
             }
         }
         // control narrative
         storyCounter++;
 
-        if (petroTransPos.y > -1000) {
+        if (petroTransPos.y > -1500) {
             petroDynamicHeight += petroClimbingStep;
         } else {
             isOrbitable = true;
         }
-
-
-        // let _text = p.createGraphics(window.innerWidth - 4, window.innerHeight - 4);
-        // // _text.textFont('Source Code Pro');
-        // _text.textAlign(p.CENTER);
-        // _text.textSize(133);
-        // _text.fill(3, 7, 11);
-        // _text.noStroke();
-        // _text.text('test', p.width * 0.5, p.height * 0.5);
-        // p.texture(_text);
-        // p.plane(window.innerWidth - 4, window.innerHeight - 4);
 
     };
 
@@ -323,44 +375,147 @@ const sketch = (p: P5) => {
         //X amplitude
         if (p.key === ']') {
             petro.changeAmplitudeX(15);
+            if (isBackgrounOn) {
+                info = "Increase X-Axis Wave Amplitude"
+            }
         } else if (p.key === '[') {
             petro.changeAmplitudeX(-15);
+            if (isBackgrounOn) {
+                info = "Decrease X-Axis Wave Amplitude"
+            }
         }  //Y amplitude
         else if (p.key === '}') {
             petro.changeAmplitudeY(15);
+            if (isBackgrounOn) {
+                info = "Increase Y-Axis Wave Amplitude"
+            }
         } else if (p.key === '{') {
             petro.changeAmplitudeY(-15);
+            if (isBackgrounOn) {
+                info = "Decrease Y-Axis Wave Amplitude"
+            }
         }
 
         // frequency
         else if (p.key === '<') {
-            petro.changeFreqX(-1);
+            petro.changeFreqX(1);
+            if (isBackgrounOn) {
+                info = "Decrease X-Axis Wave Frequency"
+            }
         } else if (p.key === '>') {
-            petro.changeFreqX(+1);
+            petro.changeFreqX(-1);
+            if (isBackgrounOn) {
+                info = "Increase X-Axis Wave Frequency"
+            }
         } else if (p.key === ',') {
-            petro.changeFreqY(-1);
+            petro.changeFreqY(1);
+            if (isBackgrounOn) {
+                info = "Decrease Y-Axis Wave Frequency"
+            }
         } else if (p.key === '.') {
-            petro.changeFreqY(+1);
+            petro.changeFreqY(-1);
+            if (isBackgrounOn) {
+                info = "Increase Y-Axis Wave Frequency"
+            }
 
             // node to reed threshold
         } else if (p.key === 'm') {
             petroNodeToReedDistThreshold += 100;
+            if (isBackgrounOn) {
+                info = "Decrease Ground Tether Threshold"
+            }
         } else if (p.key === 'n') {
             petroNodeToReedDistThreshold -= 100;
+            if (isBackgrounOn) {
+                info = "Increase Ground Tether Threshold"
+            }
         }
+
+        // node to star threshhold
+        else if (p.key === 'b') {
+            petroNodeToStarDistThreshold += 100;
+            info = "Decrease Star Tether Threshold"
+        } else if (p.key === 'v') {
+            petroNodeToStarDistThreshold -= 100;
+            info = "Increase Star Tether Threshold"
+        }
+
+        // star rotation speed
+        else if (p.key === '2') {
+            gp.changeStarRotation(p.random(.1, .5));
+            if (isBackgrounOn) {
+                info = "Increase Star Rotation Speed"
+            }
+        } else if (p.key === '1') {
+            gp.changeStarRotation(-p.random(.1, .5));
+            if (isBackgrounOn) {
+                info = "Decrease Star Rotation Speed"
+            }
+        }
+
+        // traveling roation speed
+        else if (p.key === '4') {
+            let prsb = petroRotationSpeedBoost;
+            prsb += .1;
+            petroRotationSpeedBoost = prsb;
+            if (isBackgrounOn) {
+                info = "Increase Traveling Speed"
+            }
+        } else if (p.key === '3') {
+            let prsb = petroRotationSpeedBoost;
+            prsb -= .1;
+            petroRotationSpeedBoost = p.max(.1, prsb);
+            if (isBackgrounOn) {
+                info = "Decrease Traveling Speed"
+            }
+        }
+
         // swimmable
         else if (p.key === 'q') {
             isSwimmable = false;
-
-            info = "End Traveling"
+            if (isBackgrounOn) {
+                info = "End Traveling"
+            }
         } else if (p.key === 'w') {
             isSwimmable = true;
-
-            info = "Begin Traveling"
-
-
+            if (isBackgrounOn) {
+                info = "Begin Traveling"
+            }
         }
 
+        // screen capture
+        else if (p.key === 'p') {
+            if (isBackgrounOn) {
+                info = "Petromyzonus captured"
+            }
+            p.save("Petromyzonus capture");
+        }
+
+        // reverse direction
+        else if (p.key === 'z') {
+            if (directionVal == 0) {
+                if (isBackgrounOn) {
+                    info = "Reverse Direction"
+                }
+                directionVal = 1;
+            } else {
+                if (isBackgrounOn) {
+                    info = "Reverse Direction"
+                }
+                directionVal = 0;
+            }
+        }
+
+        // turn off background
+        else if (p.key === '9') {
+            isBackgrounOn = false;
+        } else if (p.key === '0') {
+            info = "Background On"
+            isBackgrounOn = true;
+        }
+    }
+    p.keyReleased = () => {
+        info = ""
     }
 
 

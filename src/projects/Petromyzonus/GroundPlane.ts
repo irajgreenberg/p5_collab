@@ -11,7 +11,7 @@ export class GroundPlane {
 
     // seaweed stalks
     seaWeedStalks: VerletStrand[] = [];
-    reedTipverts: P5.Vector[] = []; // for elctrical transmissio between reeds and creature
+    reedTipverts: P5.Vector[] = []; // for electrical transmissio between reeds and creature
     //motionVecs
 
     // pulsing reed tips
@@ -19,6 +19,16 @@ export class GroundPlane {
     lightAmps: number[] = [];
     lightFreqs: number[] = [];
     lightThetas: number[] = [];
+
+    starCount = 500;
+    starsPos: P5.Vector[] = [];
+    starsSpd: P5.Vector[] = [];
+    starMinMaxRad: P5.Vector;
+    starFieldRotationTheta = 0
+    starFieldRotationPhi = 0
+    starFieldRotationThetaFreq = 0
+    starFieldRotationPhiFreq = 0
+
 
     constructor(p: P5, dim: P5.Vector, cols: number, rows: number, colRange: P5.Vector) {
         this.p = p;
@@ -37,16 +47,18 @@ export class GroundPlane {
                 const tint = p.random(-.9, 1.1);
                 this.cols2D[i][j] = p.createVector(this.colRange.x * tint, this.colRange.y * tint, this.colRange.z * tint);
 
-                if (i % 1 == 0 && j % 2 == 0) {
+                // light stalks
+                if (i % 1 == 0 && j % 1 == 0) {
                     this.seaWeedStalks.push(new VerletStrand(this.p,
                         this.verts2D[i][j], //head
-                        p.random(-600, -150), // lenth
-                        p.int(p.random(2, 4)), // nodeCount
+                        p.random(-1600, -450), // lenth
+                        p.int(p.random(2, 3)), // nodeCount
                         p.color(this.p.color(p.random(255), p.random(50, 90))), // color
                         p.random(.75, 1)));  // strokeWeight
                 }
             }
         }
+        // light stalks
         for (let i = 0; i < this.seaWeedStalks.length; i++) {
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.x += this.p.random(-20, 20);
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.z += this.p.random(-20, 20);
@@ -57,11 +69,30 @@ export class GroundPlane {
             this.lightFreqs.push(p.PI / p.random(2, 15));
             this.lightThetas.push(0);
         }
+
+        // Stars
+        this.starMinMaxRad = p.createVector(20000, 25500)
+        for (let i = 0; i < this.starCount; i++) {
+            const theta = p.random(p.TWO_PI);
+            const x = p.cos(theta) * p.random(this.starMinMaxRad.x, this.starMinMaxRad.y);
+            const y = p.sin(theta) * p.random(this.starMinMaxRad.x, this.starMinMaxRad.y);
+            const z = 0;
+            const phi = p.random(p.TWO_PI);
+            const x1 = p.sin(phi) * z + p.cos(phi) * x;
+            const y1 = y;
+            const z1 = p.cos(phi) * z - p.sin(phi) * x;
+            this.starsPos[i] = p.createVector(x1, y1, z1);
+        }
+        this.starFieldRotationThetaFreq = p.PI / p.random(1000, 1400);
+        this.starFieldRotationPhiFreq = p.PI / p.random(900, 1300);
+        this.starFieldRotationTheta += this.starFieldRotationThetaFreq;
+        this.starFieldRotationPhi += this.starFieldRotationPhiFreq
     }
 
     draw() {
-        this.p.noStroke();
 
+        // ground plane
+        this.p.noStroke();
         for (let i = 0; i < this.verts2D.length - 1; i++) {
             for (let j = 0; j < this.verts2D[i].length - 1; j++) {
                 this.p.beginShape();
@@ -88,14 +119,13 @@ export class GroundPlane {
             let motionVec = this.p.createVector(0, -10, 0);
             // motionVec.normalize();
             motionVec.mult(this.p.random(.2, .75));
-            this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.y += motionVec.y;
+            // this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.y;// += motionVec.y;
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.x += this.p.random(-1, 1)
             this.seaWeedStalks[i].nodes[0].pos.y += this.p.random(-1, 1)
 
 
             this.seaWeedStalks[i].draw();
             this.seaWeedStalks[i].move(0);
-
 
             // blinking lights
             this.p.push();
@@ -110,9 +140,48 @@ export class GroundPlane {
 
             this.reedTipverts[i] = this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos;
         }
+
+        for (let i = 0; i < this.starsPos.length; i++) {
+            this.p.strokeWeight(2);
+            this.p.stroke(this.p.random(170, 255))
+            this.p.point(this.starsPos[i].x, this.starsPos[i].y, this.starsPos[i].z);
+        }
+
+
+
+        // star field rotation
+        // starFieldRotationTheta = 0
+        // starFieldRotationPhi = 0
+        // starFieldRotationThetaFreq = 0
+        // starFieldRotationPhiFreq = 0
+
+        for (let i = 0; i < this.starCount; i++) {
+            // z rotation
+            const x = this.p.cos(this.starFieldRotationTheta) * this.starsPos[i].x - this.p.sin(this.starFieldRotationTheta) * this.starsPos[i].y;
+            const y = this.p.sin(this.starFieldRotationTheta) * this.starsPos[i].x + this.p.cos(this.starFieldRotationTheta) * this.starsPos[i].y;
+            const z = this.starsPos[i].z;
+
+            // y rotation
+            const x1 = this.p.sin(this.starFieldRotationPhi) * z + this.p.cos(this.starFieldRotationPhi) * x;
+            const y1 = y;
+            const z1 = this.p.cos(this.starFieldRotationPhi) * z - this.p.sin(this.starFieldRotationPhi) * x;
+
+            this.starsPos[i].x = x1;
+            this.starsPos[i].y = y1;
+            this.starsPos[i].z = z1;
+        }
     }
 
     getReedTipverts(): P5.Vector[] {
         return this.reedTipverts;
+    }
+
+    getStarVerts(): P5.Vector[] {
+        return this.starsPos;
+    }
+
+    changeStarRotation(val: number) {
+        this.starFieldRotationTheta += val * this.p.PI / 180;
+        this.starFieldRotationTheta += val * this.p.PI / 180;
     }
 }
