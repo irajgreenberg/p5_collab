@@ -42,6 +42,10 @@ let petroDynamicHeight = -3000;
 let petroClimbingStep = 30;
 let isOrbitable = false;
 let petroRotationSpeedBoost = 2;
+let isSwimmable = true;
+
+let info: string = "Test";
+
 
 const sketch = (p: P5) => {
     p.disableFriendlyErrors = true; // disables FES
@@ -118,6 +122,7 @@ const sketch = (p: P5) => {
         */
         modelMat3 = new ProtoMatrix3(3, 0, 0, 0, 3, 0, 0, 0, 3);
 
+        p.textSize(32);
     };
 
 
@@ -137,6 +142,10 @@ const sketch = (p: P5) => {
 
     p.draw = () => {
         p.background(bgR, bgG, bgB);
+
+        // p.fill(255);
+        // p.textSize(100)
+        // p.text("info", 1000, 800);
         // p.fill(bgR, bgG, bgB, 80);
         // p.fill(bgR, bgG, bgB, bgAlpha);
         // p.rect(-p.width / 2 - 1, -p.height / 2 - 1, p.width + 2, p.height + 2);
@@ -210,7 +219,7 @@ const sketch = (p: P5) => {
         petro.draw();
         petro.move();
 
-        if (isOrbitable) {
+        if (isOrbitable && isSwimmable) {
             if (directionVal == 0) {
                 petroTravelTheta.x += p.PI / 500 * petroRotationSpeedBoost; //590
                 petroTravelTheta.y += p.PI / 368 * petroRotationSpeedBoost;
@@ -287,8 +296,6 @@ const sketch = (p: P5) => {
                     p.pop();
                 }
             }
-
-
         }
         // control narrative
         storyCounter++;
@@ -298,30 +305,60 @@ const sketch = (p: P5) => {
         } else {
             isOrbitable = true;
         }
+
+
+        // let _text = p.createGraphics(window.innerWidth - 4, window.innerHeight - 4);
+        // // _text.textFont('Source Code Pro');
+        // _text.textAlign(p.CENTER);
+        // _text.textSize(133);
+        // _text.fill(3, 7, 11);
+        // _text.noStroke();
+        // _text.text('test', p.width * 0.5, p.height * 0.5);
+        // p.texture(_text);
+        // p.plane(window.innerWidth - 4, window.innerHeight - 4);
+
     };
 
     p.keyPressed = () => {
-        // amplitude
-        if (p.key === '}') {
+        //X amplitude
+        if (p.key === ']') {
+            petro.changeAmplitudeX(15);
+        } else if (p.key === '[') {
+            petro.changeAmplitudeX(-15);
+        }  //Y amplitude
+        else if (p.key === '}') {
             petro.changeAmplitudeY(15);
-
         } else if (p.key === '{') {
             petro.changeAmplitudeY(-15);
         }
+
         // frequency
-        else if (p.key === '.') {
+        else if (p.key === '<') {
             petro.changeFreqX(-1);
-        } else if (p.key === ',') {
+        } else if (p.key === '>') {
             petro.changeFreqX(+1);
-        } else if (p.key === ']') {
+        } else if (p.key === ',') {
             petro.changeFreqY(-1);
-        } else if (p.key === '[') {
+        } else if (p.key === '.') {
             petro.changeFreqY(+1);
+
             // node to reed threshold
         } else if (p.key === 'm') {
             petroNodeToReedDistThreshold += 100;
         } else if (p.key === 'n') {
             petroNodeToReedDistThreshold -= 100;
+        }
+        // swimmable
+        else if (p.key === 'q') {
+            isSwimmable = false;
+
+            info = "End Traveling"
+        } else if (p.key === 'w') {
+            isSwimmable = true;
+
+            info = "Begin Traveling"
+
+
         }
 
     }

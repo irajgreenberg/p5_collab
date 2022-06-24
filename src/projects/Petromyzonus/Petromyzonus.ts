@@ -71,6 +71,8 @@ export class Petromyzonus {
     spineMotionAmp: P5.Vector;
     spineMotionFreq: P5.Vector;
 
+    isSwimmable = true;
+
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector, bodySegments: number = 1) {
         this.p = p;
         this.length = length;
