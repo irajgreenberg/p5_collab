@@ -85,7 +85,7 @@ export class GroundPlane {
         // motionVec.mult(this.p.random(-2, -6.2));
 
         for (let i = 0; i < this.seaWeedStalks.length; i++) {
-            let motionVec = this.p.createVector(0, -100, 0);
+            let motionVec = this.p.createVector(0, -10, 0);
             // motionVec.normalize();
             motionVec.mult(this.p.random(.2, .75));
             this.seaWeedStalks[i].nodes[this.seaWeedStalks[i].nodes.length - 1].pos.y += motionVec.y;
