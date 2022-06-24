@@ -31,15 +31,17 @@ let groundRotateTheta = 0;
 let directionVal = 0;
 let petroTransPos: P5.Vector;
 const groundPlaneY = 4500;
-let petroNodeToReedDistThreshold = 3500;
+let petroNodeToReedDistThreshold = 4700;
 
 let modelMat3: ProtoMatrix3;
 //let modelMat3: P5.Matrix
 
 let storyCounter = 0;
-let petroStartingHeight = -100;
-let petroDynamicHeight = 0;
-let petroClimbingSpd = 5.3;
+let petroStartingHeight = -3500;
+let petroDynamicHeight = -3000;
+let petroClimbingStep = 30;
+let isOrbitable = false;
+let petroRotationSpeedBoost = 2;
 
 const sketch = (p: P5) => {
     p.disableFriendlyErrors = true; // disables FES
@@ -75,7 +77,7 @@ const sketch = (p: P5) => {
         directionVal = p.floor(p.random(2));
         // console.log(directionVal);
         // ground plane
-        gp = new GroundPlane(p, p.createVector(p.windowWidth * 25, 190, p.windowHeight * 25), 20, 20, p.createVector(bgR, bgG, bgB));
+        gp = new GroundPlane(p, p.createVector(p.windowWidth * 55, 190, p.windowHeight * 35), 20, 20, p.createVector(bgR, bgG, bgB));
 
         // creature
         // scl = p.random(.95, 1.3);
@@ -160,7 +162,7 @@ const sketch = (p: P5) => {
         // world transform
         //p.orbitControl(1, 1);
         p.translate(0, -600, -1000);
-        p.rotateY(groundRotateTheta);
+        //p.rotateY(groundRotateTheta);
 
 
 
@@ -183,16 +185,16 @@ const sketch = (p: P5) => {
         // const x = p.sin(petroTravelTheta.xp.frameCount * p.PI / 590) * 800
         // const y = p.cos(p.frameCount * p.PI / 290) * 800
         // const z = -500 + p.cos(p.frameCount * p.PI / 590) * 1500;
-        console.log(petroTravelTheta.x, petroTravelTheta.z);
-        const x = p.sin(petroTravelTheta.x) * p.windowWidth * 2.5;//1200
-        const y = -p.windowWidth * .5 + p.cos(petroTravelTheta.y) * p.windowWidth
+        const x = p.sin(petroTravelTheta.x) * p.windowWidth * 4;//1200
+        const y = -p.windowWidth * .5 + p.cos(petroTravelTheta.y) * p.windowWidth * .4
         const z = -2500 + p.cos(petroTravelTheta.z) * 3500;
         //const z = p.cos(p.frameCount * p.PI / 190) * 400;
 
         // move creature
         petroTransPos.x = x;
-        petroTransPos.y = y; //petroStartingHeight + petroDynamicHeight;
+        petroTransPos.y = y - petroDynamicHeight;
         petroTransPos.z = z;
+        // console.log(petroTransPos.y);
         p.translate(petroTransPos);
         if (directionVal == 0) {
             petroPointToTheta = p.PI / 2 - p.atan2(z, x);
@@ -208,22 +210,22 @@ const sketch = (p: P5) => {
         petro.draw();
         petro.move();
 
-        if (storyCounter > 100) {
+        if (isOrbitable) {
             if (directionVal == 0) {
-                petroTravelTheta.x += p.PI / 500 * 2; //590
-                petroTravelTheta.y += p.PI / 368 * 2;
-                petroTravelTheta.z += p.PI / 500 * 2;
+                petroTravelTheta.x += p.PI / 500 * petroRotationSpeedBoost; //590
+                petroTravelTheta.y += p.PI / 368 * petroRotationSpeedBoost;
+                petroTravelTheta.z += p.PI / 500 * petroRotationSpeedBoost;
             } else {
-                petroTravelTheta.x -= p.PI / 500 * 2; //590
-                petroTravelTheta.y -= p.PI / 368 * 2;
-                petroTravelTheta.z -= p.PI / 500 * 2;
+                petroTravelTheta.x -= p.PI / 500 * petroRotationSpeedBoost; //590
+                petroTravelTheta.y -= p.PI / 368 * petroRotationSpeedBoost;
+                petroTravelTheta.z -= p.PI / 500 * petroRotationSpeedBoost;
 
             }
         }
 
-        if (petroDynamicHeight > -2000) {
-            petroDynamicHeight -= petroClimbingSpd;
-        }
+        // if (petroDynamicHeight > -2000) {
+        //     petroDynamicHeight -= petroClimbingStep;
+        // }
         // p.pop();
         // END draw Petro
 
@@ -290,6 +292,12 @@ const sketch = (p: P5) => {
         }
         // control narrative
         storyCounter++;
+
+        if (petroTransPos.y > -1000) {
+            petroDynamicHeight += petroClimbingStep;
+        } else {
+            isOrbitable = true;
+        }
     };
 
     p.keyPressed = () => {
@@ -301,20 +309,19 @@ const sketch = (p: P5) => {
             petro.changeAmplitudeY(-15);
         }
         // frequency
-        else if (p.key === ']') {
-            petro.changeFreq(-1);
+        else if (p.key === '.') {
+            petro.changeFreqX(-1);
+        } else if (p.key === ',') {
+            petro.changeFreqX(+1);
+        } else if (p.key === ']') {
+            petro.changeFreqY(-1);
         } else if (p.key === '[') {
-            petro.changeFreq(+1);
+            petro.changeFreqY(+1);
             // node to reed threshold
         } else if (p.key === 'm') {
             petroNodeToReedDistThreshold += 100;
         } else if (p.key === 'n') {
             petroNodeToReedDistThreshold -= 100;
-            // Petro scale
-        } else if (p.key === '.') {
-            scl += .1;
-        } else if (p.key === ',') {
-            scl -= .1;
         }
 
     }

@@ -22,7 +22,7 @@ export class Petromyzonus {
 
     // spine dynamics
     spineTheta = 0;
-    spineThetas: number[] = [];
+    spineThetas: P5.Vector[] = [];
 
     strands: VerletStrand[] = [];
     bodyStrands: VerletStrand[] = [];
@@ -69,7 +69,7 @@ export class Petromyzonus {
     bubbleGravity = -.2;
 
     spineMotionAmp: P5.Vector;
-    spineMotionFreq: number;
+    spineMotionFreq: P5.Vector;
 
     constructor(p: P5, length: number, slices: number, radialDetail: number, radiusMinMax: P5.Vector, bodySegments: number = 1) {
         this.p = p;
@@ -110,7 +110,7 @@ export class Petromyzonus {
             const x = -length / 2 + bodySeg * i;
             this.spine.push(p.createVector(x, 0, 0));
             this.spine_init.push(p.createVector(x, 0, 0));
-            this.spineThetas[i] = p.sin(p.PI / slices) * i;
+            this.spineThetas[i] = p.createVector(p.sin(p.PI / slices) * i, p.sin(p.PI / slices) * i, p.sin(p.PI / slices) * i);
             let theta = 0;
             for (let j = 0; j < radialDetail; j++) {
                 l = i * radialDetail + j;
@@ -226,7 +226,7 @@ export class Petromyzonus {
         }
 
         this.spineMotionAmp = p.createVector(p.random(480, 800), p.random(800, 1300), p.random(30, 90));
-        this.spineMotionFreq = p.random(35, 75);
+        this.spineMotionFreq = p.createVector(p.random(35, 75), p.random(35, 75), p.random(35, 75));
     }
 
 
@@ -347,20 +347,30 @@ export class Petromyzonus {
         this.p.pop();
     }
 
+    changeAmplitudeX(val: number) {
+        this.spineMotionAmp.x += val;
+    }
+
     changeAmplitudeY(val: number) {
         this.spineMotionAmp.y += val;
     }
 
-    changeFreq(val: number) {
-        this.spineMotionFreq += val;
+    changeFreqX(val: number) {
+        this.spineMotionFreq.x += val;
     }
+
+    changeFreqY(val: number) {
+        this.spineMotionFreq.y += val;
+    }
+
+
 
     move(): void {
         // spine move
         for (let i = 0; i < this.spine.length; i++) {
-            this.spine[i].x = this.spine_init[i].x + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.x;
-            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.y;
-            this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i]) * this.spineMotionAmp.z;
+            this.spine[i].x = this.spine_init[i].x + this.p.sin(this.spineThetas[i].x * 1) * this.spineMotionAmp.x;
+            this.spine[i].y = this.spine_init[i].y + this.p.sin(this.spineThetas[i].y * 1) * this.spineMotionAmp.y;
+            this.spine[i].z = this.spine_init[i].z + this.p.sin(this.spineThetas[i].z) * this.spineMotionAmp.z;
 
 
             // deform body based on spine motion
@@ -377,7 +387,9 @@ export class Petromyzonus {
 
                 }
             }
-            this.spineThetas[i] += this.p.PI / this.spineMotionFreq;
+            this.spineThetas[i].x += this.p.PI / this.spineMotionFreq.x;
+            this.spineThetas[i].y += this.p.PI / this.spineMotionFreq.y;
+
         }
 
 
