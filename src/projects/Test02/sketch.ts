@@ -1,11 +1,11 @@
-// <FTName>
+// Test02
 // Ira Greenberg
 // Dallas, TX
 
 // Project Description: 
 
 import P5 from "p5";
-import { <FTName> } from './<FTName>';
+import { Test02 } from './Test02';
 
 
 const canvasW = 1200;
@@ -34,7 +34,6 @@ const sketch = (p: P5) => {
 
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
-        document.title = "<FTName>";
 
         let cnv = p.createCanvas(canvasW, canvasH, p.WEBGL);
         bgAlpha = p.random(80, 140);

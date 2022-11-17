@@ -1,11 +1,12 @@
-// <FTName>
+// Rainbow
 // Ira Greenberg
 // Dallas, TX
 
 // Project Description: 
 
+import p5 from "p5";
 import P5 from "p5";
-import { <FTName> } from './<FTName>';
+import { Rainbow } from "./Rainbow";
 
 
 const canvasW = 1200;
@@ -17,6 +18,11 @@ let bgG = 20;
 let bgB = 30;
 let bgColor: string
 let bgAlpha = 0;
+
+const numRainbows = 100;
+// let rainbow: Rainbow;
+// let rainbow2: Rainbow;
+let rainbow: Rainbow;
 
 let directLightVector: P5.Vector;
 
@@ -34,9 +40,9 @@ const sketch = (p: P5) => {
 
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
-        document.title = "<FTName>";
+        document.title = "Rainbow";
 
-        let cnv = p.createCanvas(canvasW, canvasH, p.WEBGL);
+        let cnv = p.createCanvas(canvasW, canvasH);
         bgAlpha = p.random(80, 140);
 
         p.setAttributes('antialias', true);
@@ -45,7 +51,26 @@ const sketch = (p: P5) => {
         directLightVector = p.createVector(0, 0, 300);
 
         // **************************************
-        // Instantiate custom geom
+        // constructor(p: p5, position: p5.Vector, dimension: p5.Vector, numCurves: number, colArr: p5.Color[])
+
+        const cols: p5.Color[] = [];
+        for (let i = 0; i < 8; i++) {
+            cols[i] = p.color(p.random(70, 140), 50, p.random(180, 200));
+        }
+        rainbow = new Rainbow(
+            p,
+            p.createVector(0, 0),
+            p.createVector(p.width * .75, 310),
+            cols
+            // [
+            //     p.color(255, 0, 0),
+            //     p.color(255, 255, 0),
+            //     p.color(255, 0, 255),
+            //     p.color(0, 255, 255),
+            //     p.color(255, 127, 0)
+            // ]
+        );
+        // **************************************
     };
 
     const resizedSketch = (p: P5) => {
@@ -58,29 +83,9 @@ const sketch = (p: P5) => {
     p.draw = () => {
         // plain vanilla bg
         p.background(bgR, bgG, bgB);
-        p.rotateY(p.PI / 2);
-        // custom fading bg
-        // p.noStroke();
-        // p.fill(bgR, bgG, bgB, bgAlpha);
-        // p.rect(-p.width / 2 - 1, -p.height / 2 - 1, p.width + 2, p.height + 2);
+        p.translate(p.width / 2, p.height / 2);
 
-        p.orbitControl();
-        //p.translate(0, 0, -300);
-
-        let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
-
-        p.ambientLight(20, 10, 15);
-
-        p.directionalLight(255, 0, 0, v);
-
-        p.shininess(255);
-        p.specularColor(189);
-        p.specularMaterial(250);
-
-        // Creating the point lights at the
-        // given points from the given directions
-        p.pointLight(255, 255, 255, -10, 5, 200);
-        p.pointLight(255, 255, 255, -60, 500, 380);
+        rainbow.draw();
 
         // **************************************
         // Animate custom geom

@@ -12,6 +12,37 @@ export enum NodeType {
     TOROID,
 }
 
+export enum ColorFamily {
+    HOT_PINK,
+    NEON_GREEN,
+    LIGHT_RED,
+    MEDIUM_RED,
+    DARK_RED,
+    LIGHT_GREEN,
+    MEDIUM_GREEN,
+    DARK_GREEN,
+    LIGHT_BLUE,
+    MEDIUM_BLUE,
+    DARK_BLUE,
+    LIGHT_YELLOW,
+    MEDIUM_YELLOW,
+    DARK_YELLOW,
+    LIGHT_ORANGE,
+    MEDIUM_ORANGE,
+    DARK_ORANGE,
+    LIGHT_PURPLE,
+    MEDIUM_PURPLE,
+    DARK_PURPLE,
+    WHITE,
+    BLACK,
+    LIGHT_BROWN,
+    MEDIUM_BROWN,
+    DARK_BROWN,
+    LIGHT_GRAY,
+    MEDIUM_GRAY,
+    DARK_GRAY,
+}
+
 export class PByte_globals {
     static grav: number = 0;
 }
