@@ -47,6 +47,20 @@ export class PByte_globals {
     static grav: number = 0;
 }
 
+export class Dimension4 {
+
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+
+    constructor(minX: number, maxX: number, minY: number, maxY: number) {
+        this.minX = minX;
+        this.maxX = maxX;
+        this.minY = minY;
+        this.maxY = maxY;
+    }
+}
 export class Box {
     pos: p5.Vector;
     dim: p5.Vector;

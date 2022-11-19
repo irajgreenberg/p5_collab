@@ -8,6 +8,8 @@ export class Particle {
     radius: number;
     col: p5.Color;
 
+    strokeWt: number;
+
     damping = 0.75;
     friction = 0.8;
     jitter = 0;
@@ -22,13 +24,18 @@ export class Particle {
         this.radius = radius;
         this.col = col;
 
+        this.strokeWt = this.p.random(.5, 8);
+
         this.jitterAmp = this.p.random(1, 3);
         this.jitterTheta = this.p.random(this.p.TWO_PI);
         this.jitterFreq = this.p.random(1, 30);
+
+        // console.log(this.spd);
     }
 
-    move(gravity: number) {
+    move(gravity: number = .03, wind: number = 0) {
         this.jitter = this.p.cos(this.jitterTheta * this.p.PI / 180) * this.jitterAmp
+        this.spd.x += wind;
         this.pos.x += this.spd.x + this.jitter;
         this.spd.y += gravity;
         this.pos.y += this.spd.y;
@@ -51,6 +58,7 @@ export class Particle {
 
     draw() {
         this.p.noFill();
+        this.p.strokeWeight(this.strokeWt);
         this.p.stroke(this.col);
         this.p.ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
     }
