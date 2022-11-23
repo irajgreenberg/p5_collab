@@ -10,6 +10,8 @@ export class ParticleEmitter {
     colorFamilies: ColorFamily[] = [];
     radiusMinMax: p5.Vector;
     partCount: number;
+    collisionPlaneShiftMinMax: p5.Vector;
+
     parts: Particle[] = [];
 
     spds: p5.Vector[] = [];
@@ -26,13 +28,14 @@ export class ParticleEmitter {
 
     // constructor(p: p5, pos: p5.Vector, emissionForce: Dimension4, colorFamilies: ColorFamily[], radiusMinMax: p5.Vector = p.createVector(2, 10), partCount: number = 200) {
 
-    constructor(p: p5, pos: p5.Vector, emissionForce: Dimension4, partCol: p5.Color, radiusMinMax: p5.Vector = p.createVector(2, 10), partCount: number = 200) {
+    constructor(p: p5, pos: p5.Vector, emissionForce: Dimension4, partCol: p5.Color, radiusMinMax: p5.Vector = p.createVector(2, 10), partCount: number = 200, collisionPlaneShiftMinMax: p5.Vector = p.createVector(0, 0)) {
         this.p = p;
         this.pos = pos;
         this.emissionForce = emissionForce;
         this.partCol = partCol;
         this.radiusMinMax = radiusMinMax
         this.partCount = partCount;
+        this.collisionPlaneShiftMinMax = collisionPlaneShiftMinMax;
 
         for (let i = 0; i < partCount; i++) {
             //constructor(p: p5, pos: p5.Vector, spd: p5.Vector, radius: number, col: p5.Color)
@@ -170,7 +173,7 @@ export class ParticleEmitter {
             // }
 
             this.parts[i] = new Particle(p, pos.copy(),
-                p.createVector(p.random(this.emissionForce.minX, this.emissionForce.maxX), p.random(this.emissionForce.minY, this.emissionForce.maxY)), p.random(radiusMinMax.x, radiusMinMax.y), p.color(col));
+                p.createVector(p.random(this.emissionForce.minX, this.emissionForce.maxX), p.random(this.emissionForce.minY, this.emissionForce.maxY)), p.random(radiusMinMax.x, radiusMinMax.y), p.color(col), collisionPlaneShiftMinMax);
 
         }
 

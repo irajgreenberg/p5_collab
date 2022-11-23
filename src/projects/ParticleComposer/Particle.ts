@@ -1,7 +1,11 @@
 import p5 from "p5";
 
-export class Particle {
+// enum ColissionPlane {
+//     COLLIDE_ABOVE,
+//     COLLIDE_BELOW
+// }
 
+export class Particle {
     p: p5;
     pos: p5.Vector;
     spd: p5.Vector;
@@ -10,6 +14,7 @@ export class Particle {
 
     strokeWt: number;
 
+    collisionPlaneShift: number;
     damping = 0.75;
     friction = 0.8;
     jitter = 0;
@@ -17,7 +22,7 @@ export class Particle {
     jitterTheta = 0;
     jitterFreq = 0;
 
-    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, radius: number, col: p5.Color) {
+    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, radius: number, col: p5.Color, collisionPlaneShiftMinMax: p5.Vector = p.createVector(0, 0)) {
         this.p = p;
         this.pos = pos;
         this.spd = spd;
@@ -25,6 +30,8 @@ export class Particle {
         this.col = col;
 
         this.strokeWt = this.p.random(.5, 8);
+
+        this.collisionPlaneShift = this.p.random(collisionPlaneShiftMinMax.x, collisionPlaneShiftMinMax.y);
 
         this.jitterAmp = this.p.random(1, 3);
         this.jitterTheta = this.p.random(this.p.TWO_PI);
@@ -46,8 +53,8 @@ export class Particle {
             this.spd.x *= -1;
         }
 
-        if (this.pos.y > this.p.height - this.radius) {
-            this.pos.y = this.p.height - this.radius;
+        if (this.pos.y > (this.p.height + this.collisionPlaneShift) - this.radius) {
+            this.pos.y = (this.p.height + this.collisionPlaneShift) - this.radius;
             this.spd.y *= -1;
             this.spd.y *= this.damping;
             this.spd.x *= this.friction;

@@ -45,7 +45,7 @@ const sketch = (p: P5) => {
         document.body.style.backgroundColor = bgColor;
         document.title = "ParticleComposer : Ira Greenberg 2022";
 
-        let cnv = p.createCanvas(1420, 780);
+        let cnv = p.createCanvas(1420, 700);
         bgAlpha = p.random(80, 140);
 
         p.setAttributes('antialias', true);
@@ -58,9 +58,10 @@ const sketch = (p: P5) => {
             p,
             p.createVector(p.width / 2 + p.random(-400, 400), p.height / 2 + p.random(-400, 400)),
             new Dimension4(-6, 9, -35, -12),
-            p.color(60, 60, 255, 5),
-            p.createVector(1, 39),
-            220
+            p.color(60, 60, 255, 3),
+            p.createVector(.5, 500),
+            220,
+            p.createVector(-p.height, 0)
         );
 
         // Red
@@ -69,8 +70,9 @@ const sketch = (p: P5) => {
             p.createVector(p.width / 2 + p.random(-400, 400), p.height / 2 + p.random(-400, 400)),
             new Dimension4(-9, 10.4, -10, -5),
             p.color(200, 100, 100, 1),
-            p.createVector(2, 205),
-            330
+            p.createVector(.5, 500),
+            330,
+            p.createVector(-p.height, 0)
         );
 
         // green
@@ -78,9 +80,10 @@ const sketch = (p: P5) => {
             p,
             p.createVector(p.width / 2 + p.random(-400, 400), p.height / 2 + p.random(-400, 400)),
             new Dimension4(-2, 2, -25, -7),
-            p.color(100, 200, 100, 5),
-            p.createVector(.5, 3),
-            330
+            p.color(100, 200, 100, 2),
+            p.createVector(.5, 500),
+            330,
+            p.createVector(-p.height, 0)
         );
 
         // yellow
@@ -89,8 +92,9 @@ const sketch = (p: P5) => {
             p.createVector(p.width / 2 + p.random(-400, 400), p.height / 2 + p.random(-400, 400)),
             new Dimension4(-2, 2, -20, -8),
             p.color(200, 200, 100, 3),
-            p.createVector(8, 35),
-            185
+            p.createVector(.5, 500),
+            185,
+            p.createVector(-p.height, 0)
         );
 
         // purple
@@ -99,8 +103,9 @@ const sketch = (p: P5) => {
             p.createVector(p.width / 2 + p.random(-400, 400), p.height / 2 + p.random(-400, 400)),
             new Dimension4(-4, 5, -19, -5),
             p.color(100, 50, 100, 1),
-            p.createVector(28, 595),
-            430
+            p.createVector(.5, 500),
+            430,
+            p.createVector(-p.height, 0)
         );
 
         // bg col
@@ -110,8 +115,9 @@ const sketch = (p: P5) => {
             new Dimension4(-8, 8, -12, -4),
             // p.color(bgR, bgG, bgB, 240),
             p.color(bgR, bgR, bgR, 2),
-            p.createVector(2, 363),
-            380
+            p.createVector(.5, 500),
+            380,
+            p.createVector(-p.height, 0)
         );
 
         // pink
@@ -119,9 +125,10 @@ const sketch = (p: P5) => {
             p,
             p.createVector(p.width / 2 + p.random(-400, 400), p.height / 2 + p.random(-400, 400)),
             new Dimension4(-10, 10, -18, -5),
-            p.color(255, 140, 140, 6),
-            p.createVector(1, 30),
-            420
+            p.color(255, 140, 140, 2),
+            p.createVector(.5, 500),
+            420,
+            p.createVector(-p.height, 0)
         );
 
         ps08 = new ParticleEmitter(
@@ -130,8 +137,9 @@ const sketch = (p: P5) => {
             new Dimension4(12, 18, -22, -14),
             // p.color(bgR, bgG, bgB, 240),
             p.color(bgR, bgR, bgR, 2),
-            p.createVector(1, 2),
-            680
+            p.createVector(.5, 500),
+            680,
+            p.createVector(-p.height, 0)
         );
 
     }
@@ -147,14 +155,14 @@ const sketch = (p: P5) => {
         // p.fill(bgR, bgG, bgB, 10);
         // p.rect(-1, -1, p.width + 2, p.height + 2);
         // p.background(255);
-        ps01.run(.2, 0);
-        ps02.run(.095);
-        ps03.run(.2);
-        ps04.run(.5, -.0001);
-        ps05.run(.5, .0005);
-        ps06.run(.5, -.00003);
-        ps07.run(.5);
-        ps08.run();
+        ps01.run(.02, 0);
+        ps02.run(.095, 0);
+        ps03.run(.02, 0);
+        ps04.run(.05, -.0001);
+        ps05.run(.05, .0005);
+        ps06.run(.05, -.00003);
+        ps07.run(.05, 0);
+        ps08.run(.03, 0);
     };
 
 };
