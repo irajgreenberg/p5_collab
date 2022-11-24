@@ -13,8 +13,8 @@ let bgColValMinMax: p5.Vector;
 let bgColor: string
 let bgAlpha = 0;
 
-let partCount = 200;
-let edgeCount = 20;
+let partCount = 305;
+let edgeCount = 300;
 const gravity = .15;
 let parts: SimpleParticle[] = [];
 let edges: CollisionEdge[] = [];
@@ -23,7 +23,7 @@ const sketch = (p: p5) => {
 
     p.setup = () => {
         // random background color
-        bgColValMinMax = p.createVector(50, 125);
+        bgColValMinMax = p.createVector(150, 225);
         bgR = p.int(p.random(bgColValMinMax.x, bgColValMinMax.y));
         bgG = p.int(p.random(bgColValMinMax.x, bgColValMinMax.y));
         bgB = p.int(p.random(bgColValMinMax.x, bgColValMinMax.y));
@@ -45,17 +45,21 @@ const sketch = (p: p5) => {
         for (let i = 0; i < partCount; i++) {
             parts.push(new SimpleParticle(
                 p,
-                p.createVector(p.random(-p.width / 2, p.width / 2), -p.height / 2),
-                p.createVector(p.random(-5, 5), p.random(3, 8)))
+                p.createVector(p.random(-200, 200), 0),
+                p.createVector(p.random(-10, 10), p.random(-25, .1)),
+                p.random(.5, 10))
             );
         }
 
         for (let i = 0; i < edgeCount; i++) {
+            const x = p.random(-p.width / 2 + 100, p.width / 2 - 100);
+            const y = p.random(-p.height / 2 + 100, p.height / 2 - 100);
+
             edges.push(new CollisionEdge(
                 p,
-                p.createVector(p.random(-p.width / 2, p.width / 2), p.random(-100, p.height / 2)),
-                p.createVector(p.random(-p.width / 2, p.width / 2), p.random(-100, p.height / 2))
-            ));
+                p.createVector(x, y),
+                p.createVector(x + p.random(10, 40), y + p.random(-30, 30)))
+            );
             //console.log(p.random(20, 100));
             // console.log(edges[edges.length - 1].tail);
         }
@@ -71,9 +75,9 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
-        // p.fill(bgR, bgG, bgB, 10);
+        // p.fill(bgR, bgG, bgB, 3);
         // p.rect(-1, -1, p.width + 2, p.height + 2);
-        p.background(255);
+        // p.background(255);
         p.translate(p.width / 2, p.height / 2)
         for (let i = 0; i < partCount; i++) {
             parts[i].move();
@@ -82,25 +86,20 @@ const sketch = (p: p5) => {
 
         for (let i = 0; i < edgeCount; i++) {
             edges[i].draw();
-
-            const x = p.cos(edges[i].rot) * edges[i].pos.x - p.sin(edges[i].rot) * edges[i].pos.y;
-            const y = p.sin(edges[i].rot) * edges[i].pos.x + p.cos(edges[i].rot) * edges[i].pos.y;
-
-
-            for (let j = 0; j < partCount; j++) {
-
-
-
-                if (parts[j].pos.dist(edges[i].pos) < 10) {
-                    parts[j].spd.y *= -1;
-                }
-            }
-
-
-
         }
 
-    };
+
+
+        for (let i = 0; i < partCount; i++) {
+            for (let j = 0; j < edgeCount; j++) {
+                parts[i].checkGroundCollision(edges[j]);
+            }
+        }
+
+
+
+    }
+
 }
 
 let _instance = new p5(sketch);
