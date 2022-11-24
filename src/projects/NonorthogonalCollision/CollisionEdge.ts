@@ -1,4 +1,5 @@
 import p5 from "p5";
+import { SimpleParticle } from "./SimpleParticle";
 
 export class CollisionEdge {
 
@@ -12,7 +13,7 @@ export class CollisionEdge {
     mag: number;
     norm: p5.Vector;
 
-    granularity = 100;
+    granularity = 5;
     edgeNodes: p5.Vector[] = [];
 
     constructor(p: p5, head: p5.Vector, tail: p5.Vector) {
@@ -56,9 +57,9 @@ export class CollisionEdge {
         this.p.endShape();
     }
 
-    isHit(part: p5.Vector): boolean {
+    isHit(part: SimpleParticle): boolean {
         for (let i = 0; i < this.edgeNodes.length; i++) {
-            if (this.edgeNodes[i].dist(part) < 5) {
+            if (this.edgeNodes[i].dist(part.pos) < part.rad) {
                 return true;
             }
         }
