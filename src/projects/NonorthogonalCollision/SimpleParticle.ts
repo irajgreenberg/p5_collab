@@ -9,7 +9,7 @@ export class SimpleParticle {
     col: p5.Color;
 
     wind: p5.Vector;;
-    gravity = .2;
+    gravity = .05;
     damping = 0.75;
     friction = 0.8;
     jitter = 0;
@@ -17,7 +17,7 @@ export class SimpleParticle {
     jitterTheta = 0;
     jitterFreq = 0;
 
-    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, rad: number = 5, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(20, 50))) {
+    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, rad: number = 5, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(20, 150))) {
         this.p = p;
         this.pos = pos;
         this.spd = spd;
@@ -35,7 +35,7 @@ export class SimpleParticle {
     move() {
         this.jitter = this.p.cos(this.jitterTheta * this.p.PI / 180) * this.jitterAmp;
 
-
+        this.wind.x = this.p.random(-0, 0);
         this.spd.x += this.wind.x;
         this.pos.x += this.spd.x + this.jitter;
 
@@ -53,6 +53,17 @@ export class SimpleParticle {
         // this.p.stroke(this.col);
         this.p.ellipse(this.pos.x, this.pos.y, this.rad * 2, this.rad * 2);
     }
+
+    wallsCollide() {
+        if (this.pos.x > this.p.width / 2 - this.rad) {
+            this.pos.x = this.p.width / 2 - this.rad;
+            this.spd.x *= -1;
+        } else if (this.pos.x < -this.p.width / 2 + this.rad) {
+            this.pos.x = -this.p.width / 2 + this.rad;
+            this.spd.x *= -1;
+        }
+    }
+
 
     checkGroundCollision(edge: CollisionEdge) {
         // Get difference between orb and ground

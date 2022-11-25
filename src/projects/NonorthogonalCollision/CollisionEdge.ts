@@ -7,6 +7,8 @@ export class CollisionEdge {
     pos: p5.Vector // central edge position
     head: p5.Vector;
     tail: p5.Vector;
+    col: p5.Color;
+    strokeWt: number;
 
     rot: number;
     lenVec: p5.Vector;
@@ -16,10 +18,12 @@ export class CollisionEdge {
     granularity = 5;
     edgeNodes: p5.Vector[] = [];
 
-    constructor(p: p5, head: p5.Vector, tail: p5.Vector) {
+    constructor(p: p5, head: p5.Vector, tail: p5.Vector, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(20, 50)), strokeWt: number = .5) {
         this.p = p;
         this.head = head;
         this.tail = tail;
+        this.col = col;
+        this.strokeWt = strokeWt;
         this.lenVec = this.p.createVector(this.tail.x, this.tail.y);
         this.lenVec.sub(head);
 
@@ -47,10 +51,10 @@ export class CollisionEdge {
         const y = this.p.sin(theta) * this.pos.x + this.p.cos(theta) * this.pos.y;
     }
 
-    draw(strokeCol: p5.Color = this.p.color(180, 90, 0), strokeWt: number = 2) {
+    draw() {
         this.p.noFill();
-        this.p.stroke(strokeCol);
-        this.p.strokeWeight(strokeWt);
+        this.p.stroke(this.col);
+        this.p.strokeWeight(this.strokeWt);
         this.p.beginShape();
         this.p.vertex(this.head.x, this.head.y);
         this.p.vertex(this.tail.x, this.tail.y);
