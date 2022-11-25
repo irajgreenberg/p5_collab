@@ -13,8 +13,8 @@ let bgColValMinMax: p5.Vector;
 let bgColor: string
 let bgAlpha = 0;
 
-let partCount = 10;
-let edgeCount = 500;
+let partCount = 2000;
+let edgeCount = 200;
 const gravity = .15;
 let parts: SimpleParticle[] = [];
 let edges: CollisionEdge[] = [];
@@ -24,7 +24,7 @@ const sketch = (p: p5) => {
 
     p.setup = () => {
         // random background color
-        bgColValMinMax = p.createVector(190, 255);
+        bgColValMinMax = p.createVector(19, 55);
         bgR = p.int(p.random(bgColValMinMax.x, bgColValMinMax.y));
         bgG = p.int(p.random(bgColValMinMax.x, bgColValMinMax.y));
         bgB = p.int(p.random(bgColValMinMax.x, bgColValMinMax.y));
@@ -46,10 +46,11 @@ const sketch = (p: p5) => {
         for (let i = 0; i < partCount; i++) {
             parts.push(new SimpleParticle(
                 p,
-                p.createVector(p.random(-300, 300), p.random(-200, -100)),
+                //p.createVector(p.random(-300, 300), p.random(-200, -100)),
+                p.createVector(p.random(-15, 15), p.random(-125, -100)),
                 //p.createVector(p.random(-10, 10), p.random(-25, .1)),
-                p.createVector(p.random(-5, 5), p.random(-15, .1)),
-                p.random(.5, 4))
+                p.createVector(p.random(-3, 3), p.random(-20, .1)),
+                p.random(.75, 4))
             );
         }
 
@@ -77,9 +78,9 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
-        // p.fill(bgR, bgG, bgB, 3);
-        // p.rect(-1, -1, p.width + 2, p.height + 2);
-        // p.background(255);
+        p.fill(bgR, bgG, bgB, .25);
+        p.rect(-1, -1, p.width + 2, p.height + 2);
+        //p.background(255);
         p.translate(p.width / 2, p.height / 2)
         for (let i = 0; i < partCount; i++) {
             parts[i].move();
@@ -87,7 +88,7 @@ const sketch = (p: p5) => {
         };
 
         for (let i = 0; i < edgeCount; i++) {
-            edges[i].draw();
+            //edges[i].draw();
         }
 
 

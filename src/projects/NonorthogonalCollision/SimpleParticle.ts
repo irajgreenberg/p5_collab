@@ -8,11 +8,14 @@ export class SimpleParticle {
     rad: number;
     col: p5.Color;
 
-    damping = .85;
-
-    // Thanksgiving Day 2022 expansion
-    // img: Image;
-    // tempRot = 0;
+    wind: p5.Vector;;
+    gravity = .2;
+    damping = 0.75;
+    friction = 0.8;
+    jitter = 0;
+    jitterAmp = 0;
+    jitterTheta = 0;
+    jitterFreq = 0;
 
     constructor(p: p5, pos: p5.Vector, spd: p5.Vector, rad: number = 5, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(20, 50))) {
         this.p = p;
@@ -21,23 +24,34 @@ export class SimpleParticle {
         this.rad = rad;
         this.col = col;
 
-        // this.img = p.loadImage("./external_resources/turkey.png")
-        // this.tempRot = p.random(-p.PI, p.PI);
+        this.wind = p.createVector(p.random(-.05, .05), p.random(-.05, .05));
+        //this.wind = p.createVector(p.random(.01, .5), p.random(-.05, .05));
+
+        this.jitterAmp = this.p.random(1, 3);
+        this.jitterTheta = this.p.random(this.p.TWO_PI);
+        this.jitterFreq = this.p.random(1, 30);
     }
 
     move() {
-        this.spd.y += .2;
+        this.jitter = this.p.cos(this.jitterTheta * this.p.PI / 180) * this.jitterAmp;
+
+
+        this.spd.x += this.wind.x;
+        this.pos.x += this.spd.x + this.jitter;
+
+
+        this.spd.y += this.gravity;
         this.pos.add(this.spd);
+
+        this.jitterTheta += this.jitterFreq;
     }
 
     draw() {
-        this.p.noFill();
-        this.p.stroke(this.col);
+        // this.p.noFill();
+        this.p.noStroke();
+        this.p.fill(this.col);
+        // this.p.stroke(this.col);
         this.p.ellipse(this.pos.x, this.pos.y, this.rad * 2, this.rad * 2);
-        // this.p.push();
-        // this.p.rotate(this.tempRot);
-        // this.p.image(this.img, this.pos.x, this.pos.y, this.rad * 55, this.rad * 55);
-        // this.p.pop();
     }
 
     checkGroundCollision(edge: CollisionEdge) {
