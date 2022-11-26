@@ -5,7 +5,6 @@
 // Project Description: 
 
 import P5 from "p5";
-import { Ukraine01 } from './Ukraine01';
 
 
 const canvasW = 1200;
