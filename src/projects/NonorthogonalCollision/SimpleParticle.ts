@@ -17,7 +17,7 @@ export class SimpleParticle {
     jitterTheta = 0;
     jitterFreq = 0;
 
-    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, rad: number = 5, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(20, 150))) {
+    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, rad: number = 5, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(120, 250))) {
         this.p = p;
         this.pos = pos;
         this.spd = spd;

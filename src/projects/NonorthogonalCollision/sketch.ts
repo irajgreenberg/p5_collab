@@ -15,8 +15,8 @@ let bgColValMinMax: p5.Vector;
 let bgColor: string
 let bgAlpha = 0;
 
-let partCount = 160;
-let edgeCount = 500;
+let partCount = 30;
+let edgeCount = 900;
 const gravity = .15;
 let parts: SimpleParticle[] = [];
 let edges: CollisionEdge[] = [];
@@ -54,11 +54,11 @@ const sketch = (p: p5) => {
                 p.createVector(p.random(-5, 5), p.random(-p.height / 2, -p.height / 2 + 100)),
                 //p.createVector(p.random(-1, 1), p.random(-25, .1)),
                 p.createVector(p.random(-.1, .1), p.random(-2, .1)),
-                p.random(.75, 2))
+                p.random(.75, 3))
             );
 
-            if (i < 20) {
-                strands[i] = new VerletStrand(p, parts[i].pos, p.random(30, 125), p.floor(p.random(5, 20)), p.color(255, p.random(180, 255), p.random(180, 255), p.random(15, 45)), 1, p.createVector(.002, .2))
+            if (i < 30) {
+                strands[i] = new VerletStrand(p, parts[i].pos, p.random(130, 225), p.floor(p.random(20, 60)), p.color(255, p.random(180, 255), p.random(180, 255), p.random(215, 245)), 1, p.createVector(.002, .2))
             }
         }
 
@@ -66,11 +66,12 @@ const sketch = (p: p5) => {
             const x = p.random(-p.width / 2 + 30, p.width / 2 - 30);
             const y = p.random(-p.height / 2 + -30, p.height / 2 - 30);
 
+            const g = p.random(20, 100);
             edges.push(new CollisionEdge(
                 p,
                 p.createVector(x, y),
                 p.createVector(x + p.random(10, 40), y + p.random(-30, 30)),
-                p.color(255, p.random(60, 200), 0, 2),
+                p.color(g, g, g, 2),
                 .5
             )
             );
@@ -91,7 +92,7 @@ const sketch = (p: p5) => {
     p.draw = () => {
         p.fill(bgR, bgG, bgB, .5);
         p.rect(-1, -1, p.width + 2, p.height + 2);
-        // p.background(255);
+        p.background(255);
         p.translate(p.width / 2, p.height / 2)
         for (let i = 0; i < partCount; i++) {
             parts[i].move();
@@ -104,7 +105,7 @@ const sketch = (p: p5) => {
         };
 
         for (let i = 0; i < edgeCount; i++) {
-            // edges[i].draw();
+            edges[i].draw();
         }
 
 
