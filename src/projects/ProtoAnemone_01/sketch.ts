@@ -5,7 +5,7 @@
 // Project Description: 
 
 import p5 from "p5";
-import { ProtoAnemone_01 } from './ProtoAnemone_01';
+import { VerletBlob } from "../../libPByte_p5/VerletBlob";
 
 
 const canvasW = 1200;
@@ -23,13 +23,17 @@ let directLightVector: p5.Vector;
 // **************************************
 // declare custom geom
 
+let blobCount = 25;
+let blobs: VerletBlob[] = [];
+// **************************************
+
 const sketch = (p: p5) => {
 
     p.setup = () => {
         // random background color
-        bgR = p.int(p.random(110, 140));
-        bgG = p.int(p.random(110, 140));
-        bgB = p.int(p.random(110, 140));
+        bgR = p.int(p.random(10, 40));
+        bgG = p.int(p.random(10, 40));
+        bgB = p.int(p.random(10, 40));
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
         p.background(bgR, bgG, bgB);
@@ -46,6 +50,13 @@ const sketch = (p: p5) => {
 
         // **************************************
         // Instantiate custom geom
+        for (let i = 0; i < blobCount; i++) {
+            blobs[i] = new VerletBlob(p, p.createVector(p.random(-150, 150), p.random(-150, 150), 0), p.floor(p.random(6, 20)), p.random(15, 65), .03, p.color(100, 100, 30, 200));
+            const node = p.floor(p.random(blobs[i].nodes.length));
+            blobs[i].nodes[node].pos.x += p.random(-4.2, 4.2);
+            blobs[i].nodes[node].pos.y += p.random(-4.2, 4.2);
+        }
+        // **************************************
     };
 
     const resizedSketch = (p: p5) => {
@@ -56,9 +67,14 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
+
+        if (p.frameCount == 1) {
+            p.background(bgR, bgG, bgB);
+        }
+
         // plain vanilla bg
-        p.background(bgR, bgG, bgB);
-        p.rotateY(p.PI / 2);
+        //p.background(bgR, bgG, bgB);
+        // p.rotateY(p.PI / 2);
         // custom fading bg
         // p.noStroke();
         // p.fill(bgR, bgG, bgB, bgAlpha);
@@ -84,6 +100,16 @@ const sketch = (p: p5) => {
 
         // **************************************
         // Animate custom geom
+
+        for (let i = 0; i < blobs.length; i++) {
+            blobs[i].draw();
+
+            const node = p.floor(p.random(blobs[i].nodes.length));
+            blobs[i].nodes[node].pos.x += p.random(-.2, .2);
+            blobs[i].nodes[node].pos.y += p.random(-.2, .2);
+
+        }
+        // **************************************
 
     };
 
