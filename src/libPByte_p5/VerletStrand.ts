@@ -72,7 +72,9 @@ export class VerletStrand {
         this.p.strokeWeight(this.strokeWt);
         for (let i = 0; i < this.nodeCount; i++) {
             if (isNodeDrawable) {
-                this.nodes[i].draw();
+                this.nodes[i].draw(1);
+                this.nodes[i].radius = 5;
+                // this.nodes[i].set
             }
             if (i > 0 && isStickDrawable) {
                 this.sticks[i - 1].draw();

@@ -17,14 +17,15 @@ export class SimpleParticle {
     jitterTheta = 0;
     jitterFreq = 0;
 
-    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, rad: number = 5, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(120, 250))) {
+    constructor(p: p5, pos: p5.Vector, spd: p5.Vector, rad: number = 5, col: p5.Color = p.color(p.random(40, 90), p.random(30, 170), p.random(100, 150), p.random(10, 130))) {
         this.p = p;
         this.pos = pos;
         this.spd = spd;
         this.rad = rad;
         this.col = col;
 
-        this.wind = p.createVector(p.random(-.05, .05), p.random(-.05, .05));
+        this.gravity = p.random(-.05, .09);
+        this.wind = p.createVector(p.random(-.01, .01), p.random(-.01, .01));
         //this.wind = p.createVector(p.random(.01, .5), p.random(-.05, .05));
 
         this.jitterAmp = this.p.random(1, 3);
@@ -35,11 +36,12 @@ export class SimpleParticle {
     move() {
         this.jitter = this.p.cos(this.jitterTheta * this.p.PI / 180) * this.jitterAmp;
 
-        this.wind.x = this.p.random(-0, 0);
+        //this.wind.x = this.p.random(-0, 0);
+        this.wind = this.p.createVector(this.p.random(-.01, .01), this.p.random(-.01, .01));
         this.spd.x += this.wind.x;
         this.pos.x += this.spd.x + this.jitter;
 
-
+        this.gravity = this.p.random(-.05, .09);
         this.spd.y += this.gravity;
         this.pos.add(this.spd);
 
@@ -47,9 +49,9 @@ export class SimpleParticle {
     }
 
     draw() {
-        // this.p.noFill();
-        this.p.noStroke();
-        this.p.fill(this.col);
+        this.p.noFill();
+        //this.p.noStroke();
+        this.p.stroke(this.col);
         // this.p.stroke(this.col);
         this.p.ellipse(this.pos.x, this.pos.y, this.rad * 2, this.rad * 2);
     }

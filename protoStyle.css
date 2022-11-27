@@ -1,24 +1,21 @@
-/* style.css */
+/* From: https://editor.p5js.org/xinxin/sketches/KvWXUlwR8 */
 
-html,
-body {
+html, body {
   height: 100%;
-
-}
-
-body {
+  background:black;
+  }
+  
+  body {
   margin: 0;
   display: flex;
-
+  
   /* This centers our sketch horizontally. */
   justify-content: center;
-
+  
   /* This centers our sketch vertically. */
   align-items: center;
-}
-
-#canvasGradient {
-  background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
-}
-
-/* Thank you: https://github.com/processing/p5.js/wiki/Positioning-your-canvas */
+  }
+  
+  canvas {
+  display: block;
+  }
