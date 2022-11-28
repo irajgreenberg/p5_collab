@@ -15,8 +15,8 @@ export class VerletBlob extends VerletBase {
     crossSupports: VerletStick[] = [];
     strands: VerletStrand[] = [];
 
-    constructor(p: p5, pos: p5.Vector, nodeCount: number, radius: number, elasticity: number, fillCol: p5.Color) {
-        super(p, p.createVector(radius * 2, radius * 2, radius * 2), elasticity, fillCol);
+    constructor(p: p5, pos: p5.Vector, nodeCount: number, radius: number, elasticity: number, fillCol: p5.Color, style: VerletStyle) {
+        super(p, p.createVector(radius * 2, radius * 2, radius * 2), elasticity, fillCol, style);
         this.pos = pos;
         this.nodeCount = (nodeCount % 2) == 0 ? nodeCount : nodeCount + 1; // ensure even
         this.radius = radius;
@@ -33,26 +33,27 @@ export class VerletBlob extends VerletBase {
             const x = this.pos.x + this.p.cos(theta) * this.radius;
             const y = this.pos.y + this.p.sin(theta) * this.radius;
             const z = this.pos.z = 0;
-            this.nodes.push(new VerletNode(this.p, this.p.createVector(x, y, z), this.p.random(.6, 1), this.p.color(this.p.random(100, 225), this.p.random(100, 225), 0, 10)));
+            this.nodes.push(new VerletNode(this.p, this.p.createVector(x, y, z), this.style.nodeRadius, this.style.nodeCol));
             theta += this.p.TWO_PI / this.nodeCount;
         }
 
         // create sticks
         for (let i = 0; i < this.nodes.length - 1; i++) {
-            this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[i + 1], .05, 0, this.p.color(50, this.p.random(100, 200), 255, 10)));
+            this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[i + 1], .05, 0, this.style.stickCol));
         }
         // close form
-        this.sticks.push(new VerletStick(this.p, this.nodes[this.nodes.length - 1], this.nodes[0], this.elasticity, 0, this.p.color(50, this.p.random(100, 200), 255, 10)));
+        this.sticks.push(new VerletStick(this.p, this.nodes[this.nodes.length - 1], this.nodes[0], this.elasticity, 0, this.style.stickCol));
 
 
         // cross-supports
         for (let i = 0; i < this.nodes.length / 2; i++) {
-            this.crossSupports.push(new VerletStick(this.p, this.nodes[i], this.nodes[this.nodes.length / 2 + i], this.elasticity, 0, this.p.color(100, 0, 225, 6)));
+            this.crossSupports.push(new VerletStick(this.p, this.nodes[i], this.nodes[this.nodes.length / 2 + i], this.elasticity, 0, this.fillCol));
         }
 
 
         // add tendrils
         for (let i = 0; i < this.nodes.length; i++) {
+            this.strands.push(new VerletStrand(this.p, this.nodes[i].pos, 130, 6, this.p.color(this.p.random(10, 90), this.p.random(10, 90), this.p.random(10, 90), 10), 1, this.p.createVector(.09, .3)));
         }
     }
 
@@ -64,6 +65,9 @@ export class VerletBlob extends VerletBase {
 
             this.sticks[i].draw();
             this.sticks[i].constrainLen();
+
+            this.strands[i].draw();
+            this.strands[i].move();
         }
 
         for (let i = 0; i < this.crossSupports.length; i++) {

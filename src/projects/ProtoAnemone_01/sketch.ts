@@ -5,6 +5,8 @@
 // Project Description: 
 
 import p5 from "p5";
+import { NodeType } from "../../libPByte_p5/PByte_utils";
+import { VerletStyle } from "../../libPByte_p5/VerletStyle";
 import { VerletBlob } from "../../libPByte_p5/VerletBlob";
 
 
@@ -12,9 +14,9 @@ const canvasW = 1200;
 const canvasH = 900;
 
 // background color
-let bgR = 50;
-let bgG = 20;
-let bgB = 30;
+let bgR = 150;
+let bgG = 120;
+let bgB = 130;
 let bgColor: string
 let bgAlpha = 0;
 
@@ -22,8 +24,8 @@ let directLightVector: p5.Vector;
 
 // **************************************
 // declare custom geom
-
-let blobCount = 25;
+let blobRots: number[] = [];
+let blobCount = 44;
 let blobs: VerletBlob[] = [];
 // **************************************
 
@@ -31,9 +33,9 @@ const sketch = (p: p5) => {
 
     p.setup = () => {
         // random background color
-        bgR = p.int(p.random(10, 40));
-        bgG = p.int(p.random(10, 40));
-        bgB = p.int(p.random(10, 40));
+        bgR = p.int(p.random(10, 75));
+        bgG = p.int(p.random(10, 75));
+        bgB = p.int(p.random(10, 75));
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
         p.background(bgR, bgG, bgB);
@@ -49,12 +51,44 @@ const sketch = (p: p5) => {
         directLightVector = p.createVector(0, 0, 300);
 
         // **************************************
+
+        //constructor(
+        // nodeRadius: number, 
+        // nodeCol: P5.Color, 
+        // nodeAlpha: number, 
+        // nodeType: NodeType, 
+        // stickCol: P5.Color, 
+        // stickWeight: number
+        // )
+
+        blobCount = p.floor(p.random(38, 70));
+
         // Instantiate custom geom
         for (let i = 0; i < blobCount; i++) {
-            blobs[i] = new VerletBlob(p, p.createVector(p.random(-150, 150), p.random(-150, 150), 0), p.floor(p.random(6, 20)), p.random(15, 65), .03, p.color(100, 100, 30, 200));
+            // blobRots[i] = p.random(p.TWO_PI);
+            blobRots[i] = 0;
+            const verletStyle = new VerletStyle(
+                p.random(.2, .95), //nodeRadius
+                p.color(p.random(150, 255), p.random(150, 255), p.random(150, 255), 10), // nodeCol 
+                100, // nodeAlpha
+                NodeType.CIRCLE, // nodeType 
+                p.color(p.random(180, 255), p.random(180, 255), p.random(180, 255), 10), // stickCol 
+                .75 // stickWeight
+            );
+            blobs[i] = new VerletBlob(
+                p,
+                p.createVector(p.random(-p.width / 2, p.width / 2), p.random(-p.height / 2, p.height / 2), 0),
+                //p.createVector(0, 0, 0),
+                p.floor(p.random(6, 20)), // nodes
+                p.random(10, 125), // radius
+                .03,
+                p.color(p.random(50, 200), p.random(50, 200), p.random(50, 200), 10),
+                verletStyle
+            );
+
             const node = p.floor(p.random(blobs[i].nodes.length));
-            blobs[i].nodes[node].pos.x += p.random(-4.2, 4.2);
-            blobs[i].nodes[node].pos.y += p.random(-4.2, 4.2);
+            blobs[i].nodes[node].pos.x += p.random(-9.2, 9.2);
+            blobs[i].nodes[node].pos.y += p.random(-9.2, 9.2);
         }
         // **************************************
     };
@@ -67,9 +101,9 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
-
+        // p.background(bgR, bgG, bgB);
         if (p.frameCount == 1) {
-            p.background(bgR, bgG, bgB);
+            p.background(bgR, bgG, bgB, 2);
         }
 
         // plain vanilla bg
@@ -102,11 +136,14 @@ const sketch = (p: p5) => {
         // Animate custom geom
 
         for (let i = 0; i < blobs.length; i++) {
+            p.push();
+            p.rotateZ(blobRots[i]);
             blobs[i].draw();
+            p.pop();
 
             const node = p.floor(p.random(blobs[i].nodes.length));
-            blobs[i].nodes[node].pos.x += p.random(-.2, .2);
-            blobs[i].nodes[node].pos.y += p.random(-.2, .2);
+            blobs[i].nodes[node].pos.x += p.random(-6, 6);
+            blobs[i].nodes[node].pos.y += p.random(-6, 6);
 
         }
         // **************************************
