@@ -14,9 +14,9 @@ const canvasW = 1200;
 const canvasH = 900;
 
 // background color
-let bgR = 150;
-let bgG = 120;
-let bgB = 130;
+let bgR = 250;
+let bgG = 220;
+let bgB = 230;
 let bgColor: string
 let bgAlpha = 0;
 
@@ -25,17 +25,18 @@ let directLightVector: p5.Vector;
 // **************************************
 // declare custom geom
 let blobRots: number[] = [];
-let blobCount = 44;
+let blobCount = 20;
 let blobs: VerletBlob[] = [];
+
 // **************************************
 
 const sketch = (p: p5) => {
 
     p.setup = () => {
         // random background color
-        bgR = p.int(p.random(10, 75));
-        bgG = p.int(p.random(10, 75));
-        bgB = p.int(p.random(10, 75));
+        bgR = p.int(p.random(90, 225));
+        bgG = p.int(p.random(90, 225));
+        bgB = p.int(p.random(90, 225));
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
         p.background(bgR, bgG, bgB);
@@ -61,34 +62,36 @@ const sketch = (p: p5) => {
         // stickWeight: number
         // )
 
-        blobCount = p.floor(p.random(38, 70));
+        blobCount = p.floor(p.random(19, 30));
+        const blobStep = canvasW / (blobCount - 1);
+        //blobCount = 20;
 
         // Instantiate custom geom
         for (let i = 0; i < blobCount; i++) {
-            // blobRots[i] = p.random(p.TWO_PI);
+            blobRots[i] = p.random(p.TWO_PI);
             blobRots[i] = 0;
             const verletStyle = new VerletStyle(
-                p.random(.2, .95), //nodeRadius
-                p.color(p.random(150, 255), p.random(150, 255), p.random(150, 255), 10), // nodeCol 
-                100, // nodeAlpha
+                p.random(.2, .5), //nodeRadius
+                p.color(p.random(150, 255), p.random(150, 255), p.random(150, 255), 160), // nodeCol 
+                200, // nodeAlpha
                 NodeType.CIRCLE, // nodeType 
                 p.color(p.random(180, 255), p.random(180, 255), p.random(180, 255), 10), // stickCol 
                 .75 // stickWeight
             );
             blobs[i] = new VerletBlob(
                 p,
-                p.createVector(p.random(-p.width / 2, p.width / 2), p.random(-p.height / 2, p.height / 2), 0),
-                //p.createVector(0, 0, 0),
-                p.floor(p.random(6, 20)), // nodes
-                p.random(10, 125), // radius
-                .03,
-                p.color(p.random(50, 200), p.random(50, 200), p.random(50, 200), 10),
+                //p.createVector(p.random(-p.width / 2, p.width / 2), p.random(-p.height / 2, p.height / 2), 0),
+                p.createVector(-p.width / 2 + blobStep * i, p.height / 2 - p.random(300, 800), p.random(-330, 330)),
+                p.floor(p.random(6, 30)), // nodes
+                p.random(2, 95), // radius
+                .008,
+                p.color(p.random(70, 200), p.random(70, 200), p.random(70, 200), 90),
                 verletStyle
             );
 
             const node = p.floor(p.random(blobs[i].nodes.length));
-            blobs[i].nodes[node].pos.x += p.random(-9.2, 9.2);
-            blobs[i].nodes[node].pos.y += p.random(-9.2, 9.2);
+            // blobs[i].nodes[node].pos.x += p.random(-9.2, 9.2);
+            // blobs[i].nodes[node].pos.y += p.random(-9.2, 9.2);
         }
         // **************************************
     };
@@ -101,9 +104,9 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
-        // p.background(bgR, bgG, bgB);
+        //p.background(bgR, bgG, bgB);
         if (p.frameCount == 1) {
-            p.background(bgR, bgG, bgB, 2);
+            p.background(bgR, bgG, bgB, .2);
         }
 
         // plain vanilla bg
@@ -137,13 +140,14 @@ const sketch = (p: p5) => {
 
         for (let i = 0; i < blobs.length; i++) {
             p.push();
-            p.rotateZ(blobRots[i]);
+            // p.rotateZ(blobRots[i] + p.frameCount * p.PI / 180);
             blobs[i].draw();
             p.pop();
 
             const node = p.floor(p.random(blobs[i].nodes.length));
-            blobs[i].nodes[node].pos.x += p.random(-6, 6);
-            blobs[i].nodes[node].pos.y += p.random(-6, 6);
+            blobs[i].nodes[node].pos.x += p.random(-3.6, 3.6);
+            blobs[i].nodes[node].pos.y += p.random(-.95, -.2);
+            blobs[i].nodes[node].pos.z += p.random(-.3, .3);
 
         }
         // **************************************

@@ -28,7 +28,7 @@ export class VerletBlob extends VerletBase {
     init(): void {
         let theta = 0;
         // create nodes
-        console.log("nodeCount = ", this.nodeCount);
+        //console.log("nodeCount = ", this.nodeCount);
         for (let i = 0; i < this.nodeCount; i++) {
             const x = this.pos.x + this.p.cos(theta) * this.radius;
             const y = this.pos.y + this.p.sin(theta) * this.radius;
@@ -47,13 +47,13 @@ export class VerletBlob extends VerletBase {
 
         // cross-supports
         for (let i = 0; i < this.nodes.length / 2; i++) {
-            this.crossSupports.push(new VerletStick(this.p, this.nodes[i], this.nodes[this.nodes.length / 2 + i], this.elasticity, 0, this.fillCol));
+            this.crossSupports.push(new VerletStick(this.p, this.nodes[i], this.nodes[this.nodes.length / 2 + i], this.elasticity, 0, this.p.color(this.p.random(120, 230), this.p.random(120, 230), this.p.random(120, 230), 120)));
         }
 
 
         // add tendrils
         for (let i = 0; i < this.nodes.length; i++) {
-            this.strands.push(new VerletStrand(this.p, this.nodes[i].pos, 130, 6, this.p.color(this.p.random(10, 90), this.p.random(10, 90), this.p.random(10, 90), 10), 1, this.p.createVector(.09, .3)));
+            this.strands.push(new VerletStrand(this.p, this.nodes[i].pos, 730, this.p.random(5, 15), this.p.color(this.p.random(30, 120), this.p.random(30, 120), this.p.random(30, 120), 4), this.p.random(.25, 3), this.p.createVector(.3, .009)));
         }
     }
 
