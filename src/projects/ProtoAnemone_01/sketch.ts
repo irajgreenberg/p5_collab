@@ -71,7 +71,7 @@ const sketch = (p: p5) => {
             blobRots[i] = p.random(p.TWO_PI);
             blobRots[i] = 0;
             const verletStyle = new VerletStyle(
-                p.random(.2, .5), //nodeRadius
+                p.random(.2, .8), //nodeRadius
                 p.color(p.random(150, 255), p.random(150, 255), p.random(150, 255), 160), // nodeCol 
                 200, // nodeAlpha
                 NodeType.CIRCLE, // nodeType 
@@ -81,9 +81,11 @@ const sketch = (p: p5) => {
             blobs[i] = new VerletBlob(
                 p,
                 //p.createVector(p.random(-p.width / 2, p.width / 2), p.random(-p.height / 2, p.height / 2), 0),
-                p.createVector(-p.width / 2 + blobStep * i, p.height / 2 - p.random(300, 800), p.random(-330, 330)),
-                p.floor(p.random(6, 30)), // nodes
-                p.random(2, 95), // radius
+                ///p.createVector(-p.width / 2 + blobStep * i, p.height / 2 - p.random(300, 800), p.random(-330, 330)),
+                p.createVector(0, 50, p.random(-800, 900)),
+                p.floor(p.random(3, 60)), // nodes
+                // p.random(2, 95), // radius
+                p.random(2, 6), // radius
                 .008,
                 p.color(p.random(70, 200), p.random(70, 200), p.random(70, 200), 90),
                 verletStyle
@@ -111,7 +113,7 @@ const sketch = (p: p5) => {
 
         // plain vanilla bg
         //p.background(bgR, bgG, bgB);
-        // p.rotateY(p.PI / 2);
+        p.rotateY(p.frameCount * p.PI / 1030);
         // custom fading bg
         // p.noStroke();
         // p.fill(bgR, bgG, bgB, bgAlpha);
@@ -140,14 +142,16 @@ const sketch = (p: p5) => {
 
         for (let i = 0; i < blobs.length; i++) {
             p.push();
-            // p.rotateZ(blobRots[i] + p.frameCount * p.PI / 180);
+            // p.rotateZ(blobRots[i] + p.frameCount * p.PI / 90);
             blobs[i].draw();
             p.pop();
 
             const node = p.floor(p.random(blobs[i].nodes.length));
-            blobs[i].nodes[node].pos.x += p.random(-3.6, 3.6);
-            blobs[i].nodes[node].pos.y += p.random(-.95, -.2);
-            blobs[i].nodes[node].pos.z += p.random(-.3, .3);
+            // blobs[i].nodes[node].pos.x += p.random(-3.6, 3.6);
+            //blobs[i].nodes[node].pos.x += p.random(-19.6, 19.6);
+            blobs[i].nodes[node].pos.x += p.random(-29.6, 29.6);
+            blobs[i].nodes[node].pos.y += p.random(-1.95, -.2);
+            blobs[i].nodes[node].pos.z += p.random(-28.8, 28.8);
 
         }
         // **************************************

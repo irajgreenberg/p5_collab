@@ -47,13 +47,13 @@ export class VerletBlob extends VerletBase {
 
         // cross-supports
         for (let i = 0; i < this.nodes.length / 2; i++) {
-            this.crossSupports.push(new VerletStick(this.p, this.nodes[i], this.nodes[this.nodes.length / 2 + i], this.elasticity, 0, this.p.color(this.p.random(120, 230), this.p.random(120, 230), this.p.random(120, 230), 120)));
+            this.crossSupports.push(new VerletStick(this.p, this.nodes[i], this.nodes[this.nodes.length / 2 + i], this.elasticity, 0, this.p.color(this.p.random(120, 230), this.p.random(120, 230), this.p.random(120, 230), 220)));
         }
 
 
         // add tendrils
         for (let i = 0; i < this.nodes.length; i++) {
-            this.strands.push(new VerletStrand(this.p, this.nodes[i].pos, 730, this.p.random(5, 15), this.p.color(this.p.random(30, 120), this.p.random(30, 120), this.p.random(30, 120), 4), this.p.random(.25, 3), this.p.createVector(.3, .009)));
+            this.strands.push(new VerletStrand(this.p, this.nodes[i].pos, this.p.random(50, 600), this.p.random(5, 25), this.p.color(this.p.random(0, 220), this.p.random(0, 220), this.p.random(0, 220), 4), this.p.random(.25, 12), this.p.createVector(.3, .009)));
         }
     }
 
