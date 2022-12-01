@@ -34,14 +34,14 @@ const sketch = (p: p5) => {
 
     p.setup = () => {
         // random background color
-        bgR = p.int(p.random(90, 225));
-        bgG = p.int(p.random(90, 225));
-        bgB = p.int(p.random(90, 225));
+        bgR = p.int(p.random(60, 185));
+        bgG = p.int(p.random(60, 185));
+        bgB = p.int(p.random(60, 185));
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
-        document.title = "ProtoAnemone_01";
+        document.title = "Floral Flow";
 
         let cnv = p.createCanvas(canvasW, canvasH, p.WEBGL);
         bgAlpha = p.random(80, 140);
@@ -62,11 +62,32 @@ const sketch = (p: p5) => {
         // stickWeight: number
         // )
 
-        blobCount = p.floor(p.random(19, 30));
+        blobCount = p.floor(p.random(6, 12));
         const blobStep = canvasW / (blobCount - 1);
         //blobCount = 20;
 
         // Instantiate custom geom
+        const xShift = p.random(-200, 200);
+        let x1 = 0
+        let x2 = 0;
+        const seed = 200;
+        if (p.floor(p.random(seed)) % 10 == 0) {
+            x1 = 50
+            x2 = 400;
+        } else if (p.floor(p.random(seed)) % 6 == 0) {
+            x1 = -300
+            x2 = -100;
+        } else if (p.floor(p.random(seed)) % 4 == 0) {
+            x1 = -200
+            x2 = 200;
+        } else if (p.floor(p.random(seed)) % 2 == 0) {
+            x1 = -100
+            x2 = 100;
+        } else {
+            x1 = 0
+            x2 = 0;
+        }
+        console.log(x1, " ", x2)
         for (let i = 0; i < blobCount; i++) {
             blobRots[i] = p.random(p.TWO_PI);
             blobRots[i] = 0;
@@ -82,7 +103,7 @@ const sketch = (p: p5) => {
                 p,
                 //p.createVector(p.random(-p.width / 2, p.width / 2), p.random(-p.height / 2, p.height / 2), 0),
                 ///p.createVector(-p.width / 2 + blobStep * i, p.height / 2 - p.random(300, 800), p.random(-330, 330)),
-                p.createVector(0, 50, p.random(-800, 900)),
+                p.createVector(p.random(x1, x2), p.random(-50, 190), p.random(-800, 900)),
                 p.floor(p.random(3, 60)), // nodes
                 // p.random(2, 95), // radius
                 p.random(2, 6), // radius
@@ -107,6 +128,9 @@ const sketch = (p: p5) => {
 
     p.draw = () => {
         //p.background(bgR, bgG, bgB);
+        p.noFill();
+        p.stroke(155)
+        p.rect(-p.width / 2, -p.height / 2, p.width, p.height)
         if (p.frameCount == 1) {
             p.background(bgR, bgG, bgB, .2);
         }
@@ -119,7 +143,7 @@ const sketch = (p: p5) => {
         // p.fill(bgR, bgG, bgB, bgAlpha);
         // p.rect(-p.width / 2 - 1, -p.height / 2 - 1, p.width + 2, p.height + 2);
 
-        p.orbitControl();
+        // p.orbitControl();
         //p.translate(0, 0, -300);
 
         let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
@@ -160,7 +184,7 @@ const sketch = (p: p5) => {
 
     p.keyTyped = () => {
         if (p.key === 'p') {
-            const name = "ProtoAnemone_01" + "_" + p.year() + p.month() + p.day() + p.hour() + p.minute() + p.second() + ".png";
+            const name = "Floral Flow" + "_" + p.year() + p.month() + p.day() + p.hour() + p.minute() + p.second() + ".png";
             p.save(name);
         }
     }
