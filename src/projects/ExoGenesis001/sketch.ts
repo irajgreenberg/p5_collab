@@ -6,6 +6,7 @@
 
 import p5 from "p5";
 import { ExoGenesis001 } from './ExoGenesis001';
+import { ProtoStyle } from "../../libPByte_p5/ProtoStyle";
 
 
 const sketch = (p: p5) => {
@@ -40,7 +41,7 @@ const sketch = (p: p5) => {
         directLightVector = p.createVector(0, 0, 300);
 
         // ****** Instantiate Custom Geom *******
-        s1 = new ExoGenesis001(p, 20, 550);
+        s1 = new ExoGenesis001(p, 20, 550, new ProtoStyle(p, p.color(100, 100, 115), p.color(30, 30, 30), 2, 8));
 
         // **************************************
     };
@@ -74,7 +75,7 @@ const sketch = (p: p5) => {
         p.pointLight(255, 255, 255, -60, 500, 380);
 
         // ********* Animate Custom Geom ********
-        s1.move();
+        s1.move(new p5.Vector(200, 200, 1));
         s1.draw();
         // **************************************
     };

@@ -1,6 +1,6 @@
 // <FTName>
 // Ira Greenberg
-// Dallas, TX
+// Santa Fe, NM | Dallas, TX
 
 // Project Description: 
 
@@ -8,23 +8,9 @@ import p5 from "p5";
 import { <FTName> } from './<FTName>';
 
 
-// const canvasW = 1200;
-// const canvasH = 900;
-
-// // background color
-// let bgR = 0
-// let bgG = 0;
-// let bgB = 0;
-// let bgColor: string
-// let bgAlpha = 0;
-
-// let directLightVector: p5.Vector;
-
-// **************************************
-// declare custom geom
-
 const sketch = (p: p5) => {
 
+    // window size
     const canvasW = 1200;
     const canvasH = 900;
 
@@ -33,15 +19,10 @@ const sketch = (p: p5) => {
     let bgG = p.int(p.random(110, 140));
     let bgB = p.int(p.random(110, 140));
     let bgColor: string
-    let bgAlpha = 0;
 
     let directLightVector: p5.Vector;
 
     p.setup = () => {
-        // random background color
-        // bgR = p.int(p.random(110, 140));
-        // bgG = p.int(p.random(110, 140));
-        // bgB = p.int(p.random(110, 140));
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
         p.background(bgR, bgG, bgB);
@@ -49,15 +30,17 @@ const sketch = (p: p5) => {
         document.title = "<FTName>";
 
         let cnv = p.createCanvas(canvasW, canvasH, p.WEBGL);
-        bgAlpha = p.random(80, 140);
+
 
         p.setAttributes('antialias', true);
         cnv.style('display', 'block');
 
         directLightVector = p.createVector(0, 0, 300);
 
+        // ****** Instantiate Custom Geom *******
+
+
         // **************************************
-        // Instantiate custom geom
     };
 
     const resizedSketch = (p: p5) => {
@@ -68,16 +51,10 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
-        // plain vanilla bg
         p.background(bgR, bgG, bgB);
         p.rotateY(p.PI / 2);
-        // custom fading bg
-        // p.noStroke();
-        // p.fill(bgR, bgG, bgB, bgAlpha);
-        // p.rect(-p.width / 2 - 1, -p.height / 2 - 1, p.width + 2, p.height + 2);
 
         p.orbitControl();
-        //p.translate(0, 0, -300);
 
         let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
 
@@ -94,9 +71,10 @@ const sketch = (p: p5) => {
         p.pointLight(255, 255, 255, -10, 5, 200);
         p.pointLight(255, 255, 255, -60, 500, 380);
 
-        // **************************************
-        // Animate custom geom
+        // ********* Animate Custom Geom ********
 
+
+        // **************************************
     };
 
     p.keyTyped = () => {

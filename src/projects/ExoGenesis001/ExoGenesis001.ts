@@ -5,25 +5,29 @@
 // Class Description: 
 
 import p5 from "p5";
-import { VerletNode } from "../../../src/libPByte_p5/VerletNode";
-import { VerletStick } from "../../../src/libPByte_p5/VerletStick";
-import { VerletStrand } from "../../../src/libPByte_p5/VerletStrand";
-import { VerletStrand_2N } from "../../../src/libPByte_p5/VerletStrand_2N";
+import { VerletNode } from "../../libPByte_p5/VerletNode";
+import { VerletStick } from "../../libPByte_p5/VerletStick";
+import { VerletStrand } from "../../libPByte_p5/VerletStrand";
+import { VerletStrand_2N } from "../../libPByte_p5/VerletStrand_2N";
+import { ProtoStyle } from "../../libPByte_p5/ProtoStyle";
 
 export class ExoGenesis001 {
 
     p: p5
-    nodeCount: number
-    spineLen: number
+    nodeCount: number;
+    spineLen: number;
+    style: ProtoStyle;
     nodes: VerletNode[] = [];
     sticks: VerletStick[] = [];
     // centralSpine: VerletStrand | undefined;
     centralSpine: VerletStrand_2N | undefined;
+    bounds: p5.Vector | undefined
 
-    constructor(p: p5, nodeCount: number, spineLen: number) {
+    constructor(p: p5, nodeCount: number, spineLen: number, style: ProtoStyle) {
         this.p = p;
         this.nodeCount = nodeCount;
-        this.spineLen = spineLen
+        this.spineLen = spineLen;
+        this.style = style;
 
         this.create();
     }
@@ -34,17 +38,24 @@ export class ExoGenesis001 {
             new p5.Vector(-this.spineLen / 2, 0, 0),
             new p5.Vector(this.spineLen / 2, 0, 0),
             this.nodeCount,
-            this.p.color(200, 150, 150),
-            .5
+            this.style
         )
         for (let i = 0; i < this.centralSpine.nodes.length; i++) {
             this.centralSpine.nodes[i].nudge(new p5.Vector(0, this.p.random(-15, 15), 0));
         }
     }
 
-    move(time: number = 0) {
+    move(bounds?: p5.Vector) {
+        // if (bounds) {
+        this.bounds = bounds;
+        // }
         if (this.centralSpine) {
-            this.centralSpine.move();
+            if (bounds) {
+                this.centralSpine.move(bounds);
+            } else {
+                this.centralSpine.move();
+            }
+
         }
     }
 
@@ -53,6 +64,19 @@ export class ExoGenesis001 {
             this.centralSpine.draw(true, true);
         }
     }
+
+    drawBounds() {
+        if (this.bounds) {
+            this.p.beginShape();
+            this.p.vertex(-this.bounds.x / 2, -this.bounds.y / 2, this.bounds.z);
+            this.p.vertex(this.bounds.x / 2, -this.bounds.y / 2, this.bounds.z);
+            this.p.vertex(this.bounds.x / 2, this.bounds.y / 2, this.bounds.z);
+            this.p.vertex(-this.bounds.x / 2, this.bounds.y / 2, this.bounds.z);
+            this.p.endShape();
+
+        }
+    }
+
 }
 
 

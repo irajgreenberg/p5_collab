@@ -1,6 +1,8 @@
 // <FTName>
 // Ira Greenberg
-// Dallas, TX
+// Santa Fe, NM | Dallas, TX
+
+// Class Description: 
 
 import p5 from "p5";
 
