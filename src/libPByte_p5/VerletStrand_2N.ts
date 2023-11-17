@@ -66,17 +66,19 @@ export class VerletStrand_2N {
             if (i > 0) {
                 this.nodes[i].verlet();
                 this.sticks[i - 1].constrainLen();
-                if (bounds) {
-                    this.nodes[i].boundsCollide(bounds);
-                }
+
+            }
+            if (bounds) {
+                this.nodes[i].boundsCollide(bounds);
             }
             //} else if (lockedNode == 1) {
             if (i < this.nodes.length - 2) {
                 this.nodes[i].verlet();
                 this.sticks[i].constrainLen();
-                if (bounds) {
-                    this.nodes[i].boundsCollide(bounds);
-                }
+
+            }
+            if (bounds) {
+                this.nodes[i].boundsCollide(bounds);
             }
             //}
 

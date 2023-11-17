@@ -41,7 +41,7 @@ export class ExoGenesis001 {
             this.style
         )
         for (let i = 0; i < this.centralSpine.nodes.length; i++) {
-            this.centralSpine.nodes[i].nudge(new p5.Vector(0, this.p.random(-15, 15), 0));
+            this.centralSpine.nodes[i].nudge(new p5.Vector(0, this.p.random(-5, 5), 0));
         }
     }
 
@@ -65,14 +65,16 @@ export class ExoGenesis001 {
         }
     }
 
-    drawBounds() {
+    drawBounds(fill: p5.Color = this.p.color(200), stroke: p5.Color = this.p.color(50)) {
         if (this.bounds) {
+            this.p.fill(fill);
+            this.p.stroke(stroke);
             this.p.beginShape();
             this.p.vertex(-this.bounds.x / 2, -this.bounds.y / 2, this.bounds.z);
             this.p.vertex(this.bounds.x / 2, -this.bounds.y / 2, this.bounds.z);
             this.p.vertex(this.bounds.x / 2, this.bounds.y / 2, this.bounds.z);
             this.p.vertex(-this.bounds.x / 2, this.bounds.y / 2, this.bounds.z);
-            this.p.endShape();
+            this.p.endShape(this.p.CLOSE);
 
         }
     }
