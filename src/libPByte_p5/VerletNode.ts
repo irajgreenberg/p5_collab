@@ -41,9 +41,9 @@ export class VerletNode {
 		this.p.noStroke();
 		this.p.push();
 		this.p.translate(this.pos.x, this.pos.y, this.pos.z);
-		this.p.sphere(this.radius, detail = 8, detail = 8)
+		this.p.sphere(this.radius, detail, detail)
 		this.p.pop();
-		this.p.noFill();
+		//this.p.noFill();
 	}
 
 	setStyle(radius: number, col: P5.Color): void {
