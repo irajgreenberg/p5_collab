@@ -1,13 +1,14 @@
-// ExoGenesis001
+// Hydrozoa
 // Ira Greenberg
 // Santa Fe, NM | Dallas, TX
 
 // Project Description: 
 
 import p5 from "p5";
-import { ExoGenesis001 } from './ExoGenesis001';
+import { Hydrozoa } from './Hydrozoa';
 import { ProtoStyle } from "../../libPByte_p5/ProtoStyle";
 import { VerletStick } from "../../libPByte_p5/VerletStick";
+import { Hydrozoa_02 } from "./Hydrozoa_02";
 
 
 const sketch = (p: p5) => {
@@ -29,11 +30,11 @@ const sketch = (p: p5) => {
 
     let directLightVector: p5.Vector;
 
-    let s1: ExoGenesis001;
+    let s1: Hydrozoa;
     let armLength = 85;
     let armEndNodeIndex = 0;
-    let armsRight: ExoGenesis001[] = [];
-    let armsLeft: ExoGenesis001[] = [];
+    let armsRight: Hydrozoa[] = [];
+    let armsLeft: Hydrozoa[] = [];
 
 
     let crossSupports: VerletStick[] = [];
@@ -44,12 +45,14 @@ const sketch = (p: p5) => {
     let vertSupportsRight: VerletStick[] = [];
     let vertSupportsLeft: VerletStick[] = [];
 
+    let h1: Hydrozoa_02;
+
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
-        document.title = "ExoGenesis001";
+        document.title = "Hydrozoa";
 
         let cnv = p.createCanvas(canvasW, canvasH, p.WEBGL);
 
@@ -61,7 +64,9 @@ const sketch = (p: p5) => {
 
         // ****** Instantiate Custom Geom *******
         // main spine
-        s1 = new ExoGenesis001(p, 30, new p5.Vector(-50, 0, 0), new p5.Vector(50, 0, 0), new p5.Vector(.6, .8), new ProtoStyle(p, p.color(150, 75, 20), p.color(255, 200, 200), 2, 2));
+        s1 = new Hydrozoa(p, 30, new p5.Vector(-50, 0, 0), new p5.Vector(50, 0, 0), new p5.Vector(.6, .8), new ProtoStyle(p, p.color(150, 75, 20), p.color(255, 200, 200), 2, 2));
+
+        h1 = new Hydrozoa_02(p, 30, new p5.Vector(-50, 0, 0), new p5.Vector(50, 0, 0), new p5.Vector(.6, .8), new ProtoStyle(p, p.color(150, 75, 20), p.color(255, 200, 200), 2, 2));
 
         // appendages
         for (let i = 0; i < s1.nodeCount; i++) {
@@ -70,11 +75,11 @@ const sketch = (p: p5) => {
 
             let h1 = s1.centralSpine!.nodes[i].pos.copy();
             let t1 = new p5.Vector(h1.x, h1.y + armLength, h1.z);
-            armsRight.push(new ExoGenesis001(p, 15, h1, t1, new p5.Vector(.2, .4), new ProtoStyle(p, p.color(100, 100, 135), p.color(200, 200, 255), .8, 3)));
+            armsRight.push(new Hydrozoa(p, 15, h1, t1, new p5.Vector(.2, .4), new ProtoStyle(p, p.color(100, 100, 135), p.color(200, 200, 255), .8, 3)));
 
             let h2 = h1.copy();
             let t2 = new p5.Vector(h2.x, h2.y - armLength, h2.z)
-            armsLeft.push(new ExoGenesis001(p, 15, h2, t2, new p5.Vector(.2, .4), new ProtoStyle(p, p.color(100, 100, 135), p.color(200, 200, 255), .8, 3)));
+            armsLeft.push(new Hydrozoa(p, 15, h2, t2, new p5.Vector(.2, .4), new ProtoStyle(p, p.color(100, 100, 135), p.color(200, 200, 255), .8, 3)));
 
             armEndNodeIndex = armsRight[i].centralSpine!.nodes.length - 1;
             crossSupports.push(new VerletStick(p, armsRight[i].centralSpine!.nodes[armEndNodeIndex], armsLeft[i].centralSpine!.nodes[armEndNodeIndex], 1, 0));
@@ -200,7 +205,7 @@ const sketch = (p: p5) => {
 
     p.keyTyped = () => {
         if (p.key === 'p') {
-            const name = "ExoGenesis001" + "_" + p.year() + p.month() + p.day() + p.hour() + p.minute() + p.second() + ".png";
+            const name = "Hydrozoa" + "_" + p.year() + p.month() + p.day() + p.hour() + p.minute() + p.second() + ".png";
             p.save(name);
         }
     }

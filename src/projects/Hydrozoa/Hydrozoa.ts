@@ -1,4 +1,4 @@
-// ExoGenesis001
+// Hydrozoa
 // Ira Greenberg
 // Santa Fe, NM | Dallas, TX
 
@@ -11,7 +11,7 @@ import { VerletStrand } from "../../libPByte_p5/VerletStrand";
 import { VerletStrand_2N } from "../../libPByte_p5/VerletStrand_2N";
 import { ProtoStyle } from "../../libPByte_p5/ProtoStyle";
 
-export class ExoGenesis001 {
+export class Hydrozoa {
 
     p: p5
     nodeCount: number;

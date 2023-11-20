@@ -18,6 +18,9 @@ export class VerletStrand_2N {
 
     stickTensionRange: p5.Vector;
 
+    //Hydrozoa(p, 30, new p5.Vector(-50, 0, 0), new p5.Vector(50, 0, 0), new p5.Vector(.6, .8), new ProtoStyle(p, p.color(150, 75, 20), p.color(255, 200, 200), 2, 2));
+
+
     constructor(p: p5, head: p5.Vector, tail: p5.Vector, nodeCount: number, stickTensionRange: p5.Vector = p.createVector(.01, .3), style: ProtoStyle = new ProtoStyle(p, p.color(127, 127, 127), p.color(25, 25, 25), 1, 3)) {
         this.p = p;
         this.head = head;
