@@ -109,7 +109,8 @@ export class VerletStrand_2N {
         }
     }
 
-    draw(isNodeDrawable: boolean = false, isStickDrawable: boolean = true, style: ProtoStyle): void {
+    draw(isNodeDrawable: boolean = false, isStickDrawable: boolean = true,
+        style: ProtoStyle = new ProtoStyle(this.p, this.p.color(150, 75, 20), this.p.color(255, 200, 200), 2, 2)): void {
         //  this.p.strokeWeight(this.style.strokeWt);
         for (let i = 0; i < this.nodeCount; i++) {
             if (isNodeDrawable) {
