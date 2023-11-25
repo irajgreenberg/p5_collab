@@ -109,8 +109,24 @@ export class VerletStrand_2N {
         }
     }
 
+    move2(bounds?: p5.Vector): void {
+        for (let i = 0; i < this.nodeCount; i++) {
+            if (i > 0) {
+                this.nodes[i].verlet();
+            }
+            if (bounds) {
+                this.nodes[i].boundsCollide(bounds);
+            }
+        }
+
+        for (let i = 0; i < this.sticks.length; i++) {
+            this.sticks[i].constrainLen();
+        }
+    }
+
+
     draw(isNodeDrawable: boolean = false, isStickDrawable: boolean = true,
-        style: ProtoStyle = new ProtoStyle(this.p, this.p.color(150, 75, 20), this.p.color(255, 200, 200), 2, 2)): void {
+        style: ProtoStyle = new ProtoStyle(this.p, this.p.color(150, 75, 20), this.p.color(255, 200, 200), .85, 2)): void {
         //  this.p.strokeWeight(this.style.strokeWt);
         for (let i = 0; i < this.nodeCount; i++) {
             if (isNodeDrawable) {

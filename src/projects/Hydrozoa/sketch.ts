@@ -4,9 +4,11 @@
 
 // Project Description: 
 
-import p5 from "p5";
+import p5, { Vector } from "p5";
 import { ProtoStyle } from "../../libPByte_p5/ProtoStyle";
 import { Hydrozoa } from "./Hydrozoa";
+import { Pulsar } from "./Pulsar";
+import { Phys } from "../../libPByte_p5/PByte_utils";
 
 
 const sketch = (p: p5) => {
@@ -14,7 +16,7 @@ const sketch = (p: p5) => {
     // window size
     const canvasW = 1200;
     const canvasH = 900;
-    let bounds = new p5.Vector(800, 800, 800);
+    let bounds = new p5.Vector(500, 500, 500);
 
     // background color
     let bgR = p.int(p.random(10, 40));
@@ -26,6 +28,10 @@ const sketch = (p: p5) => {
 
     let h1: Hydrozoa;
 
+    let p0: Pulsar;
+    let p1: Pulsar;
+    const pulsarCount = 20;
+    let ps: Pulsar[] = [];
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
@@ -47,6 +53,13 @@ const sketch = (p: p5) => {
 
         h1.setArmsStyle(new ProtoStyle(p, p.color(0, 0, 0), p.color(100, 0, 100), 20, 1));
 
+        // p0 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.3, 10, .002));
+        // p1 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.2, 15, .02));
+        for (let i = 0; i < pulsarCount; i++) {
+            const r = p.random(20, 50);
+            ps.push(new Pulsar(p, new p5.Vector(r, r, r), new Phys(p.random(.1, .4), p.random(5, 15), p.random(.002, .3))));
+        }
+
         // **************************************
     };
 
@@ -58,10 +71,21 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
+        p.fill(0, 20);
+
+
         p.background(bgR, bgG, bgB);
 
         p.orbitControl();
-        p.rotate(p.frameCount * p.PI / 360);
+        p.rotateY(p.frameCount * p.PI / 900);
+
+        // p.beginShape();
+        // p.vertex(-p.width / 2, -p.height / 2, 300)
+        // p.vertex(p.width / 2, -p.height / 2, 300)
+        // p.vertex(p.width / 2, p.height / 2, 300)
+        // p.vertex(-p.width / 2, p.height / 2, 300)
+        // p.endShape(p.CLOSE);
+        // p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
 
         let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
 
@@ -89,10 +113,24 @@ const sketch = (p: p5) => {
         // h1.drawSpine(true, true);
         p.push();
         p.scale(.3);
-        h1.drawArms(false, true);
+        // h1.drawArms(false, true);
         p.pop();
+
+        // p0.move(bounds);
+        // p0.draw();
+
+
+        // p1.move(bounds);
+        // p1.draw();
+
+        for (let i = 0; i < pulsarCount; i++) {
+            ps[i].move(bounds);
+            ps[i].draw();
+        }
+
+        drawBoundsOutline();
         // h1.drawArmsBoundarySupports();
-        h1.move(bounds);
+        // h1.move(bounds);
         // **************************************
     };
 
@@ -109,7 +147,7 @@ const sketch = (p: p5) => {
         p.stroke(stroke);
         p.box(bounds.x, bounds.y, bounds.z);
     }
-    function drawBoundsOutline(stroke: p5.Color = p.color(50), strokeWt: number = 1) {
+    function drawBoundsOutline(stroke: p5.Color = p.color(100, 50, 0), strokeWt: number = 1) {
         p.noFill();
         p.stroke(stroke);
         p.strokeWeight(strokeWt);

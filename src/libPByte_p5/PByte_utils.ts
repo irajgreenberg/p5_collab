@@ -47,6 +47,22 @@ export class PByte_globals {
     static grav: number = 0;
 }
 
+export class Phys {
+    amplitude: number;
+    freqency: number;
+    elasticity: number;
+    damping: number;
+    friction: number;
+
+    constructor(amplitude: number = 1, freqency: number = 1, elasticity: number = .5, damping: number = .75, friction: number = .75) {
+        this.amplitude = amplitude;
+        this.freqency = freqency;
+        this.elasticity = elasticity;
+        this.damping = damping;
+        this.friction = friction;
+    }
+}
+
 export class Dimension4 {
 
     minX: number;
