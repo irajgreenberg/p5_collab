@@ -13,6 +13,8 @@ export class Pulsar {
     freq: number;
     elasticity: number;
 
+    centroid: p5.Vector = new p5.Vector(0, 0, 0);
+
     theta: number = 0;
 
     //tetrahedron structure
@@ -51,9 +53,9 @@ export class Pulsar {
         // tails
         for (let i = 0; i < this.nodes.length; i++) {
             let h1 = this.nodes[i].pos.copy();
-            const tailLen = this.p.random(1.5, 3.5);
+            const tailLen = this.p.random(2.5, 8.5);
             let t1 = new p5.Vector(h1.x * tailLen, h1.y * tailLen, h1.z * tailLen);
-            this.tails.push(new VerletStrand_2N(this.p, h1, t1, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255), .3, .5)));
+            this.tails.push(new VerletStrand_2N(this.p, h1, t1, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255, 90), .3, .5)));
         }
     }
 
@@ -63,8 +65,10 @@ export class Pulsar {
     }
 
     move(bounds: p5.Vector = new p5.Vector(this.p.width, this.p.height, this.p.height)) {
+        this.centroid.mult(0);
+
         const v = this.p.sin(this.theta * this.p.PI / 180.0) * this.p.random(this.amp * .8, this.amp * 1.2);
-        this.nodes[0].nudge(new p5.Vector(v, v, v));
+        this.nodes[this.p.floor(this.p.random(this.nodes.length))].nudge(new p5.Vector(v, v, v));
 
         for (let i = 0; i < this.nodes.length; i++) {
             this.nodes[i].verlet();
@@ -72,7 +76,10 @@ export class Pulsar {
 
             this.tails[i].nodes[0].pos = this.nodes[i].pos.copy();
             this.tails[i].move();
+
+            this.centroid.add(this.nodes[i].pos)
         }
+        this.centroid.div(this.nodes.length);
 
         for (let i = 0; i < this.sticks.length; i++) {
             this.sticks[i].constrainLen();
@@ -85,6 +92,8 @@ export class Pulsar {
             this.p.strokeWeight(1.5);
             this.sticks[i].draw();
         }
+
+
 
         for (let i = 0; i < this.tails.length; i++) {
             this.tails[i].draw();

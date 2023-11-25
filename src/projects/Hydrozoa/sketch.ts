@@ -30,7 +30,7 @@ const sketch = (p: p5) => {
 
     let p0: Pulsar;
     let p1: Pulsar;
-    const pulsarCount = 20;
+    const pulsarCount = 50;
     let ps: Pulsar[] = [];
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
@@ -56,8 +56,8 @@ const sketch = (p: p5) => {
         // p0 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.3, 10, .002));
         // p1 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.2, 15, .02));
         for (let i = 0; i < pulsarCount; i++) {
-            const r = p.random(20, 50);
-            ps.push(new Pulsar(p, new p5.Vector(r, r, r), new Phys(p.random(.1, .4), p.random(5, 15), p.random(.002, .3))));
+            const r = p.random(10, 15);
+            ps.push(new Pulsar(p, new p5.Vector(r, r, r), new Phys(p.random(-.4, .4), p.random(5, 15), p.random(.002, .3))));
         }
 
         // **************************************
@@ -126,6 +126,13 @@ const sketch = (p: p5) => {
         for (let i = 0; i < pulsarCount; i++) {
             ps[i].move(bounds);
             ps[i].draw();
+
+            for (let j = i + 1; j < pulsarCount; j++) {
+                if (ps[i].centroid.dist(ps[j].centroid) < 100) {
+                    p.stroke(255, 200, 200);
+                    p.line(ps[i].centroid.x, ps[i].centroid.y, ps[i].centroid.z, ps[j].centroid.x, ps[j].centroid.y, ps[j].centroid.z);
+                }
+            }
         }
 
         drawBoundsOutline();
@@ -133,6 +140,7 @@ const sketch = (p: p5) => {
         // h1.move(bounds);
         // **************************************
     };
+
 
     p.keyTyped = () => {
         if (p.key === 'p') {
@@ -152,6 +160,13 @@ const sketch = (p: p5) => {
         p.stroke(stroke);
         p.strokeWeight(strokeWt);
         p.box(bounds.x, bounds.y, bounds.z);
+    }
+
+    function testCollision(p1: Pulsar, p2: Pulsar) {
+        for (let i = 0; i < p1.nodes.length; i++) {
+            for (let j = 0; j < p2.nodes.length; j++) {
+            }
+        }
     }
 
 };
