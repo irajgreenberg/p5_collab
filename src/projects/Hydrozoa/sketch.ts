@@ -57,7 +57,12 @@ const sketch = (p: p5) => {
         // p1 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.2, 15, .02));
         for (let i = 0; i < pulsarCount; i++) {
             const r = p.random(10, 15);
-            ps.push(new Pulsar(p, new p5.Vector(r, r, r), new Phys(p.random(-.4, .4), p.random(5, 15), p.random(.002, .3))));
+            const initPos = new p5.Vector(
+                p.random(-bounds.x / 2, bounds.x / 2),
+                p.random(-bounds.y / 2, bounds.y / 2),
+                p.random(-bounds.z / 2, bounds.z / 2),
+            );
+            ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-.4, .4), p.random(5, 15), p.random(.002, .3))));
         }
 
         // **************************************
@@ -129,8 +134,9 @@ const sketch = (p: p5) => {
 
             for (let j = i + 1; j < pulsarCount; j++) {
                 if (ps[i].centroid.dist(ps[j].centroid) < 100) {
-                    p.stroke(255, 200, 200);
+                    p.stroke(255, 200, 200, 150);
                     p.line(ps[i].centroid.x, ps[i].centroid.y, ps[i].centroid.z, ps[j].centroid.x, ps[j].centroid.y, ps[j].centroid.z);
+                    testNodeCollision(ps[i], ps[j]);
                 }
             }
         }
@@ -162,9 +168,20 @@ const sketch = (p: p5) => {
         p.box(bounds.x, bounds.y, bounds.z);
     }
 
-    function testCollision(p1: Pulsar, p2: Pulsar) {
+    function testNodeCollision(p1: Pulsar, p2: Pulsar) {
         for (let i = 0; i < p1.nodes.length; i++) {
             for (let j = 0; j < p2.nodes.length; j++) {
+                if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < 5 &&
+                    p1.isNodePaired[i] == false &&
+                    p2.isNodePaired[j] == false) {
+                    p1.nodes[i].pos = p2.nodes[j].pos.copy();
+                    //p1.connectioNodePos[i] = p2.nodes[j].pos.copy();
+                    p1.nodes[i].col = p.color(255, 255, 0);
+                    p2.nodes[j].col = p.color(255, 255, 0);
+
+                    p1.isNodePaired[i] = true;
+                    p2.isNodePaired[j] = true;
+                }
             }
         }
     }
