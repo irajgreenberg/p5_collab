@@ -9,6 +9,7 @@ import { ProtoStyle } from "../../libPByte_p5/ProtoStyle";
 import { Hydrozoa } from "./Hydrozoa";
 import { Pulsar } from "./Pulsar";
 import { Phys } from "../../libPByte_p5/PByte_utils";
+import { VerletStick } from "../../libPByte_p5/VerletStick";
 
 
 const sketch = (p: p5) => {
@@ -18,10 +19,12 @@ const sketch = (p: p5) => {
     const canvasH = 900;
     let bounds = new p5.Vector(500, 500, 500);
 
+    let isAttachable = false;
+
     // background color
-    let bgR = p.int(p.random(10, 40));
-    let bgG = p.int(p.random(10, 40));
-    let bgB = p.int(p.random(10, 40));
+    let bgR = p.int(p.random(0, 10));
+    let bgG = p.int(p.random(0, 10));
+    let bgB = p.int(p.random(0, 10));
     let bgColor: string
 
     let directLightVector: p5.Vector;
@@ -30,7 +33,7 @@ const sketch = (p: p5) => {
 
     let p0: Pulsar;
     let p1: Pulsar;
-    const pulsarCount = 50;
+    const pulsarCount = 25;
     let ps: Pulsar[] = [];
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
@@ -56,13 +59,13 @@ const sketch = (p: p5) => {
         // p0 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.3, 10, .002));
         // p1 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.2, 15, .02));
         for (let i = 0; i < pulsarCount; i++) {
-            const r = p.random(10, 15);
+            const r = p.random(10, 20);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-.4, .4), p.random(5, 15), p.random(.002, .3))));
+            ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3))));
         }
 
         // **************************************
@@ -155,6 +158,10 @@ const sketch = (p: p5) => {
         }
     }
 
+    p.mousePressed = () => {
+        isAttachable = true;
+    }
+
     function drawBounds(fill: p5.Color = p.color(200), stroke: p5.Color = p.color(50)) {
         p.noStroke();
         p.fill(fill);
@@ -169,18 +176,24 @@ const sketch = (p: p5) => {
     }
 
     function testNodeCollision(p1: Pulsar, p2: Pulsar) {
-        for (let i = 0; i < p1.nodes.length; i++) {
-            for (let j = 0; j < p2.nodes.length; j++) {
-                if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < 5 &&
-                    p1.isNodePaired[i] == false &&
-                    p2.isNodePaired[j] == false) {
-                    p1.nodes[i].pos = p2.nodes[j].pos.copy();
-                    //p1.connectioNodePos[i] = p2.nodes[j].pos.copy();
-                    p1.nodes[i].col = p.color(255, 255, 0);
-                    p2.nodes[j].col = p.color(255, 255, 0);
+        if (isAttachable) {
+            for (let i = 0; i < p1.nodes.length; i++) {
+                for (let j = i; j < p2.nodes.length; j++) {
+                    if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < p.random(30, 195) &&
+                        p1.isNodePaired[i] === false &&
+                        p2.isNodePaired[j] === false) {
+                        // p1.nodes[i].pos = p2.nodes[j].pos;
+                        p.strokeWeight(.25);
+                        p1.sticks.push(new VerletStick(p, p1.nodes[i], p2.nodes[j], p.random(.5, .003), 0, p.color(100, 255, 50, 55)));
 
-                    p1.isNodePaired[i] = true;
-                    p2.isNodePaired[j] = true;
+
+                        //p1.connectioNodePos[i] = p2.nodes[j].pos.copy();
+                        p1.nodes[i].col = p.color(255, 255, 0);
+                        p2.nodes[j].col = p.color(255, 255, 0);
+
+                        p1.isNodePaired[i] = true;
+                        p2.isNodePaired[j] = true;
+                    }
                 }
             }
         }

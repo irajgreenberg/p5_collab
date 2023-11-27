@@ -19,7 +19,6 @@ export class Pulsar {
     theta: number = 0;
 
     //tetrahedron structure
-    pilotNode: VerletNode | undefined;
     nodes: VerletNode[] = [];
     connectioNodePos: p5.Vector[] = [];
     isNodePaired: boolean[] = []; // tracks when nodes get paired form collison/proximity
@@ -40,8 +39,6 @@ export class Pulsar {
 
     setup(): void {
         // nodes of a tetrahedron
-        this.pilotNode = new VerletNode(this.p, this.pos, 2, this.p.color(127, 90, 0));
-
         this.nodes.push(new VerletNode(this.p, (new p5.Vector(this.p.sqrt(8 / 9) * this.dim.x, 0, -1 / 3)).add(this.pos), 2, this.p.color(127, 90, 0)));
         this.nodes.push(new VerletNode(this.p, (new p5.Vector(-this.p.sqrt(2 / 9) * this.dim.x, this.p.sqrt(2 / 3) * this.dim.y, -1 / 3 * this.dim.z)).add(this.pos), 2, this.p.color(127, 90, 0)));
         this.nodes.push(new VerletNode(this.p, (new p5.Vector(-this.p.sqrt(2 / 9) * this.dim.x, -this.p.sqrt(2 / 3) * this.dim.y, -1 / 3 * this.dim.z)).add(this.pos), 2, this.p.color(127, 90, 0)));
@@ -51,18 +48,12 @@ export class Pulsar {
         for (let i = 0; i < this.nodes.length; i++) {
             // n.pos.add(this.pos);
             this.isNodePaired.push(false);
-            // this.connectioNodePos[i] = new p5.Vector(0, 0, 0);
+            this.connectioNodePos[i] = new p5.Vector(0, 0, 0);
         }
 
 
 
         // sticks of tetrahedron
-        // conect nodes to pilot node
-        for (let i = 0; i < this.nodes.length; i++) {
-            this.sticks.push(new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.p.color(150, 150, 255, 125)));
-        }
-
-        // connect non-pilot nodes
         this.sticks.push(new VerletStick(this.p, this.nodes[0], this.nodes[1], this.elasticity, 0, this.p.color(150, 150, 255, 125)));
         this.sticks.push(new VerletStick(this.p, this.nodes[0], this.nodes[2], this.elasticity, 0, this.p.color(150, 150, 255, 125)));
         this.sticks.push(new VerletStick(this.p, this.nodes[0], this.nodes[3], this.elasticity, 0, this.p.color(150, 150, 255, 125)));
@@ -80,10 +71,7 @@ export class Pulsar {
     }
 
     nudge(nodeID: number = 0, vec: p5.Vector = new p5.Vector(1, 1, 1)): void {
-        this.pilotNode!.nudge(vec);
-    }
-
-    setNodeVec(nodeID: number, vec: p5.Vector) {
+        this.nodes[nodeID].nudge(vec);
 
     }
 
@@ -93,8 +81,7 @@ export class Pulsar {
 
 
         const v = this.p.sin(this.theta * this.p.PI / 180.0) * this.p.random(this.amp * .8, this.amp * 1.2);
-        this.pilotNode!.nudge(new p5.Vector(v, v, v));
-        this.pilotNode!.verlet();
+        this.nodes[this.p.floor(this.p.random(this.nodes.length))].nudge(new p5.Vector(v, v, v));
 
         for (let i = 0; i < this.nodes.length; i++) {
             this.nodes[i].verlet();
@@ -124,7 +111,7 @@ export class Pulsar {
         }
 
         for (let i = 0; i < this.nodes.length; i++) {
-            // this.nodes[i].draw();
+            this.nodes[i].draw();
         }
 
 
