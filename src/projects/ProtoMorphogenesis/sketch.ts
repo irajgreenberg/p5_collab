@@ -36,6 +36,8 @@ const sketch = (p: p5) => {
     let p1: Pulsar;
     const pulsarCount = 25;
     let ps: Pulsar[] = [];
+    const annulusCount = 8;
+    let as: Annulus[] = [];
 
     let a0: Annulus;
     p.setup = () => {
@@ -61,6 +63,8 @@ const sketch = (p: p5) => {
 
         // p0 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.3, 10, .002));
         // p1 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.2, 15, .02));
+
+        // pulsars
         for (let i = 0; i < pulsarCount; i++) {
             const r = p.random(10, 20);
             const initPos = new p5.Vector(
@@ -68,9 +72,23 @@ const sketch = (p: p5) => {
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3))));
+            ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
         }
-        a0 = new Annulus(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 40, 30), 24, new Phys(.4, 15, .002));
+
+        // annulus
+        for (let i = 0; i < annulusCount; i++) {
+            const r = p.random(15, 30);
+            const initPos = new p5.Vector(
+                p.random(-bounds.x / 2, bounds.x / 2),
+                p.random(-bounds.y / 2, bounds.y / 2),
+                p.random(-bounds.z / 2, bounds.z / 2),
+            );
+            const detail: number = p.floor(p.random(6, 14));
+            // console.log(detail);
+            as.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3)));
+        }
+
+        // a0 = new Annulus(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 40, 30), 24, new Phys(.4, 15, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3));
 
         // **************************************
     };
@@ -147,8 +165,13 @@ const sketch = (p: p5) => {
                 }
             }
         }
-        a0.move(bounds);
-        a0.draw();
+
+        for (let i = 0; i < annulusCount; i++) {
+            as[i].move(bounds);
+            as[i].draw();
+        }
+        // a0.move(bounds);
+        // a0.draw();
 
         drawBoundsOutline();
         // h1.drawArmsBoundarySupports();
@@ -190,7 +213,7 @@ const sketch = (p: p5) => {
                         p2.isNodePaired[j] === false) {
                         // p1.nodes[i].pos = p2.nodes[j].pos;
                         p.strokeWeight(.25);
-                        p1.sticks.push(new VerletStick(p, p1.nodes[i], p2.nodes[j], p.random(.5, .003), 0, p.color(100, 255, 50, 55)));
+                        p1.sticks.push(new VerletStick(p, p1.nodes[i], p2.nodes[j], p.random(.5, .003), 0, p.color(255, 30, 30, 100)));
 
 
                         //p1.connectioNodePos[i] = p2.nodes[j].pos.copy();

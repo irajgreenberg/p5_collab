@@ -3,6 +3,7 @@ import { Phys } from "../../libPByte_p5/PByte_utils";
 import { VerletNode } from "../../libPByte_p5/VerletNode";
 import { VerletStick } from "../../libPByte_p5/VerletStick";
 import { VerletStrand_2N } from "../../libPByte_p5/VerletStrand_2N";
+import { ProtoStyle } from "../../libPByte_p5/ProtoStyle";
 
 export abstract class ProtoMorphoBase {
 
@@ -12,6 +13,7 @@ export abstract class ProtoMorphoBase {
     amp: number;
     freq: number;
     elasticity: number;
+    style: ProtoStyle;
 
     centroid: p5.Vector = new p5.Vector(0, 0, 0);
     theta: number = 0;
@@ -27,21 +29,22 @@ export abstract class ProtoMorphoBase {
 
     supportSticksHidden?: VerletStick[] = [];
 
-    constructor(p: p5, pos: p5.Vector, dim: p5.Vector, physObj: Phys) {
+    constructor(p: p5, pos: p5.Vector, dim: p5.Vector, physObj: Phys, style: ProtoStyle = new ProtoStyle(p, p.color(127, 127, 127), p.color(25, 25, 25), 1, 3)) {
         this.p = p;
         this.pos = pos;
         this.dim = dim;
         this.amp = physObj.amplitude;
         this.freq = physObj.freqency;
         this.elasticity = physObj.elasticity;
+        this.style = style;
 
-        this.setup();
+        // this.setup();
     }
 
     // overridden by all derived classes
-    setup(): void {
+    // setup(): void {
 
-    }
+    // }
 
     nudge(nodeID: number = 0, vec: p5.Vector = new p5.Vector(1, 1, 1)): void {
         this.pilotNode!.nudge(vec);
