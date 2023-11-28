@@ -10,6 +10,7 @@ import { Hydrozoa } from "./Hydrozoa";
 import { Pulsar } from "./Pulsar";
 import { Phys } from "../../libPByte_p5/PByte_utils";
 import { VerletStick } from "../../libPByte_p5/VerletStick";
+import { Annulus } from "./Annulus";
 
 
 const sketch = (p: p5) => {
@@ -35,12 +36,14 @@ const sketch = (p: p5) => {
     let p1: Pulsar;
     const pulsarCount = 25;
     let ps: Pulsar[] = [];
+
+    let a0: Annulus;
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
         p.background(bgR, bgG, bgB);
         document.body.style.backgroundColor = bgColor;
-        document.title = "Hydrozoa";
+        document.title = "ProtoMorphogenesis";
 
         let cnv = p.createCanvas(canvasW, canvasH, p.WEBGL);
 
@@ -67,6 +70,7 @@ const sketch = (p: p5) => {
             );
             ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3))));
         }
+        a0 = new Annulus(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 40, 30), 24, new Phys(.4, 15, .002));
 
         // **************************************
     };
@@ -143,6 +147,8 @@ const sketch = (p: p5) => {
                 }
             }
         }
+        a0.move(bounds);
+        a0.draw();
 
         drawBoundsOutline();
         // h1.drawArmsBoundarySupports();
@@ -179,7 +185,7 @@ const sketch = (p: p5) => {
         if (isAttachable) {
             for (let i = 0; i < p1.nodes.length; i++) {
                 for (let j = i; j < p2.nodes.length; j++) {
-                    if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < p.random(30, 195) &&
+                    if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < p.random(10, 40) &&
                         p1.isNodePaired[i] === false &&
                         p2.isNodePaired[j] === false) {
                         // p1.nodes[i].pos = p2.nodes[j].pos;
