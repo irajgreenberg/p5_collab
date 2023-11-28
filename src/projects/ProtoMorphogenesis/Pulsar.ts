@@ -20,13 +20,13 @@ export class Pulsar extends ProtoMorphoBase {
     // theta: number = 0;
 
     //tetrahedron structure
-    pilotNode: VerletNode | undefined;
-    nodes: VerletNode[] = [];
-    connectioNodePos: p5.Vector[] = [];
-    isNodePaired: boolean[] = []; // tracks when nodes get paired form collison/proximity
-    sticks: VerletStick[] = [];
-    supportSticks: VerletStick[] = [];
-    tails: VerletStrand_2N[] = [];
+    // pilotNode: VerletNode | undefined;
+    // nodes: VerletNode[] = [];
+    // connectioNodePos: p5.Vector[] = [];
+    // isNodePaired: boolean[] = []; // tracks when nodes get paired form collison/proximity
+    // sticks: VerletStick[] = [];
+    // supportSticks: VerletStick[] = [];
+    // tails: VerletStrand_2N[] = [];
 
     constructor(p: p5, pos: p5.Vector, dim: p5.Vector, physObj: Phys, style?: ProtoStyle) {
         super(p, pos, dim, physObj, style);
