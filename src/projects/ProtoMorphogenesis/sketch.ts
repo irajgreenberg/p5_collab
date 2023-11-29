@@ -42,6 +42,9 @@ const sketch = (p: p5) => {
 
     let aa0: AAChain;
 
+    const AAChainCount = 6;
+    let aas: AAChain[] = [];
+
     let a0: Annulus;
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
@@ -93,7 +96,20 @@ const sketch = (p: p5) => {
 
         // a0 = new Annulus(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 40, 30), 24, new Phys(.4, 15, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3));
 
-        aa0 = new AAChain(p, new p5.Vector(0, 0, 0), new p5.Vector(30, 250, 0), 15, new Phys(.3, 10, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 65, 80), 2, 3));
+        // aa0 = new AAChain(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 300, 0), 15, new Phys(2.9, 20, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 65, 80), 2, 3));
+
+        // AAChain
+        for (let i = 0; i < AAChainCount; i++) {
+            const r = p.random(10, 30);
+            const initPos = new p5.Vector(
+                p.random(-bounds.x / 2, bounds.x / 2),
+                p.random(-bounds.y / 2, bounds.y / 2),
+                p.random(-bounds.z / 2, bounds.z / 2),
+            );
+            const detail: number = p.floor(p.random(6, 14));
+            // console.log(detail);
+            aas.push(new AAChain(p, initPos, new p5.Vector(r, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
+        }
 
         // **************************************
     };
@@ -158,8 +174,8 @@ const sketch = (p: p5) => {
         // p1.move(bounds);
         // p1.draw();
 
-        aa0.move(bounds);
-        aa0.draw();
+        // aa0.move(bounds);
+        // aa0.draw();
 
         for (let i = 0; i < pulsarCount; i++) {
             ps[i].move(bounds);
@@ -180,6 +196,11 @@ const sketch = (p: p5) => {
         }
         // a0.move(bounds);
         // a0.draw();
+
+        for (let i = 0; i < AAChainCount; i++) {
+            aas[i].move(bounds);
+            aas[i].draw();
+        }
 
         drawBoundsOutline();
         // h1.drawArmsBoundarySupports();

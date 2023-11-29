@@ -26,8 +26,8 @@ export class AAChain extends ProtoMorphoBase {
             this.nodes.push(new VerletNode(this.p, new p5.Vector(this.dim.x / 2, yStep * i, 0).add(this.pos), this.style.radius, this.style.fillCol));
         }
 
-        this.sticks.push(new VerletStick(this.p, this.nodes[0], this.pilotNode, this.elasticity, 0, this.style.strokeCol));
-        this.sticks.push(new VerletStick(this.p, this.nodes[1], this.pilotNode, this.elasticity, 0, this.style.strokeCol));
+        this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[0], this.pilotNode, this.elasticity, 0, this.style.strokeCol));
+        this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[1], this.pilotNode, this.elasticity, 0, this.style.strokeCol));
 
         for (let i = 0; i <= this.aminoAcidCount; i += 2) {
             this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[i + 1], this.elasticity, 0, this.style.strokeCol));
@@ -36,6 +36,13 @@ export class AAChain extends ProtoMorphoBase {
             //diagonal
             this.sticks.push(new VerletStick(this.p, this.nodes[i + 3], this.nodes[i], this.elasticity, 0, this.style.strokeCol));
         }
+
+        // stabalizing side sticks
+        this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[0], this.nodes[this.aminoAcidCount + 1], this.elasticity, 0, this.style.strokeCol));
+        this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[1], this.nodes[this.aminoAcidCount + 2], this.elasticity, 0, this.style.strokeCol));
+
+        this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[0], this.nodes[this.aminoAcidCount + 2], this.elasticity, 0, this.style.strokeCol));
+        this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[1], this.nodes[this.aminoAcidCount + 1], this.elasticity, 0, this.style.strokeCol));
 
     }
 }
