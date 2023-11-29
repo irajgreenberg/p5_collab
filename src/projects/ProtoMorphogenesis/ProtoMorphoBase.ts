@@ -63,8 +63,10 @@ export abstract class ProtoMorphoBase {
             this.nodes[i].verlet();
             this.nodes[i].boundsCollide(bounds);
 
-            this.tails[i].nodes[0].pos = this.nodes[i].pos.copy();
-            this.tails[i].move();
+            if (this.tails.length > 0) {
+                this.tails[i].nodes[0].pos = this.nodes[i].pos.copy();
+                this.tails[i].move();
+            }
 
             this.centroid.add(this.nodes[i].pos);
 

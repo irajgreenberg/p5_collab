@@ -35,7 +35,7 @@ const sketch = (p: p5) => {
 
     let p0: Pulsar;
     let p1: Pulsar;
-    const pulsarCount = 25;
+    const pulsarCount = 10;
     let ps: Pulsar[] = [];
     const annulusCount = 8;
     let as: Annulus[] = [];
@@ -93,7 +93,7 @@ const sketch = (p: p5) => {
 
         // a0 = new Annulus(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 40, 30), 24, new Phys(.4, 15, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3));
 
-        aa0 = new AAChain(p, new p5.Vector(0, 0, 0), new p5.Vector(30, 150, 0), 8, new Phys(.3, 10, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 65, 80), 2, 3));
+        aa0 = new AAChain(p, new p5.Vector(0, 0, 0), new p5.Vector(30, 250, 0), 15, new Phys(.3, 10, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 65, 80), 2, 3));
 
         // **************************************
     };
