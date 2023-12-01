@@ -12,6 +12,7 @@ import { Phys } from "../../libPByte_p5/PByte_utils";
 import { VerletStick } from "../../libPByte_p5/VerletStick";
 import { Annulus } from "./Annulus";
 import { AAChain } from "./AAChain";
+import { Helix } from "./Helix";
 
 
 const sketch = (p: p5) => {
@@ -41,9 +42,11 @@ const sketch = (p: p5) => {
     let as: Annulus[] = [];
 
     let aa0: AAChain;
-
     const AAChainCount = 6;
     let aas: AAChain[] = [];
+
+    let h: Helix;
+
 
     let a0: Annulus;
     p.setup = () => {
@@ -110,6 +113,9 @@ const sketch = (p: p5) => {
             // console.log(detail);
             aas.push(new AAChain(p, initPos, new p5.Vector(r, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
         }
+
+        // Helix
+        h = new Helix(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 150, 0), 30, new Phys(.1, 3, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 0, 80), 2, 3));
 
         // **************************************
     };
@@ -201,6 +207,9 @@ const sketch = (p: p5) => {
             aas[i].move(bounds);
             aas[i].draw();
         }
+
+        // h.move(bounds);
+        h.draw();
 
         drawBoundsOutline();
         // h1.drawArmsBoundarySupports();
