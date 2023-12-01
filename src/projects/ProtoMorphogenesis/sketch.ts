@@ -13,6 +13,7 @@ import { VerletStick } from "../../libPByte_p5/VerletStick";
 import { Annulus } from "./Annulus";
 import { AAChain } from "./AAChain";
 import { Helix } from "./Helix";
+import { ProtoBlob } from "./ProtoBlob";
 
 
 const sketch = (p: p5) => {
@@ -38,14 +39,17 @@ const sketch = (p: p5) => {
     let p1: Pulsar;
     const pulsarCount = 10;
     let ps: Pulsar[] = [];
-    const annulusCount = 8;
+
+    const annulusCount = 1;
     let as: Annulus[] = [];
 
     let aa0: AAChain;
-    const AAChainCount = 6;
+    const AAChainCount = 1;
     let aas: AAChain[] = [];
 
     let h: Helix;
+
+    let b: ProtoBlob;
 
 
     let a0: Annulus;
@@ -86,13 +90,13 @@ const sketch = (p: p5) => {
 
         // annulus
         for (let i = 0; i < annulusCount; i++) {
-            const r = p.random(15, 30);
+            const r = p.random(130, 200);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            const detail: number = p.floor(p.random(6, 14));
+            const detail: number = p.floor(p.random(30, 60));
             // console.log(detail);
             as.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3)));
         }
@@ -103,19 +107,22 @@ const sketch = (p: p5) => {
 
         // AAChain
         for (let i = 0; i < AAChainCount; i++) {
-            const r = p.random(10, 30);
+            const r = p.random(10, 10);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            const detail: number = p.floor(p.random(6, 14));
+            const detail: number = p.floor(p.random(30, 50));
             // console.log(detail);
-            aas.push(new AAChain(p, initPos, new p5.Vector(r, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
+            aas.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
         }
 
         // Helix
         h = new Helix(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 150, 0), 30, new Phys(.1, 3, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 0, 80), 2, 3));
+
+        // Blob
+        b = new ProtoBlob(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 3, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 2, 3));
 
         // **************************************
     };
@@ -183,18 +190,20 @@ const sketch = (p: p5) => {
         // aa0.move(bounds);
         // aa0.draw();
 
-        for (let i = 0; i < pulsarCount; i++) {
-            ps[i].move(bounds);
-            ps[i].draw();
 
-            for (let j = i + 1; j < pulsarCount; j++) {
-                if (ps[i].centroid.dist(ps[j].centroid) < 100) {
-                    p.stroke(255, 200, 200, 150);
-                    p.line(ps[i].centroid.x, ps[i].centroid.y, ps[i].centroid.z, ps[j].centroid.x, ps[j].centroid.y, ps[j].centroid.z);
-                    testNodeCollision(ps[i], ps[j]);
-                }
-            }
-        }
+
+        // for (let i = 0; i < pulsarCount; i++) {
+        //     ps[i].move(bounds);
+        //     ps[i].draw();
+
+        //     for (let j = i + 1; j < pulsarCount; j++) {
+        //         if (ps[i].centroid.dist(ps[j].centroid) < 100) {
+        //             p.stroke(255, 200, 200, 150);
+        //             p.line(ps[i].centroid.x, ps[i].centroid.y, ps[i].centroid.z, ps[j].centroid.x, ps[j].centroid.y, ps[j].centroid.z);
+        //             testNodeCollision(ps[i], ps[j]);
+        //         }
+        //     }
+        // }
 
         for (let i = 0; i < annulusCount; i++) {
             as[i].move(bounds);
@@ -203,13 +212,17 @@ const sketch = (p: p5) => {
         // a0.move(bounds);
         // a0.draw();
 
-        for (let i = 0; i < AAChainCount; i++) {
-            aas[i].move(bounds);
-            aas[i].draw();
-        }
+        // for (let i = 0; i < AAChainCount; i++) {
+        //     aas[i].move(bounds);
+        //     aas[i].draw();
+        // }
 
         // h.move(bounds);
-        h.draw();
+        // h.draw();
+
+        // b.move(bounds);
+        // b.draw();
+
 
         drawBoundsOutline();
         // h1.drawArmsBoundarySupports();

@@ -44,5 +44,16 @@ export class AAChain extends ProtoMorphoBase {
         this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[0], this.nodes[this.aminoAcidCount + 2], this.elasticity, 0, this.style.strokeCol));
         this.supportSticksHidden?.push(new VerletStick(this.p, this.nodes[1], this.nodes[this.aminoAcidCount + 1], this.elasticity, 0, this.style.strokeCol));
 
+
+
+
+        // tails
+        for (let i = 0; i < this.nodes.length; i++) {
+            let h1 = this.nodes[i].pos.copy();
+            const tailLen = this.p.random(.5, 1.5);
+            let t1 = new p5.Vector(h1.x * tailLen, h1.y * tailLen, h1.z * tailLen);
+            this.tails.push(new VerletStrand_2N(this.p, h1, t1, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255, 90), .3, .5)));
+        }
+
     }
 }

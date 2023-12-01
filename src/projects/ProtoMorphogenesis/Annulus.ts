@@ -50,7 +50,8 @@ export class Annulus extends ProtoMorphoBase {
         // Annulus sticks
         // conect nodes to pilot node
         for (let i = 0; i < this.nodes.length; i++) {
-            this.sticks.push(new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.style.strokeCol));
+            // this.sticks.push(new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.style.strokeCol));
+            this.supportSticksHidden?.push((new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.style.strokeCol)));
 
             // connect perimeter
             if (i < this.nodes.length - 1) {
@@ -71,7 +72,7 @@ export class Annulus extends ProtoMorphoBase {
             let h1 = this.nodes[i].pos.copy();
             const tailLen = this.p.random(.5, 1.5);
             let t1 = new p5.Vector(h1.x * tailLen, h1.y * tailLen, h1.z * tailLen);
-            this.tails.push(new VerletStrand_2N(this.p, h1, t1, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255, 90), .3, .5)));
+            this.tails.push(new VerletStrand_2N(this.p, h1, t1, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255, 80), .3, .5)));
         }
 
     }
