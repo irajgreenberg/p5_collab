@@ -50,15 +50,15 @@ export class Annulus extends ProtoMorphoBase {
         // Annulus sticks
         // conect nodes to pilot node
         for (let i = 0; i < this.nodes.length; i++) {
-            // this.sticks.push(new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.style.strokeCol));
-            this.supportSticksHidden?.push((new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.style.strokeCol)));
+            this.sticks.push(new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.p.color(150, 150, 255, 30)));
+            // this.supportSticksHidden?.push((new VerletStick(this.p, this.pilotNode, this.nodes[i], this.elasticity, 0, this.style.strokeCol)));
 
             // connect perimeter
-            if (i < this.nodes.length - 1) {
-                this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[i + 1], this.elasticity, 0, this.style.strokeCol));
-            } else {
-                this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[0], this.elasticity, 0, this.style.strokeCol));
-            }
+            // if (i < this.nodes.length - 1) {
+            //     this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[i + 1], this.elasticity, 0, this.style.strokeCol));
+            // } else {
+            //     this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[0], this.elasticity, 0, this.style.strokeCol));
+            // }
         }
 
         // cross-supports

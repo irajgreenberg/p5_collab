@@ -14,6 +14,8 @@ import { Annulus } from "./Annulus";
 import { AAChain } from "./AAChain";
 import { Helix } from "./Helix";
 import { ProtoBlob } from "./ProtoBlob";
+import { ProtoBlock } from "./ProtoBlock";
+import { ProtoMorphoBase } from "./ProtoMorphoBase";
 
 
 const sketch = (p: p5) => {
@@ -37,22 +39,28 @@ const sketch = (p: p5) => {
 
     let p0: Pulsar;
     let p1: Pulsar;
-    const pulsarCount = 10;
+    const pulsarCount = 5;
     let ps: Pulsar[] = [];
 
-    const annulusCount = 1;
+    const annulusCount = 2;
     let as: Annulus[] = [];
 
     let aa0: AAChain;
-    const AAChainCount = 1;
+    const AAChainCount = 2;
     let aas: AAChain[] = [];
 
     let h: Helix;
 
     let b: ProtoBlob;
 
+    let pb: ProtoBlock;
+
 
     let a0: Annulus;
+
+
+    let protoOrgs: ProtoMorphoBase[] = [];
+
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
@@ -85,7 +93,8 @@ const sketch = (p: p5) => {
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
+            // ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
+            protoOrgs.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
         }
 
         // annulus
@@ -96,9 +105,11 @@ const sketch = (p: p5) => {
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            const detail: number = p.floor(p.random(30, 60));
+            const detail: number = p.floor(p.random(10, 30));
             // console.log(detail);
-            as.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3)));
+            // as.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 1, 3)));
+
+            protoOrgs.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 1, 3)));
         }
 
         // a0 = new Annulus(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 40, 30), 24, new Phys(.4, 15, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3));
@@ -115,15 +126,23 @@ const sketch = (p: p5) => {
             );
             const detail: number = p.floor(p.random(30, 50));
             // console.log(detail);
-            aas.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
+            // aas.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
+            protoOrgs.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
         }
 
         // Helix
         h = new Helix(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 150, 0), 30, new Phys(.1, 3, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 0, 80), 2, 3));
 
         // Blob
-        b = new ProtoBlob(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 3, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 2, 3));
+        b = new ProtoBlob(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 7, new Phys(6.75, 8, p.random(.02, .03)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1));
 
+        protoOrgs.push(new ProtoBlob(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 7, new Phys(6.75, 8, p.random(.02, .03)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
+
+
+        // ProtoBlock
+        // pb = new ProtoBlock(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 3, new Phys(2.5, 15, p.random(.001, .003)), new ProtoStyle(p, p.color("#FC0FC0"), p.color(200, 200, 200, 95), 2, 3));
+
+        protoOrgs.push(new ProtoBlock(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 3, new Phys(2.5, 15, p.random(.001, .003)), new ProtoStyle(p, p.color("#FC0FC0"), p.color(200, 200, 200, 95), 2, 3)));
         // **************************************
     };
 
@@ -206,8 +225,8 @@ const sketch = (p: p5) => {
         // }
 
         for (let i = 0; i < annulusCount; i++) {
-            as[i].move(bounds);
-            as[i].draw();
+            //  as[i].move(bounds);
+            // as[i].draw(true, false);
         }
         // a0.move(bounds);
         // a0.draw();
@@ -221,7 +240,26 @@ const sketch = (p: p5) => {
         // h.draw();
 
         // b.move(bounds);
-        // b.draw();
+        // b.draw(true, true);
+
+        // pb.move(bounds);
+        // pb.draw(true, true);
+
+
+        for (let i = 0; i < protoOrgs.length; i++) {
+            protoOrgs[i].move(bounds);
+            protoOrgs[i].draw();
+
+            for (let j = i + 1; j < protoOrgs.length; j++) {
+                if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 100) {
+                    p.stroke(255, 200, 200, 150);
+                    p.line(protoOrgs[i].centroid.x, protoOrgs[i].centroid.y, protoOrgs[i].centroid.z, protoOrgs[j].centroid.x, protoOrgs[j].centroid.y, protoOrgs[j].centroid.z);
+                    testNodeCollision(protoOrgs[i], protoOrgs[j]);
+                }
+            }
+        }
+
+
 
 
         drawBoundsOutline();
@@ -255,7 +293,7 @@ const sketch = (p: p5) => {
         p.box(bounds.x, bounds.y, bounds.z);
     }
 
-    function testNodeCollision(p1: Pulsar, p2: Pulsar) {
+    function testNodeCollision(p1: ProtoMorphoBase, p2: ProtoMorphoBase) {
         if (isAttachable) {
             for (let i = 0; i < p1.nodes.length; i++) {
                 for (let j = i; j < p2.nodes.length; j++) {

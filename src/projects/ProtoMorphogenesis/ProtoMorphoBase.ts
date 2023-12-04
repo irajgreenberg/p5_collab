@@ -16,11 +16,13 @@ export abstract class ProtoMorphoBase {
     style: ProtoStyle;
 
     centroid: p5.Vector = new p5.Vector(0, 0, 0);
-    theta: number = 0;
+    theta: number = 0.0;
+    phi: number = 0.0;
 
     //tetrahedron structure
     pilotNode: VerletNode | undefined;
     nodes: VerletNode[] = [];
+    nodes2D: VerletNode[][] = [];
     connectioNodePos: p5.Vector[] = [];
     isNodePaired: boolean[] = []; // tracks when nodes get paired form collison/proximity
     sticks: VerletStick[] = [];
@@ -88,20 +90,21 @@ export abstract class ProtoMorphoBase {
 
 
         this.theta += this.freq;
-
     }
 
-    draw() {
-        for (let i = 0; i < this.sticks.length; i++) {
-            this.p.strokeWeight(1.5);
-            this.sticks[i].draw();
+    draw(isFill: boolean = false, isStroke: boolean = true) {
+        if (isStroke) {
+            for (let i = 0; i < this.sticks.length; i++) {
+                this.p.strokeWeight(1.5);
+                this.sticks[i].draw();
+            }
         }
 
-        for (let i = 0; i < this.nodes.length; i++) {
-            // this.nodes[i].draw();
+        if (isFill) {
+            for (let i = 0; i < this.nodes.length; i++) {
+                this.nodes[i].draw();
+            }
         }
-
-
 
         for (let i = 0; i < this.tails.length; i++) {
             this.tails[i].draw();
