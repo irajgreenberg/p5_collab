@@ -25,7 +25,7 @@ export class ProtoBlob extends ProtoMorphoBase {
         let x = this.p.cos(-this.p.PI / 2) * this.dim.x;
         let y = this.p.sin(-this.p.PI / 2) * this.dim.y;
         let z = 0.0;
-        this.nodes.push(new VerletNode(this.p, new p5.Vector(x, y, z), 2, this.p.color(200, 100, 0)));
+        this.nodes.push(new VerletNode(this.p, new p5.Vector(x, y, z).add(this.pos), 2, this.p.color(200, 100, 0)));
 
         // body nodes
         this.theta = -this.p.PI / 2 + this.p.PI / this.blobDetail;
@@ -39,7 +39,7 @@ export class ProtoBlob extends ProtoMorphoBase {
                 const x1 = this.p.sin(this.phi) * z + this.p.cos(this.phi) * x;
                 const y1 = y
                 const z1 = this.p.cos(this.phi) * z - this.p.sin(this.phi) * x;
-                const vn = new VerletNode(this.p, new p5.Vector(x1, y1, z1), 2, this.p.color(200, 100, 0))
+                const vn = new VerletNode(this.p, new p5.Vector(x1, y1, z1).add(this.pos), 2, this.p.color(200, 100, 0))
                 this.nodes.push(vn);
                 this.nodes2D[i][j] = vn;
                 this.phi += this.p.TWO_PI / this.blobDetail;
@@ -51,7 +51,7 @@ export class ProtoBlob extends ProtoMorphoBase {
         x = this.p.cos(this.p.PI / 2) * this.dim.x;
         y = this.p.sin(this.p.PI / 2) * this.dim.y;
         z = 0.0;
-        this.nodes.push(new VerletNode(this.p, new p5.Vector(x, y, z), 2, this.p.color(200, 100, 0)));
+        this.nodes.push(new VerletNode(this.p, new p5.Vector(x, y, z).add(this.pos), 2, this.p.color(200, 100, 0)));
 
         // sticks (main body - latitude)
         for (let i = 0, k = 0; i < this.nodes2D.length; i++) {
@@ -93,8 +93,8 @@ export class ProtoBlob extends ProtoMorphoBase {
         // support sticks
         for (let i = 0; i < this.nodes.length; i++) {
             for (let j = i; j < this.nodes.length; j++) {
-                if (this.nodes[i].pos.dist(this.nodes[j].pos) > this.dim.x * 1.95) {
-                    this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[j], .02, 0, this.p.color(200, 200, 0, 15)));
+                if (this.nodes[i].pos.dist(this.nodes[j].pos) > this.dim.x * 1.75) {
+                    this.sticks.push(new VerletStick(this.p, this.nodes[i], this.nodes[j], .02, 0, this.p.color(200, 200, 0, 20)));
                 }
             }
 
@@ -102,10 +102,13 @@ export class ProtoBlob extends ProtoMorphoBase {
 
         // tails
         for (let i = 0; i < this.nodes.length; i++) {
-            let h1 = this.nodes[i].pos.copy();
-            const tailLen = this.p.random(1.5, 2.5);
-            let t1 = new p5.Vector(h1.x * tailLen, h1.y * tailLen, h1.z * tailLen);
-            this.tails.push(new VerletStrand_2N(this.p, h1, t1, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255, 90), .3, .5)));
+            let tail = this.nodes[i].pos.copy();
+            tail.sub(this.pos);
+            tail.normalize();
+            const tailLen = this.p.random(10, 20);
+            tail.mult(tailLen);
+            tail.add(this.nodes[i].pos)
+            this.tails.push(new VerletStrand_2N(this.p, this.nodes[i].pos, tail, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255, 90), .3, .5)));
         }
     }
 }

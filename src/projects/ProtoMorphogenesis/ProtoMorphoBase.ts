@@ -31,6 +31,8 @@ export abstract class ProtoMorphoBase {
 
     supportSticksHidden?: VerletStick[] = [];
 
+    isAttachable: boolean = true;
+
     constructor(p: p5, pos: p5.Vector, dim: p5.Vector, physObj: Phys, style: ProtoStyle = new ProtoStyle(p, p.color(127, 127, 127), p.color(25, 25, 25), 1, 3)) {
         this.p = p;
         this.pos = pos;
@@ -90,7 +92,14 @@ export abstract class ProtoMorphoBase {
 
 
         this.theta += this.freq;
+
+        // explicit setting false
+        for (let i = 0; i < this.nodes.length; i++) {
+            this.isNodePaired.push(false);
+        }
     }
+
+
 
     draw(isFill: boolean = false, isStroke: boolean = true) {
         if (isStroke) {

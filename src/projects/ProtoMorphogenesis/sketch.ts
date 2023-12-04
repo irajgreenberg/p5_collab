@@ -25,7 +25,7 @@ const sketch = (p: p5) => {
     const canvasH = 900;
     let bounds = new p5.Vector(500, 500, 500);
 
-    let isAttachable = false;
+    let isWorldAttachable = false;
 
     // background color
     let bgR = p.int(p.random(0, 10));
@@ -51,7 +51,8 @@ const sketch = (p: p5) => {
 
     let h: Helix;
 
-    let b: ProtoBlob;
+    const protoBlobCount = 5;
+    let blobs: ProtoBlob[] = [];
 
     let pb: ProtoBlock;
 
@@ -78,22 +79,14 @@ const sketch = (p: p5) => {
 
         // ****** Instantiate Custom Geom *******
 
-        h1 = new Hydrozoa(p, 30, new p5.Vector(-450, 0, 0), new p5.Vector(450, 0, 0), new p5.Vector(.6, .8), new ProtoStyle(p, p.color(150, 75, 20), p.color(255, 200, 200), 1, 10));
-
-        h1.setArmsStyle(new ProtoStyle(p, p.color(0, 0, 0), p.color(100, 0, 100), 20, 1));
-
-        // p0 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.3, 10, .002));
-        // p1 = new Pulsar(p, new p5.Vector(30, 30, 30), new Phys(.2, 15, .02));
-
         // pulsars
         for (let i = 0; i < pulsarCount; i++) {
-            const r = p.random(10, 20);
+            const r = p.random(30, 60);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            // ps.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
             protoOrgs.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
         }
 
@@ -106,18 +99,26 @@ const sketch = (p: p5) => {
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
             const detail: number = p.floor(p.random(10, 30));
-            // console.log(detail);
-            // as.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 1, 3)));
 
-            protoOrgs.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 1, 3)));
+            // protoOrgs.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 1, 3)));
         }
-
-        // a0 = new Annulus(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 40, 30), 24, new Phys(.4, 15, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 2, 3));
-
-        // aa0 = new AAChain(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 300, 0), 15, new Phys(2.9, 20, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 65, 80), 2, 3));
 
         // AAChain
         for (let i = 0; i < AAChainCount; i++) {
+            const r = p.random(100, 100);
+            const initPos = new p5.Vector(
+                p.random(-bounds.x / 2, bounds.x / 2),
+                p.random(-bounds.y / 2, bounds.y / 2),
+                p.random(-bounds.z / 2, bounds.z / 2),
+            );
+            const detail: number = p.floor(p.random(30, 50));
+
+            // protoOrgs.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
+        }
+
+
+        // Blobs
+        for (let i = 0; i < protoBlobCount; i++) {
             const r = p.random(10, 10);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
@@ -125,24 +126,15 @@ const sketch = (p: p5) => {
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
             const detail: number = p.floor(p.random(30, 50));
-            // console.log(detail);
-            // aas.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
-            protoOrgs.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
+
+            const rad = p.random(35, 60);
+            protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
         }
 
-        // Helix
-        h = new Helix(p, new p5.Vector(0, 0, 0), new p5.Vector(40, 150, 0), 30, new Phys(.1, 3, .002), new ProtoStyle(p, p.color(127, 127, 127), p.color(130, 130, 0, 80), 2, 3));
-
-        // Blob
-        b = new ProtoBlob(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 7, new Phys(6.75, 8, p.random(.02, .03)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1));
-
-        protoOrgs.push(new ProtoBlob(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 7, new Phys(6.75, 8, p.random(.02, .03)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
 
 
-        // ProtoBlock
-        // pb = new ProtoBlock(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 3, new Phys(2.5, 15, p.random(.001, .003)), new ProtoStyle(p, p.color("#FC0FC0"), p.color(200, 200, 200, 95), 2, 3));
 
-        protoOrgs.push(new ProtoBlock(p, new p5.Vector(0, 0, 0), new p5.Vector(100, 100, 100), 3, new Phys(2.5, 15, p.random(.001, .003)), new ProtoStyle(p, p.color("#FC0FC0"), p.color(200, 200, 200, 95), 2, 3)));
+        // protoOrgs.push(new ProtoBlock(p, new p5.Vector(0, 0, 0), new p5.Vector(30, 30, 30), 3, new Phys(2.5, 15, p.random(.001, .003)), new ProtoStyle(p, p.color("#FC0FC0"), p.color(200, 200, 200, 95), 2, 3)));
         // **************************************
     };
 
@@ -199,59 +191,13 @@ const sketch = (p: p5) => {
         // h1.drawArms(false, true);
         p.pop();
 
-        // p0.move(bounds);
-        // p0.draw();
-
-
-        // p1.move(bounds);
-        // p1.draw();
-
-        // aa0.move(bounds);
-        // aa0.draw();
-
-
-
-        // for (let i = 0; i < pulsarCount; i++) {
-        //     ps[i].move(bounds);
-        //     ps[i].draw();
-
-        //     for (let j = i + 1; j < pulsarCount; j++) {
-        //         if (ps[i].centroid.dist(ps[j].centroid) < 100) {
-        //             p.stroke(255, 200, 200, 150);
-        //             p.line(ps[i].centroid.x, ps[i].centroid.y, ps[i].centroid.z, ps[j].centroid.x, ps[j].centroid.y, ps[j].centroid.z);
-        //             testNodeCollision(ps[i], ps[j]);
-        //         }
-        //     }
-        // }
-
-        for (let i = 0; i < annulusCount; i++) {
-            //  as[i].move(bounds);
-            // as[i].draw(true, false);
-        }
-        // a0.move(bounds);
-        // a0.draw();
-
-        // for (let i = 0; i < AAChainCount; i++) {
-        //     aas[i].move(bounds);
-        //     aas[i].draw();
-        // }
-
-        // h.move(bounds);
-        // h.draw();
-
-        // b.move(bounds);
-        // b.draw(true, true);
-
-        // pb.move(bounds);
-        // pb.draw(true, true);
-
 
         for (let i = 0; i < protoOrgs.length; i++) {
             protoOrgs[i].move(bounds);
             protoOrgs[i].draw();
 
             for (let j = i + 1; j < protoOrgs.length; j++) {
-                if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 100) {
+                if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 150) {
                     p.stroke(255, 200, 200, 150);
                     p.line(protoOrgs[i].centroid.x, protoOrgs[i].centroid.y, protoOrgs[i].centroid.z, protoOrgs[j].centroid.x, protoOrgs[j].centroid.y, protoOrgs[j].centroid.z);
                     testNodeCollision(protoOrgs[i], protoOrgs[j]);
@@ -259,12 +205,7 @@ const sketch = (p: p5) => {
             }
         }
 
-
-
-
         drawBoundsOutline();
-        // h1.drawArmsBoundarySupports();
-        // h1.move(bounds);
         // **************************************
     };
 
@@ -277,7 +218,7 @@ const sketch = (p: p5) => {
     }
 
     p.mousePressed = () => {
-        isAttachable = true;
+        isWorldAttachable = true;
     }
 
     function drawBounds(fill: p5.Color = p.color(200), stroke: p5.Color = p.color(50)) {
@@ -294,12 +235,13 @@ const sketch = (p: p5) => {
     }
 
     function testNodeCollision(p1: ProtoMorphoBase, p2: ProtoMorphoBase) {
-        if (isAttachable) {
+        if (isWorldAttachable) {
             for (let i = 0; i < p1.nodes.length; i++) {
                 for (let j = i; j < p2.nodes.length; j++) {
-                    if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < p.random(10, 40) &&
+                    if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < p.random(20, 30) &&
                         p1.isNodePaired[i] === false &&
-                        p2.isNodePaired[j] === false) {
+                        p2.isNodePaired[j] === false &&
+                        p1.isAttachable || p2.isAttachable) {
                         // p1.nodes[i].pos = p2.nodes[j].pos;
                         p.strokeWeight(.25);
                         p1.sticks.push(new VerletStick(p, p1.nodes[i], p2.nodes[j], p.random(.5, .003), 0, p.color(255, 30, 30, 100)));
@@ -311,6 +253,9 @@ const sketch = (p: p5) => {
 
                         p1.isNodePaired[i] = true;
                         p2.isNodePaired[j] = true;
+
+                        p1.isAttachable = false;
+                        p2.isAttachable = false;
                     }
                 }
             }

@@ -49,12 +49,12 @@ export class Pulsar extends ProtoMorphoBase {
         this.nodes.push(new VerletNode(this.p, (new p5.Vector(-this.p.sqrt(2 / 9) * this.dim.x, -this.p.sqrt(2 / 3) * this.dim.y, -1 / 3 * this.dim.z)).add(this.pos), this.style.radius, this.style.fillCol));
         this.nodes.push(new VerletNode(this.p, (new p5.Vector(0, 0, 1 * this.dim.x)).add(this.pos), this.style.radius, this.style.fillCol));
 
-        // explicit setting false
-        for (let i = 0; i < this.nodes.length; i++) {
-            // n.pos.add(this.pos);
-            this.isNodePaired.push(false);
-            // this.connectioNodePos[i] = new p5.Vector(0, 0, 0);
-        }
+        // // explicit setting false
+        // for (let i = 0; i < this.nodes.length; i++) {
+        //     // n.pos.add(this.pos);
+        //     this.isNodePaired.push(false);
+        //     // this.connectioNodePos[i] = new p5.Vector(0, 0, 0);
+        // }
 
 
 
