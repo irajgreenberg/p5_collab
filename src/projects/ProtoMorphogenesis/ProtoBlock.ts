@@ -62,10 +62,10 @@ export class ProtoBlock extends ProtoMorphoBase {
 
         // cube hiddon diagnol support sticks
         //sticks
-        this.sticks.push(new VerletStick(this.p, this.nodes[0], this.nodes[6], this.elasticity, 0, this.p.color(255, 255, 0)));
-        this.sticks.push(new VerletStick(this.p, this.nodes[1], this.nodes[7], this.elasticity, 0, this.p.color(255, 255, 0)));
-        this.sticks.push(new VerletStick(this.p, this.nodes[2], this.nodes[4], this.elasticity, 0, this.p.color(255, 255, 0)));
-        this.sticks.push(new VerletStick(this.p, this.nodes[3], this.nodes[5], this.elasticity, 0, this.p.color(255, 255, 0)));
+        this.supportSticksHidden!.push(new VerletStick(this.p, this.nodes[0], this.nodes[6], this.elasticity, 0, this.p.color(255, 255, 0)));
+        this.supportSticksHidden!.push(new VerletStick(this.p, this.nodes[1], this.nodes[7], this.elasticity, 0, this.p.color(255, 255, 0)));
+        this.supportSticksHidden!.push(new VerletStick(this.p, this.nodes[2], this.nodes[4], this.elasticity, 0, this.p.color(255, 255, 0)));
+        this.supportSticksHidden!.push(new VerletStick(this.p, this.nodes[3], this.nodes[5], this.elasticity, 0, this.p.color(255, 255, 0)));
 
 
         // Cube sticks

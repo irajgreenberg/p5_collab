@@ -54,7 +54,9 @@ const sketch = (p: p5) => {
     const protoBlobCount = 5;
     let blobs: ProtoBlob[] = [];
 
-    let pb: ProtoBlock;
+    const protoBlockCount = 5;
+    let pBlocks: ProtoBlock[] = [];
+    //let pb: ProtoBlock;
 
 
     let a0: Annulus;
@@ -132,6 +134,19 @@ const sketch = (p: p5) => {
         }
 
 
+        // Blocks
+        for (let i = 0; i < protoBlobCount; i++) {
+            const r = p.random(10, 10);
+            const initPos = new p5.Vector(
+                p.random(-bounds.x / 2, bounds.x / 2),
+                p.random(-bounds.y / 2, bounds.y / 2),
+                p.random(-bounds.z / 2, bounds.z / 2),
+            );
+            const detail: number = p.floor(p.random(30, 50));
+
+            const rad = p.random(25, 40);
+            protoOrgs.push(new ProtoBlock(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
+        }
 
 
         // protoOrgs.push(new ProtoBlock(p, new p5.Vector(0, 0, 0), new p5.Vector(30, 30, 30), 3, new Phys(2.5, 15, p.random(.001, .003)), new ProtoStyle(p, p.color("#FC0FC0"), p.color(200, 200, 200, 95), 2, 3)));
