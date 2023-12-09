@@ -35,32 +35,21 @@ const sketch = (p: p5) => {
 
     let directLightVector: p5.Vector;
 
-    let h1: Hydrozoa;
-
-    let p0: Pulsar;
-    let p1: Pulsar;
     const pulsarCount = 5;
     let ps: Pulsar[] = [];
 
     const annulusCount = 2;
     let as: Annulus[] = [];
 
-    let aa0: AAChain;
+    // let aa0: AAChain;
     const AAChainCount = 2;
     let aas: AAChain[] = [];
-
-    let h: Helix;
 
     const protoBlobCount = 5;
     let blobs: ProtoBlob[] = [];
 
-    const protoBlockCount = 5;
+    const protoBlockCount = 35;
     let pBlocks: ProtoBlock[] = [];
-    //let pb: ProtoBlock;
-
-
-    let a0: Annulus;
-
 
     let protoOrgs: ProtoMorphoBase[] = [];
 
@@ -89,7 +78,7 @@ const sketch = (p: p5) => {
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            protoOrgs.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
+            // protoOrgs.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
         }
 
         // annulus
@@ -130,13 +119,13 @@ const sketch = (p: p5) => {
             const detail: number = p.floor(p.random(30, 50));
 
             const rad = p.random(35, 60);
-            protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
+            // protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
         }
 
 
         // Blocks
-        for (let i = 0; i < protoBlobCount; i++) {
-            const r = p.random(10, 10);
+        for (let i = 0; i < protoBlockCount; i++) {
+            const rad = p.random(5, 15);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
@@ -144,8 +133,7 @@ const sketch = (p: p5) => {
             );
             const detail: number = p.floor(p.random(30, 50));
 
-            const rad = p.random(25, 40);
-            protoOrgs.push(new ProtoBlock(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
+            protoOrgs.push(new ProtoBlock(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(1, 3), p.random(1, 3), p.random(.008, .01)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
         }
 
 
@@ -161,21 +149,13 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
-        p.fill(0, 20);
+        // p.fill(0, 20);
 
 
         p.background(bgR, bgG, bgB);
 
         p.orbitControl();
-        p.rotateY(p.frameCount * p.PI / 900);
-
-        // p.beginShape();
-        // p.vertex(-p.width / 2, -p.height / 2, 300)
-        // p.vertex(p.width / 2, -p.height / 2, 300)
-        // p.vertex(p.width / 2, p.height / 2, 300)
-        // p.vertex(-p.width / 2, p.height / 2, 300)
-        // p.endShape(p.CLOSE);
-        // p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
+        //  p.rotateY(p.frameCount * p.PI / 900);
 
         let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
 
@@ -200,16 +180,9 @@ const sketch = (p: p5) => {
         //drawBounds(p.color(200, 140, 150, 80));
         //drawBoundsOutline(p.color(75, 75, 75), 1);
 
-        // h1.drawSpine(true, true);
-        p.push();
-        p.scale(.3);
-        // h1.drawArms(false, true);
-        p.pop();
-
-
         for (let i = 0; i < protoOrgs.length; i++) {
             protoOrgs[i].move(bounds);
-            protoOrgs[i].draw();
+            protoOrgs[i].draw(true, false);
 
             for (let j = i + 1; j < protoOrgs.length; j++) {
                 if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 150) {
@@ -253,7 +226,7 @@ const sketch = (p: p5) => {
         if (isWorldAttachable) {
             for (let i = 0; i < p1.nodes.length; i++) {
                 for (let j = i; j < p2.nodes.length; j++) {
-                    if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < p.random(20, 30) &&
+                    if (p1.nodes[i].pos.dist(p2.nodes[j].pos) < p.random(5, 5) &&
                         p1.isNodePaired[i] === false &&
                         p2.isNodePaired[j] === false &&
                         p1.isAttachable || p2.isAttachable) {

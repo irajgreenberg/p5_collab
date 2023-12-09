@@ -59,8 +59,10 @@ export abstract class ProtoMorphoBase {
 
 
 
-        const v = this.p.sin(this.theta * this.p.PI / 180.0) * this.p.random(this.amp * .8, this.amp * 1.2);
-        this.pilotNode!.nudge(new p5.Vector(v, v, v));
+        const xv = this.p.sin(this.theta * this.p.PI / 180.0) * this.p.random(this.amp * -1, this.amp * 1);
+        const yv = this.p.sin(this.theta * this.p.PI / 180.0) * this.p.random(this.amp * -1, this.amp * 1);
+        const zv = this.p.sin(this.theta * this.p.PI / 180.0) * this.p.random(this.amp * -1, this.amp * 1);
+        this.pilotNode!.nudge(new p5.Vector(xv, yv, zv));
         this.pilotNode!.verlet();
 
         for (let i = 0; i < this.nodes.length; i++) {
@@ -118,5 +120,10 @@ export abstract class ProtoMorphoBase {
         for (let i = 0; i < this.tails.length; i++) {
             this.tails[i].draw();
         }
+
+        this.faceRender();
+    }
+
+    faceRender() {
     }
 }
