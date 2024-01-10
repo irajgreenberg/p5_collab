@@ -6,9 +6,9 @@
     "scripts": {
         "dev": "npm-run-all clean start-parcel",
         "build": "npm-run-all clean build-parcel",
-        "start-parcel": "parcel -p 8080 index.html --open",
+        "start-parcel": "parcel ./index.html -p 8080 index.html --open",
         "build-parcel": "parcel build index.html --public-url ././",
-     "clean": "rimraf dist"
+        "clean": "rimraf dist"
     },
     "keywords": [],
     "author": "",

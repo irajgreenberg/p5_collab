@@ -72,7 +72,7 @@ export class ProtoBlock extends ProtoMorphoBase {
 
     faceRender() {
         for (let i = 0; i < this.indices.length; i++) {
-            this.p.fill(125, 125, 125);
+            this.p.fill(75, 65, 90);
             this.p.beginShape();
             for (let j = 0; j < this.indices[i].length; j++) {
                 this.p.vertex(this.nodes[this.indices[i][j]].pos.x, this.nodes[this.indices[i][j]].pos.y, this.nodes[this.indices[i][j]].pos.z);

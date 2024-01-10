@@ -21,16 +21,21 @@ import { ProtoMorphoBase } from "./ProtoMorphoBase";
 const sketch = (p: p5) => {
 
     // window size
-    const canvasW = 1200;
-    const canvasH = 900;
-    let bounds = new p5.Vector(500, 500, 500);
+    const canvasW = 200;
+    const canvasH = 200;
+    let bounds = new p5.Vector(100, 100, 100);
 
     let isWorldAttachable = false;
 
     // background color
-    let bgR = p.int(p.random(0, 10));
-    let bgG = p.int(p.random(0, 10));
-    let bgB = p.int(p.random(0, 10));
+    // let bgR = p.int(p.random(210, 230));
+    // let bgG = p.int(p.random(210, 230));
+    // let bgB = p.int(p.random(210, 230));
+
+    let bgR = p.int(p.random(30, 80));
+    let bgG = p.int(p.random(30, 80));
+    let bgB = p.int(p.random(30, 80));
+
     let bgColor: string
 
     let directLightVector: p5.Vector;
@@ -45,10 +50,10 @@ const sketch = (p: p5) => {
     const AAChainCount = 2;
     let aas: AAChain[] = [];
 
-    const protoBlobCount = 5;
+    const protoBlobCount = 10;
     let blobs: ProtoBlob[] = [];
 
-    const protoBlockCount = 35;
+    const protoBlockCount = 3;
     let pBlocks: ProtoBlock[] = [];
 
     let protoOrgs: ProtoMorphoBase[] = [];
@@ -110,7 +115,7 @@ const sketch = (p: p5) => {
 
         // Blobs
         for (let i = 0; i < protoBlobCount; i++) {
-            const r = p.random(10, 10);
+            const r = p.random(1, 1);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
@@ -118,14 +123,16 @@ const sketch = (p: p5) => {
             );
             const detail: number = p.floor(p.random(30, 50));
 
-            const rad = p.random(35, 60);
-            // protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
+            const rad = p.random(3, 10);
+            protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(3, 5)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(100, 100, 100, 255), 1, 1)));
+
+            protoOrgs[protoOrgs.length - 1].setTailCol(p.color(p.random(150, 200), p.random(150, 200), 185, p.random(60, 100)));
         }
 
 
         // Blocks
         for (let i = 0; i < protoBlockCount; i++) {
-            const rad = p.random(5, 15);
+            const rad = p.random(50, 100);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
@@ -133,7 +140,7 @@ const sketch = (p: p5) => {
             );
             const detail: number = p.floor(p.random(30, 50));
 
-            protoOrgs.push(new ProtoBlock(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(1, 3), p.random(1, 3), p.random(.008, .01)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
+            // protoOrgs.push(new ProtoBlock(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(4, 7)), new Phys(p.random(1, 3), p.random(1, 3), p.random(.003, .007)), new ProtoStyle(p, p.color(127, 127, 127), p.color(200, 200, 200, 95), 1, 1)));
         }
 
 
@@ -149,31 +156,32 @@ const sketch = (p: p5) => {
     };
 
     p.draw = () => {
-        // p.fill(0, 20);
+        p.fill(0, 5);
 
 
-        p.background(bgR, bgG, bgB);
+        p.background(bgR * 1.2, bgG * 1.2, bgB * 1.2);
+        // p.background(255);
 
         p.orbitControl();
-        //  p.rotateY(p.frameCount * p.PI / 900);
+        p.rotateY(p.frameCount * p.PI / 900);
 
         let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
 
-        p.ambientLight(20, 10, 15);
+        // p.ambientLight(20, 10, 15);
 
-        p.directionalLight(127, 127, 127, v);
+        // p.directionalLight(127, 127, 127, v);
 
-        p.shininess(100);
+        p.shininess(75);
         // p.specularColor(189);
         // p.specularMaterial(250);
 
-        p.specularColor(20);
-        p.specularMaterial(30);
+        p.specularColor(255);
+        p.specularMaterial(150);
 
         // Creating the point lights at the
         // given points from the given directions
-        p.pointLight(255, 255, 255, -10, 5, 200);
-        p.pointLight(255, 255, 255, -60, 500, 380);
+        p.pointLight(155, 100, 100, 60, 5, 1200);
+        p.pointLight(200, 200, 255, -60, 500, 1380);
 
         // ********* Animate Custom Geom ********
 
@@ -182,12 +190,15 @@ const sketch = (p: p5) => {
 
         for (let i = 0; i < protoOrgs.length; i++) {
             protoOrgs[i].move(bounds);
-            protoOrgs[i].draw(true, false);
+            protoOrgs[i].draw(false, false);
 
             for (let j = i + 1; j < protoOrgs.length; j++) {
-                if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 150) {
-                    p.stroke(255, 200, 200, 150);
+                if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 90) {
+                    p.stroke(255, 200, 200, p.random(50, 100));
                     p.line(protoOrgs[i].centroid.x, protoOrgs[i].centroid.y, protoOrgs[i].centroid.z, protoOrgs[j].centroid.x, protoOrgs[j].centroid.y, protoOrgs[j].centroid.z);
+
+                    // p.curve(protoOrgs[i].centroid.x, protoOrgs[i].centroid.y, protoOrgs[i].centroid.z, protoOrgs[j].centroid.x, protoOrgs[j].centroid.y, protoOrgs[j].centroid.z);
+
                     testNodeCollision(protoOrgs[i], protoOrgs[j]);
                 }
             }

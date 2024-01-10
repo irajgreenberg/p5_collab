@@ -33,7 +33,9 @@ export abstract class ProtoMorphoBase {
 
     isAttachable: boolean = true;
 
-    constructor(p: p5, pos: p5.Vector, dim: p5.Vector, physObj: Phys, style: ProtoStyle = new ProtoStyle(p, p.color(127, 127, 127), p.color(25, 25, 25), 1, 3)) {
+    tailCol: p5.Color;
+
+    constructor(p: p5, pos: p5.Vector, dim: p5.Vector, physObj: Phys, style: ProtoStyle = new ProtoStyle(p, p.color(127, 127, 127), p.color(25, 25, 25), 1, 3), tailCol: p5.Color = p.color(200, 200, 200)) {
         this.p = p;
         this.pos = pos;
         this.dim = dim;
@@ -41,6 +43,7 @@ export abstract class ProtoMorphoBase {
         this.freq = physObj.freqency;
         this.elasticity = physObj.elasticity;
         this.style = style;
+        this.tailCol = tailCol;
 
         // this.setup();
     }
@@ -101,7 +104,10 @@ export abstract class ProtoMorphoBase {
         }
     }
 
-
+    setTailCol(tailCol: p5.Color): void {
+        this.tailCol = tailCol;
+        this.resetTails();
+    }
 
     draw(isFill: boolean = false, isStroke: boolean = true) {
         if (isStroke) {
@@ -126,4 +132,6 @@ export abstract class ProtoMorphoBase {
 
     faceRender() {
     }
+
+    resetTails(): void { }
 }
