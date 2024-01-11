@@ -74,7 +74,7 @@ export abstract class ProtoMorphoBase {
 
             if (this.tails.length > 0) {
                 this.tails[i].nodes[0].pos = this.nodes[i].pos.copy();
-                this.tails[i].move();
+                this.tails[i].move(bounds);
             }
 
             this.centroid.add(this.nodes[i].pos);

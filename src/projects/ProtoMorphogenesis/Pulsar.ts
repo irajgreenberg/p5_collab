@@ -75,9 +75,10 @@ export class Pulsar extends ProtoMorphoBase {
         // tails
         for (let i = 0; i < this.nodes.length; i++) {
             let h1 = this.nodes[i].pos.copy();
-            const tailLen = this.p.random(.5, 1.5);
+            const tailLen = this.p.random(.1, 2);
             let t1 = new p5.Vector(h1.x * tailLen, h1.y * tailLen, h1.z * tailLen);
-            this.tails.push(new VerletStrand_2N(this.p, h1, t1, 10, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(200, 200, 255, 90), .3, .5)));
+            const tailCol = this.p.random(140, 255);
+            this.tails.push(new VerletStrand_2N(this.p, h1, t1, this.p.random(8, 15), new p5.Vector(.02, .5), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.p.color(tailCol, tailCol, tailCol, 90), .3, .5)));
         }
     }
 

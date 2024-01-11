@@ -21,9 +21,9 @@ import { ProtoMorphoBase } from "./ProtoMorphoBase";
 const sketch = (p: p5) => {
 
     // window size
-    const canvasW = 200;
-    const canvasH = 200;
-    let bounds = new p5.Vector(100, 100, 100);
+    const canvasW = 100;
+    const canvasH = 100;
+    let bounds = new p5.Vector(70, 70, 70);
 
     let isWorldAttachable = false;
 
@@ -32,15 +32,15 @@ const sketch = (p: p5) => {
     // let bgG = p.int(p.random(210, 230));
     // let bgB = p.int(p.random(210, 230));
 
-    let bgR = p.int(p.random(30, 80));
-    let bgG = p.int(p.random(30, 80));
-    let bgB = p.int(p.random(30, 80));
+    let bgR = p.int(p.random(10, 50));
+    let bgG = p.int(p.random(10, 50));
+    let bgB = p.int(p.random(10, 50));
 
     let bgColor: string
 
     let directLightVector: p5.Vector;
 
-    const pulsarCount = 5;
+    const pulsarCount = 35;
     let ps: Pulsar[] = [];
 
     const annulusCount = 2;
@@ -50,7 +50,7 @@ const sketch = (p: p5) => {
     const AAChainCount = 2;
     let aas: AAChain[] = [];
 
-    const protoBlobCount = 10;
+    const protoBlobCount = 1;
     let blobs: ProtoBlob[] = [];
 
     const protoBlockCount = 3;
@@ -61,7 +61,7 @@ const sketch = (p: p5) => {
     p.setup = () => {
         bgColor = "#" + p.hex(bgR, 2) + p.hex(bgG, 2) + p.hex(bgB, 2);
 
-        p.background(bgR, bgG, bgB);
+        p.background(bgR - 20, bgG - 20, bgB - 20);
         document.body.style.backgroundColor = bgColor;
         document.title = "ProtoMorphogenesis";
 
@@ -77,18 +77,18 @@ const sketch = (p: p5) => {
 
         // pulsars
         for (let i = 0; i < pulsarCount; i++) {
-            const r = p.random(30, 60);
+            const r = p.random(2, 10);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            // protoOrgs.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 75, 255, 150), 2, 3)));
+            // protoOrgs.push(new Pulsar(p, initPos, new p5.Vector(r, r, r), new Phys(p.random(-3.4, 3.4), p.random(20, 65), p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(p.random(160, 230), p.random(160, 230), p.random(160, 230), p.random(70, 125)), 2, 3)));
         }
 
         // annulus
         for (let i = 0; i < annulusCount; i++) {
-            const r = p.random(130, 200);
+            const r = p.random(10, 30);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
@@ -96,7 +96,7 @@ const sketch = (p: p5) => {
             );
             const detail: number = p.floor(p.random(10, 30));
 
-            // protoOrgs.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 1, 3)));
+            //protoOrgs.push(new Annulus(p, initPos, new p5.Vector(r, r, r), detail, new Phys(.4, 15, p.random(.002, .1)), new ProtoStyle(p, p.color(127, 127, 127), p.color(125, 200, 255, 80), 1, 3)));
         }
 
         // AAChain
@@ -109,7 +109,7 @@ const sketch = (p: p5) => {
             );
             const detail: number = p.floor(p.random(30, 50));
 
-            // protoOrgs.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
+            //  protoOrgs.push(new AAChain(p, initPos, new p5.Vector(r * .1, r * 6, r), detail, new Phys(1.5, 15, p.random(.002, .3)), new ProtoStyle(p, p.color(127, 127, 127), p.color(255, 180, 180, 95), 2, 3)));
         }
 
 
@@ -121,11 +121,10 @@ const sketch = (p: p5) => {
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            const detail: number = p.floor(p.random(30, 50));
+            const detail: number = p.floor(p.random(2, 8));
 
-            const rad = p.random(3, 10);
-            protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), p.floor(p.random(3, 5)), new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .09)), new ProtoStyle(p, p.color(127, 127, 127), p.color(100, 100, 100, 255), 1, 1)));
-
+            const rad = p.random(30, 30);
+            protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), detail, new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .02)), new ProtoStyle(p, p.color(127, 127, 127), p.color(100, 100, 100, 255), 1, 1)));
             protoOrgs[protoOrgs.length - 1].setTailCol(p.color(p.random(150, 200), p.random(150, 200), 185, p.random(60, 100)));
         }
 
@@ -159,7 +158,7 @@ const sketch = (p: p5) => {
         p.fill(0, 5);
 
 
-        p.background(bgR * 1.2, bgG * 1.2, bgB * 1.2);
+        p.background(bgR * 1.8, bgG * 1.8, bgB * 1.8);
         // p.background(255);
 
         p.orbitControl();
@@ -190,21 +189,21 @@ const sketch = (p: p5) => {
 
         for (let i = 0; i < protoOrgs.length; i++) {
             protoOrgs[i].move(bounds);
-            protoOrgs[i].draw(false, false);
+            protoOrgs[i].draw(false, true);
 
             for (let j = i + 1; j < protoOrgs.length; j++) {
-                if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 90) {
-                    p.stroke(255, 200, 200, p.random(50, 100));
+                if (protoOrgs[i].centroid.dist(protoOrgs[j].centroid) < 50) {
+                    p.stroke(bgR * .8, bgG * .8, bgB * .8, 70);
                     p.line(protoOrgs[i].centroid.x, protoOrgs[i].centroid.y, protoOrgs[i].centroid.z, protoOrgs[j].centroid.x, protoOrgs[j].centroid.y, protoOrgs[j].centroid.z);
 
                     // p.curve(protoOrgs[i].centroid.x, protoOrgs[i].centroid.y, protoOrgs[i].centroid.z, protoOrgs[j].centroid.x, protoOrgs[j].centroid.y, protoOrgs[j].centroid.z);
 
-                    testNodeCollision(protoOrgs[i], protoOrgs[j]);
+                    // testNodeCollision(protoOrgs[i], protoOrgs[j]);
                 }
             }
         }
 
-        drawBoundsOutline();
+        //  drawBoundsOutline();
         // **************************************
     };
 
