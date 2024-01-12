@@ -50,7 +50,7 @@ const sketch = (p: p5) => {
     const AAChainCount = 2;
     let aas: AAChain[] = [];
 
-    const protoBlobCount = 1;
+    let protoBlobCount = 1;
     let blobs: ProtoBlob[] = [];
 
     const protoBlockCount = 3;
@@ -113,17 +113,34 @@ const sketch = (p: p5) => {
         }
 
 
-        // Blobs
+        // Blobs - account for count to dertmine size and complexity
+        protoBlobCount = p.floor(p.random(1, 16));
+        protoBlobCount = 1;
+        let rad = 1;
+        let detail = 5;
+        if (protoBlobCount == 1) {
+            rad = p.random(25, 35);
+            detail = p.floor(p.random(6, 12));
+        } else if (protoBlobCount < 5) {
+            rad = p.random(15, 20);
+            detail = p.floor(p.random(5, 7));
+        } else if (protoBlobCount < 10) {
+            rad = p.random(8, 14);
+            detail = p.floor(p.random(3, 5));
+        } else {
+            rad = p.random(4, 8);
+            detail = p.floor(p.random(2, 3));
+        }
+
         for (let i = 0; i < protoBlobCount; i++) {
-            const r = p.random(1, 1);
             const initPos = new p5.Vector(
                 p.random(-bounds.x / 2, bounds.x / 2),
                 p.random(-bounds.y / 2, bounds.y / 2),
                 p.random(-bounds.z / 2, bounds.z / 2),
             );
-            const detail: number = p.floor(p.random(2, 8));
+            //const detail: number = p.floor(p.random(2, 8));
 
-            const rad = p.random(30, 30);
+            //const rad = p.random(30, 30);
             protoOrgs.push(new ProtoBlob(p, initPos, new p5.Vector(rad, rad, rad), detail, new Phys(p.random(2, 5), p.random(5, 8), p.random(.002, .02)), new ProtoStyle(p, p.color(127, 127, 127), p.color(100, 100, 100, 255), 1, 1)));
             protoOrgs[protoOrgs.length - 1].setTailCol(p.color(p.random(150, 200), p.random(150, 200), 185, p.random(60, 100)));
         }
@@ -162,7 +179,7 @@ const sketch = (p: p5) => {
         // p.background(255);
 
         p.orbitControl();
-        p.rotateY(p.frameCount * p.PI / 900);
+        //  p.rotateY(p.frameCount * p.PI / 900);
 
         let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
 
@@ -188,7 +205,7 @@ const sketch = (p: p5) => {
         //drawBoundsOutline(p.color(75, 75, 75), 1);
 
         for (let i = 0; i < protoOrgs.length; i++) {
-            protoOrgs[i].move(bounds);
+            // protoOrgs[i].move(bounds);
             protoOrgs[i].draw(false, true);
 
             for (let j = i + 1; j < protoOrgs.length; j++) {
