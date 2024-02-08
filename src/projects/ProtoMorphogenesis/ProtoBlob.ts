@@ -105,7 +105,8 @@ export class ProtoBlob extends ProtoMorphoBase {
             let tail = this.nodes[i].pos.copy();
             tail.sub(this.pos);
             tail.normalize();
-            const tailLen = this.p.random(180, 220);
+            //const tailLen = this.p.random(180, 220);
+            const tailLen = this.p.random(18, 22);
             tail.mult(tailLen);
             tail.add(this.nodes[i].pos)
             this.tails.push(new VerletStrand_2N(this.p, this.nodes[i].pos, tail, 20, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.tailCol, .3, .5)));
@@ -118,7 +119,8 @@ export class ProtoBlob extends ProtoMorphoBase {
             let tail = this.nodes[i].pos.copy();
             tail.sub(this.pos);
             tail.normalize();
-            const tailLen = this.p.random(180, 220);
+            //const tailLen = this.p.random(180, 220);
+            const tailLen = this.p.random(18, 67);
             tail.mult(tailLen);
             tail.add(this.nodes[i].pos)
             this.tails.push(new VerletStrand_2N(this.p, this.nodes[i].pos, tail, 20, new p5.Vector(1, 1), new ProtoStyle(this.p, this.p.color(100, 100, 135), this.tailCol, .3, .5)));

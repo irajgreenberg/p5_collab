@@ -21,8 +21,8 @@ import { ProtoMorphoBase } from "./ProtoMorphoBase";
 const sketch = (p: p5) => {
 
     // window size
-    const canvasW = 100;
-    const canvasH = 100;
+    const canvasW = 200;
+    const canvasH = 200;
     let bounds = new p5.Vector(70, 70, 70);
 
     let isWorldAttachable = false;
@@ -179,7 +179,8 @@ const sketch = (p: p5) => {
         // p.background(255);
 
         p.orbitControl();
-        //  p.rotateY(p.frameCount * p.PI / 900);
+        p.rotateY(p.frameCount * p.PI / 900);
+        p.rotateX(p.frameCount * p.PI / 500);
 
         let v = p.createVector(directLightVector.x, directLightVector.y, directLightVector.z);
 
@@ -205,7 +206,7 @@ const sketch = (p: p5) => {
         //drawBoundsOutline(p.color(75, 75, 75), 1);
 
         for (let i = 0; i < protoOrgs.length; i++) {
-            // protoOrgs[i].move(bounds);
+            protoOrgs[i].move(bounds);
             protoOrgs[i].draw(false, true);
 
             for (let j = i + 1; j < protoOrgs.length; j++) {
